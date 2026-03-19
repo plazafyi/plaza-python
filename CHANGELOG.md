@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.0.4 (2026-03-19)
+
+Full Changelog: [v0.0.3...v0.0.4](https://github.com/plazafyi/plaza-python/compare/v0.0.3...v0.0.4)
+
+### Chores
+
+* update SDK settings ([4542e6a](https://github.com/plazafyi/plaza-python/commit/4542e6a1346a1f0d97dff35cd915d52021e38b9c))
+* update SDK settings ([4470813](https://github.com/plazafyi/plaza-python/commit/4470813c74bdb99e220f23e2dfc4ccb291dcfa33))
+
 ## 0.0.3 (2026-03-19)
 
 Full Changelog: [v0.0.2...v0.0.3](https://github.com/plazafyi/plaza-python/compare/v0.0.2...v0.0.3)
