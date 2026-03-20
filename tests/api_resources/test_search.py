@@ -29,6 +29,7 @@ class TestSearch:
         search = client.search.query(
             q="q",
             cursor="cursor",
+            format="format",
             limit=0,
             output_fields="output[fields]",
             output_include="output[include]",
@@ -73,6 +74,7 @@ class TestSearch:
         search = client.search.query_post(
             q="q",
             cursor="cursor",
+            format="format",
             limit=0,
             output_fields="output[fields]",
             output_include="output[include]",
@@ -123,6 +125,7 @@ class TestAsyncSearch:
         search = await async_client.search.query(
             q="q",
             cursor="cursor",
+            format="format",
             limit=0,
             output_fields="output[fields]",
             output_include="output[include]",
@@ -167,6 +170,7 @@ class TestAsyncSearch:
         search = await async_client.search.query_post(
             q="q",
             cursor="cursor",
+            format="format",
             limit=0,
             output_fields="output[fields]",
             output_include="output[include]",

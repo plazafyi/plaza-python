@@ -19,6 +19,9 @@ class RoutingRouteParams(TypedDict, total=False):
     origin: Required[Origin]
     """Geographic coordinate as a JSON object with `lat` and `lng` fields."""
 
+    format: str
+    """Response format for alternatives: json (default), geojson, csv, ndjson"""
+
     alternatives: int
     """Number of alternative routes to return (0-3, default 0).
 

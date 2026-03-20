@@ -60,6 +60,14 @@ class TestQuery:
         assert_matches_type(FeatureCollection, query, path=["response"])
 
     @parametrize
+    def test_method_overpass_with_all_params(self, client: Plaza) -> None:
+        query = client.query.overpass(
+            data="[out:json];node[amenity=cafe](around:500,48.8566,2.3522);out body;",
+            format="format",
+        )
+        assert_matches_type(FeatureCollection, query, path=["response"])
+
+    @parametrize
     def test_raw_response_overpass(self, client: Plaza) -> None:
         response = client.query.with_raw_response.overpass(
             data="[out:json];node[amenity=cafe](around:500,48.8566,2.3522);out body;",
@@ -155,6 +163,14 @@ class TestAsyncQuery:
     async def test_method_overpass(self, async_client: AsyncPlaza) -> None:
         query = await async_client.query.overpass(
             data="[out:json];node[amenity=cafe](around:500,48.8566,2.3522);out body;",
+        )
+        assert_matches_type(FeatureCollection, query, path=["response"])
+
+    @parametrize
+    async def test_method_overpass_with_all_params(self, async_client: AsyncPlaza) -> None:
+        query = await async_client.query.overpass(
+            data="[out:json];node[amenity=cafe](around:500,48.8566,2.3522);out body;",
+            format="format",
         )
         assert_matches_type(FeatureCollection, query, path=["response"])
 

@@ -38,6 +38,23 @@ class TestElevation:
         assert_matches_type(ElevationBatchResult, elevation, path=["response"])
 
     @parametrize
+    def test_method_batch_with_all_params(self, client: Plaza) -> None:
+        elevation = client.elevation.batch(
+            coordinates=[
+                {
+                    "lat": 48.8566,
+                    "lng": 2.3522,
+                },
+                {
+                    "lat": 45.764,
+                    "lng": 4.8357,
+                },
+            ],
+            format="format",
+        )
+        assert_matches_type(ElevationBatchResult, elevation, path=["response"])
+
+    @parametrize
     def test_raw_response_batch(self, client: Plaza) -> None:
         response = client.elevation.with_raw_response.batch(
             coordinates=[
@@ -87,6 +104,7 @@ class TestElevation:
     @parametrize
     def test_method_lookup_with_all_params(self, client: Plaza) -> None:
         elevation = client.elevation.lookup(
+            format="format",
             lat=0,
             lng=0,
             locations="locations",
@@ -124,6 +142,7 @@ class TestElevation:
     @parametrize
     def test_method_lookup_post_with_all_params(self, client: Plaza) -> None:
         elevation = client.elevation.lookup_post(
+            format="format",
             lat=0,
             lng=0,
             locations="locations",
@@ -246,6 +265,23 @@ class TestAsyncElevation:
         assert_matches_type(ElevationBatchResult, elevation, path=["response"])
 
     @parametrize
+    async def test_method_batch_with_all_params(self, async_client: AsyncPlaza) -> None:
+        elevation = await async_client.elevation.batch(
+            coordinates=[
+                {
+                    "lat": 48.8566,
+                    "lng": 2.3522,
+                },
+                {
+                    "lat": 45.764,
+                    "lng": 4.8357,
+                },
+            ],
+            format="format",
+        )
+        assert_matches_type(ElevationBatchResult, elevation, path=["response"])
+
+    @parametrize
     async def test_raw_response_batch(self, async_client: AsyncPlaza) -> None:
         response = await async_client.elevation.with_raw_response.batch(
             coordinates=[
@@ -295,6 +331,7 @@ class TestAsyncElevation:
     @parametrize
     async def test_method_lookup_with_all_params(self, async_client: AsyncPlaza) -> None:
         elevation = await async_client.elevation.lookup(
+            format="format",
             lat=0,
             lng=0,
             locations="locations",
@@ -332,6 +369,7 @@ class TestAsyncElevation:
     @parametrize
     async def test_method_lookup_post_with_all_params(self, async_client: AsyncPlaza) -> None:
         elevation = await async_client.elevation.lookup_post(
+            format="format",
             lat=0,
             lng=0,
             locations="locations",

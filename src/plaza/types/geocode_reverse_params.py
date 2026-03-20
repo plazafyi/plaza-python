@@ -8,6 +8,9 @@ __all__ = ["GeocodeReverseParams"]
 
 
 class GeocodeReverseParams(TypedDict, total=False):
+    format: str
+    """Response format: json (default), geojson, csv, ndjson"""
+
     lang: str
     """Language code for localized names (e.g. en, de, fr)"""
 

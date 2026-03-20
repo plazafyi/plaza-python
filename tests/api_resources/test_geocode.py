@@ -34,6 +34,7 @@ class TestGeocode:
         geocode = client.geocode.autocomplete(
             q="q",
             country_code="country_code",
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",
@@ -78,6 +79,7 @@ class TestGeocode:
         geocode = client.geocode.autocomplete_post(
             q="q",
             country_code="country_code",
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",
@@ -154,6 +156,7 @@ class TestGeocode:
             q="q",
             bbox="bbox",
             country_code="country_code",
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",
@@ -199,6 +202,7 @@ class TestGeocode:
             q="q",
             bbox="bbox",
             country_code="country_code",
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",
@@ -239,6 +243,7 @@ class TestGeocode:
     @parametrize
     def test_method_reverse_with_all_params(self, client: Plaza) -> None:
         geocode = client.geocode.reverse(
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",
@@ -277,6 +282,7 @@ class TestGeocode:
     @parametrize
     def test_method_reverse_post_with_all_params(self, client: Plaza) -> None:
         geocode = client.geocode.reverse_post(
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",
@@ -325,6 +331,7 @@ class TestAsyncGeocode:
         geocode = await async_client.geocode.autocomplete(
             q="q",
             country_code="country_code",
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",
@@ -369,6 +376,7 @@ class TestAsyncGeocode:
         geocode = await async_client.geocode.autocomplete_post(
             q="q",
             country_code="country_code",
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",
@@ -445,6 +453,7 @@ class TestAsyncGeocode:
             q="q",
             bbox="bbox",
             country_code="country_code",
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",
@@ -490,6 +499,7 @@ class TestAsyncGeocode:
             q="q",
             bbox="bbox",
             country_code="country_code",
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",
@@ -530,6 +540,7 @@ class TestAsyncGeocode:
     @parametrize
     async def test_method_reverse_with_all_params(self, async_client: AsyncPlaza) -> None:
         geocode = await async_client.geocode.reverse(
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",
@@ -568,6 +579,7 @@ class TestAsyncGeocode:
     @parametrize
     async def test_method_reverse_post_with_all_params(self, async_client: AsyncPlaza) -> None:
         geocode = await async_client.geocode.reverse_post(
+            format="format",
             lang="lang",
             lat=0,
             layer="layer",

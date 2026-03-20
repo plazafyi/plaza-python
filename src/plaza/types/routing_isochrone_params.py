@@ -19,6 +19,9 @@ class RoutingIsochroneParams(TypedDict, total=False):
     time: Required[float]
     """Travel time in seconds (1-7200)"""
 
+    format: str
+    """Response format: json (default), geojson, csv, ndjson"""
+
     mode: str
     """Travel mode (auto, foot, bicycle)"""
 

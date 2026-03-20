@@ -176,6 +176,7 @@ class TestDatasets:
         dataset = client.datasets.features(
             id="id",
             cursor="cursor",
+            format="format",
             limit=0,
             output_buffer=0,
             output_centroid=True,
@@ -384,6 +385,7 @@ class TestAsyncDatasets:
         dataset = await async_client.datasets.features(
             id="id",
             cursor="cursor",
+            format="format",
             limit=0,
             output_buffer=0,
             output_centroid=True,

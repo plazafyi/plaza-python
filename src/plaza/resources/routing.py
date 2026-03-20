@@ -62,6 +62,7 @@ class RoutingResource(SyncAPIResource):
         lat: float,
         lng: float,
         time: float,
+        format: str | Omit = omit,
         mode: str | Omit = omit,
         output_fields: str | Omit = omit,
         output_geometry: bool | Omit = omit,
@@ -84,6 +85,8 @@ class RoutingResource(SyncAPIResource):
           lng: Longitude
 
           time: Travel time in seconds (1-7200)
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           mode: Travel mode (auto, foot, bicycle)
 
@@ -117,6 +120,7 @@ class RoutingResource(SyncAPIResource):
                         "lat": lat,
                         "lng": lng,
                         "time": time,
+                        "format": format,
                         "mode": mode,
                         "output_fields": output_fields,
                         "output_geometry": output_geometry,
@@ -136,6 +140,7 @@ class RoutingResource(SyncAPIResource):
         lat: float,
         lng: float,
         time: float,
+        format: str | Omit = omit,
         mode: str | Omit = omit,
         output_fields: str | Omit = omit,
         output_geometry: bool | Omit = omit,
@@ -158,6 +163,8 @@ class RoutingResource(SyncAPIResource):
           lng: Longitude
 
           time: Travel time in seconds (1-7200)
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           mode: Travel mode (auto, foot, bicycle)
 
@@ -191,6 +198,7 @@ class RoutingResource(SyncAPIResource):
                         "lat": lat,
                         "lng": lng,
                         "time": time,
+                        "format": format,
                         "mode": mode,
                         "output_fields": output_fields,
                         "output_geometry": output_geometry,
@@ -390,6 +398,7 @@ class RoutingResource(SyncAPIResource):
         *,
         destination: routing_route_params.Destination,
         origin: routing_route_params.Origin,
+        format: str | Omit = omit,
         alternatives: int | Omit = omit,
         annotations: bool | Omit = omit,
         depart_at: Union[str, datetime, None] | Omit = omit,
@@ -415,6 +424,8 @@ class RoutingResource(SyncAPIResource):
           destination: Geographic coordinate as a JSON object with `lat` and `lng` fields.
 
           origin: Geographic coordinate as a JSON object with `lat` and `lng` fields.
+
+          format: Response format for alternatives: json (default), geojson, csv, ndjson
 
           alternatives: Number of alternative routes to return (0-3, default 0). When > 0, response is a
               FeatureCollection of route Features.
@@ -469,7 +480,11 @@ class RoutingResource(SyncAPIResource):
                 routing_route_params.RoutingRouteParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"format": format}, routing_route_params.RoutingRouteParams),
             ),
             cast_to=RouteResult,
         )
@@ -501,6 +516,7 @@ class AsyncRoutingResource(AsyncAPIResource):
         lat: float,
         lng: float,
         time: float,
+        format: str | Omit = omit,
         mode: str | Omit = omit,
         output_fields: str | Omit = omit,
         output_geometry: bool | Omit = omit,
@@ -523,6 +539,8 @@ class AsyncRoutingResource(AsyncAPIResource):
           lng: Longitude
 
           time: Travel time in seconds (1-7200)
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           mode: Travel mode (auto, foot, bicycle)
 
@@ -556,6 +574,7 @@ class AsyncRoutingResource(AsyncAPIResource):
                         "lat": lat,
                         "lng": lng,
                         "time": time,
+                        "format": format,
                         "mode": mode,
                         "output_fields": output_fields,
                         "output_geometry": output_geometry,
@@ -575,6 +594,7 @@ class AsyncRoutingResource(AsyncAPIResource):
         lat: float,
         lng: float,
         time: float,
+        format: str | Omit = omit,
         mode: str | Omit = omit,
         output_fields: str | Omit = omit,
         output_geometry: bool | Omit = omit,
@@ -597,6 +617,8 @@ class AsyncRoutingResource(AsyncAPIResource):
           lng: Longitude
 
           time: Travel time in seconds (1-7200)
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           mode: Travel mode (auto, foot, bicycle)
 
@@ -630,6 +652,7 @@ class AsyncRoutingResource(AsyncAPIResource):
                         "lat": lat,
                         "lng": lng,
                         "time": time,
+                        "format": format,
                         "mode": mode,
                         "output_fields": output_fields,
                         "output_geometry": output_geometry,
@@ -829,6 +852,7 @@ class AsyncRoutingResource(AsyncAPIResource):
         *,
         destination: routing_route_params.Destination,
         origin: routing_route_params.Origin,
+        format: str | Omit = omit,
         alternatives: int | Omit = omit,
         annotations: bool | Omit = omit,
         depart_at: Union[str, datetime, None] | Omit = omit,
@@ -854,6 +878,8 @@ class AsyncRoutingResource(AsyncAPIResource):
           destination: Geographic coordinate as a JSON object with `lat` and `lng` fields.
 
           origin: Geographic coordinate as a JSON object with `lat` and `lng` fields.
+
+          format: Response format for alternatives: json (default), geojson, csv, ndjson
 
           alternatives: Number of alternative routes to return (0-3, default 0). When > 0, response is a
               FeatureCollection of route Features.
@@ -908,7 +934,11 @@ class AsyncRoutingResource(AsyncAPIResource):
                 routing_route_params.RoutingRouteParams,
             ),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform({"format": format}, routing_route_params.RoutingRouteParams),
             ),
             cast_to=RouteResult,
         )

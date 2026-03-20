@@ -54,6 +54,7 @@ class ElevationResource(SyncAPIResource):
         self,
         *,
         coordinates: Iterable[elevation_batch_params.Coordinate],
+        format: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -67,6 +68,8 @@ class ElevationResource(SyncAPIResource):
         Args:
           coordinates: Coordinates to look up elevations for (max 50)
 
+          format: Response format: json (default), geojson, csv, ndjson
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -79,7 +82,11 @@ class ElevationResource(SyncAPIResource):
             "/api/v1/elevation/batch",
             body=maybe_transform({"coordinates": coordinates}, elevation_batch_params.ElevationBatchParams),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"format": format}, elevation_batch_params.ElevationBatchParams),
             ),
             cast_to=ElevationBatchResult,
         )
@@ -87,6 +94,7 @@ class ElevationResource(SyncAPIResource):
     def lookup(
         self,
         *,
+        format: str | Omit = omit,
         lat: float | Omit = omit,
         lng: float | Omit = omit,
         locations: str | Omit = omit,
@@ -104,6 +112,8 @@ class ElevationResource(SyncAPIResource):
         Look up elevation at one or more points
 
         Args:
+          format: Response format: json (default), geojson, csv, ndjson
+
           lat: Latitude (single point)
 
           lng: Longitude (single point)
@@ -133,6 +143,7 @@ class ElevationResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "format": format,
                         "lat": lat,
                         "lng": lng,
                         "locations": locations,
@@ -149,6 +160,7 @@ class ElevationResource(SyncAPIResource):
     def lookup_post(
         self,
         *,
+        format: str | Omit = omit,
         lat: float | Omit = omit,
         lng: float | Omit = omit,
         locations: str | Omit = omit,
@@ -166,6 +178,8 @@ class ElevationResource(SyncAPIResource):
         Look up elevation at one or more points
 
         Args:
+          format: Response format: json (default), geojson, csv, ndjson
+
           lat: Latitude (single point)
 
           lng: Longitude (single point)
@@ -195,6 +209,7 @@ class ElevationResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "format": format,
                         "lat": lat,
                         "lng": lng,
                         "locations": locations,
@@ -267,6 +282,7 @@ class AsyncElevationResource(AsyncAPIResource):
         self,
         *,
         coordinates: Iterable[elevation_batch_params.Coordinate],
+        format: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -280,6 +296,8 @@ class AsyncElevationResource(AsyncAPIResource):
         Args:
           coordinates: Coordinates to look up elevations for (max 50)
 
+          format: Response format: json (default), geojson, csv, ndjson
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -292,7 +310,11 @@ class AsyncElevationResource(AsyncAPIResource):
             "/api/v1/elevation/batch",
             body=await async_maybe_transform({"coordinates": coordinates}, elevation_batch_params.ElevationBatchParams),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform({"format": format}, elevation_batch_params.ElevationBatchParams),
             ),
             cast_to=ElevationBatchResult,
         )
@@ -300,6 +322,7 @@ class AsyncElevationResource(AsyncAPIResource):
     async def lookup(
         self,
         *,
+        format: str | Omit = omit,
         lat: float | Omit = omit,
         lng: float | Omit = omit,
         locations: str | Omit = omit,
@@ -317,6 +340,8 @@ class AsyncElevationResource(AsyncAPIResource):
         Look up elevation at one or more points
 
         Args:
+          format: Response format: json (default), geojson, csv, ndjson
+
           lat: Latitude (single point)
 
           lng: Longitude (single point)
@@ -346,6 +371,7 @@ class AsyncElevationResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
+                        "format": format,
                         "lat": lat,
                         "lng": lng,
                         "locations": locations,
@@ -362,6 +388,7 @@ class AsyncElevationResource(AsyncAPIResource):
     async def lookup_post(
         self,
         *,
+        format: str | Omit = omit,
         lat: float | Omit = omit,
         lng: float | Omit = omit,
         locations: str | Omit = omit,
@@ -379,6 +406,8 @@ class AsyncElevationResource(AsyncAPIResource):
         Look up elevation at one or more points
 
         Args:
+          format: Response format: json (default), geojson, csv, ndjson
+
           lat: Latitude (single point)
 
           lng: Longitude (single point)
@@ -408,6 +437,7 @@ class AsyncElevationResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
+                        "format": format,
                         "lat": lat,
                         "lng": lng,
                         "locations": locations,

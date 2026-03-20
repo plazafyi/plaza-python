@@ -46,6 +46,7 @@ class SearchResource(SyncAPIResource):
         *,
         q: str,
         cursor: str | Omit = omit,
+        format: str | Omit = omit,
         limit: int | Omit = omit,
         output_fields: str | Omit = omit,
         output_include: str | Omit = omit,
@@ -65,6 +66,8 @@ class SearchResource(SyncAPIResource):
           q: Search query string
 
           cursor: Cursor for pagination
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           limit: Maximum results (default 25, max 100)
 
@@ -95,6 +98,7 @@ class SearchResource(SyncAPIResource):
                     {
                         "q": q,
                         "cursor": cursor,
+                        "format": format,
                         "limit": limit,
                         "output_fields": output_fields,
                         "output_include": output_include,
@@ -112,6 +116,7 @@ class SearchResource(SyncAPIResource):
         *,
         q: str,
         cursor: str | Omit = omit,
+        format: str | Omit = omit,
         limit: int | Omit = omit,
         output_fields: str | Omit = omit,
         output_include: str | Omit = omit,
@@ -131,6 +136,8 @@ class SearchResource(SyncAPIResource):
           q: Search query string
 
           cursor: Cursor for pagination
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           limit: Maximum results (default 25, max 100)
 
@@ -161,6 +168,7 @@ class SearchResource(SyncAPIResource):
                     {
                         "q": q,
                         "cursor": cursor,
+                        "format": format,
                         "limit": limit,
                         "output_fields": output_fields,
                         "output_include": output_include,
@@ -199,6 +207,7 @@ class AsyncSearchResource(AsyncAPIResource):
         *,
         q: str,
         cursor: str | Omit = omit,
+        format: str | Omit = omit,
         limit: int | Omit = omit,
         output_fields: str | Omit = omit,
         output_include: str | Omit = omit,
@@ -218,6 +227,8 @@ class AsyncSearchResource(AsyncAPIResource):
           q: Search query string
 
           cursor: Cursor for pagination
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           limit: Maximum results (default 25, max 100)
 
@@ -248,6 +259,7 @@ class AsyncSearchResource(AsyncAPIResource):
                     {
                         "q": q,
                         "cursor": cursor,
+                        "format": format,
                         "limit": limit,
                         "output_fields": output_fields,
                         "output_include": output_include,
@@ -265,6 +277,7 @@ class AsyncSearchResource(AsyncAPIResource):
         *,
         q: str,
         cursor: str | Omit = omit,
+        format: str | Omit = omit,
         limit: int | Omit = omit,
         output_fields: str | Omit = omit,
         output_include: str | Omit = omit,
@@ -284,6 +297,8 @@ class AsyncSearchResource(AsyncAPIResource):
           q: Search query string
 
           cursor: Cursor for pagination
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           limit: Maximum results (default 25, max 100)
 
@@ -314,6 +329,7 @@ class AsyncSearchResource(AsyncAPIResource):
                     {
                         "q": q,
                         "cursor": cursor,
+                        "format": format,
                         "limit": limit,
                         "output_fields": output_fields,
                         "output_include": output_include,
