@@ -17,6 +17,9 @@ class GeocodeForwardParams(TypedDict, total=False):
     country_code: str
     """ISO 3166-1 alpha-2 country code filter"""
 
+    format: str
+    """Response format: json (default), geojson, csv, ndjson"""
+
     lang: str
     """Language code for localized names (e.g. en, de, fr)"""
 

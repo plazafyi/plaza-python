@@ -57,6 +57,7 @@ class GeocodeResource(SyncAPIResource):
         *,
         q: str,
         country_code: str | Omit = omit,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -76,6 +77,8 @@ class GeocodeResource(SyncAPIResource):
           q: Partial address query
 
           country_code: ISO 3166-1 alpha-2 country code filter
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           lang: Language code for localized names (e.g. en, de, fr)
 
@@ -106,6 +109,7 @@ class GeocodeResource(SyncAPIResource):
                     {
                         "q": q,
                         "country_code": country_code,
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,
@@ -123,6 +127,7 @@ class GeocodeResource(SyncAPIResource):
         *,
         q: str,
         country_code: str | Omit = omit,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -142,6 +147,8 @@ class GeocodeResource(SyncAPIResource):
           q: Partial address query
 
           country_code: ISO 3166-1 alpha-2 country code filter
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           lang: Language code for localized names (e.g. en, de, fr)
 
@@ -172,6 +179,7 @@ class GeocodeResource(SyncAPIResource):
                     {
                         "q": q,
                         "country_code": country_code,
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,
@@ -222,6 +230,7 @@ class GeocodeResource(SyncAPIResource):
         q: str,
         bbox: str | Omit = omit,
         country_code: str | Omit = omit,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -243,6 +252,8 @@ class GeocodeResource(SyncAPIResource):
           bbox: Bounding box filter: south,west,north,east
 
           country_code: ISO 3166-1 alpha-2 country code filter
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           lang: Language code for localized names (e.g. en, de, fr)
 
@@ -274,6 +285,7 @@ class GeocodeResource(SyncAPIResource):
                         "q": q,
                         "bbox": bbox,
                         "country_code": country_code,
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,
@@ -292,6 +304,7 @@ class GeocodeResource(SyncAPIResource):
         q: str,
         bbox: str | Omit = omit,
         country_code: str | Omit = omit,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -313,6 +326,8 @@ class GeocodeResource(SyncAPIResource):
           bbox: Bounding box filter: south,west,north,east
 
           country_code: ISO 3166-1 alpha-2 country code filter
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           lang: Language code for localized names (e.g. en, de, fr)
 
@@ -344,6 +359,7 @@ class GeocodeResource(SyncAPIResource):
                         "q": q,
                         "bbox": bbox,
                         "country_code": country_code,
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,
@@ -359,6 +375,7 @@ class GeocodeResource(SyncAPIResource):
     def reverse(
         self,
         *,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -377,6 +394,8 @@ class GeocodeResource(SyncAPIResource):
         Reverse geocode a coordinate
 
         Args:
+          format: Response format: json (default), geojson, csv, ndjson
+
           lang: Language code for localized names (e.g. en, de, fr)
 
           lat: Legacy shorthand. Latitude. Use near param instead.
@@ -409,6 +428,7 @@ class GeocodeResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,
@@ -426,6 +446,7 @@ class GeocodeResource(SyncAPIResource):
     def reverse_post(
         self,
         *,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -444,6 +465,8 @@ class GeocodeResource(SyncAPIResource):
         Reverse geocode a coordinate
 
         Args:
+          format: Response format: json (default), geojson, csv, ndjson
+
           lang: Language code for localized names (e.g. en, de, fr)
 
           lat: Legacy shorthand. Latitude. Use near param instead.
@@ -476,6 +499,7 @@ class GeocodeResource(SyncAPIResource):
                 timeout=timeout,
                 query=maybe_transform(
                     {
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,
@@ -516,6 +540,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
         *,
         q: str,
         country_code: str | Omit = omit,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -535,6 +560,8 @@ class AsyncGeocodeResource(AsyncAPIResource):
           q: Partial address query
 
           country_code: ISO 3166-1 alpha-2 country code filter
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           lang: Language code for localized names (e.g. en, de, fr)
 
@@ -565,6 +592,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
                     {
                         "q": q,
                         "country_code": country_code,
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,
@@ -582,6 +610,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
         *,
         q: str,
         country_code: str | Omit = omit,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -601,6 +630,8 @@ class AsyncGeocodeResource(AsyncAPIResource):
           q: Partial address query
 
           country_code: ISO 3166-1 alpha-2 country code filter
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           lang: Language code for localized names (e.g. en, de, fr)
 
@@ -631,6 +662,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
                     {
                         "q": q,
                         "country_code": country_code,
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,
@@ -681,6 +713,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
         q: str,
         bbox: str | Omit = omit,
         country_code: str | Omit = omit,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -702,6 +735,8 @@ class AsyncGeocodeResource(AsyncAPIResource):
           bbox: Bounding box filter: south,west,north,east
 
           country_code: ISO 3166-1 alpha-2 country code filter
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           lang: Language code for localized names (e.g. en, de, fr)
 
@@ -733,6 +768,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
                         "q": q,
                         "bbox": bbox,
                         "country_code": country_code,
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,
@@ -751,6 +787,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
         q: str,
         bbox: str | Omit = omit,
         country_code: str | Omit = omit,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -772,6 +809,8 @@ class AsyncGeocodeResource(AsyncAPIResource):
           bbox: Bounding box filter: south,west,north,east
 
           country_code: ISO 3166-1 alpha-2 country code filter
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           lang: Language code for localized names (e.g. en, de, fr)
 
@@ -803,6 +842,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
                         "q": q,
                         "bbox": bbox,
                         "country_code": country_code,
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,
@@ -818,6 +858,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
     async def reverse(
         self,
         *,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -836,6 +877,8 @@ class AsyncGeocodeResource(AsyncAPIResource):
         Reverse geocode a coordinate
 
         Args:
+          format: Response format: json (default), geojson, csv, ndjson
+
           lang: Language code for localized names (e.g. en, de, fr)
 
           lat: Legacy shorthand. Latitude. Use near param instead.
@@ -868,6 +911,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,
@@ -885,6 +929,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
     async def reverse_post(
         self,
         *,
+        format: str | Omit = omit,
         lang: str | Omit = omit,
         lat: float | Omit = omit,
         layer: str | Omit = omit,
@@ -903,6 +948,8 @@ class AsyncGeocodeResource(AsyncAPIResource):
         Reverse geocode a coordinate
 
         Args:
+          format: Response format: json (default), geojson, csv, ndjson
+
           lang: Language code for localized names (e.g. en, de, fr)
 
           lat: Legacy shorthand. Latitude. Use near param instead.
@@ -935,6 +982,7 @@ class AsyncGeocodeResource(AsyncAPIResource):
                 timeout=timeout,
                 query=await async_maybe_transform(
                     {
+                        "format": format,
                         "lang": lang,
                         "lat": lat,
                         "layer": layer,

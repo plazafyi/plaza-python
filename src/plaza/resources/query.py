@@ -7,7 +7,7 @@ from typing import Iterable
 import httpx
 
 from ..types import query_sparql_params, query_execute_params, query_overpass_params
-from .._types import Body, Query, Headers, NotGiven, not_given
+from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
 from .._resource import SyncAPIResource, AsyncAPIResource
@@ -83,6 +83,7 @@ class QueryResource(SyncAPIResource):
         self,
         *,
         data: str,
+        format: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -96,6 +97,8 @@ class QueryResource(SyncAPIResource):
         Args:
           data: Overpass QL query string
 
+          format: Response format: json (default), geojson, csv, ndjson
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -108,7 +111,11 @@ class QueryResource(SyncAPIResource):
             "/api/v1/overpass",
             body=maybe_transform({"data": data}, query_overpass_params.QueryOverpassParams),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"format": format}, query_overpass_params.QueryOverpassParams),
             ),
             cast_to=FeatureCollection,
         )
@@ -206,6 +213,7 @@ class AsyncQueryResource(AsyncAPIResource):
         self,
         *,
         data: str,
+        format: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -219,6 +227,8 @@ class AsyncQueryResource(AsyncAPIResource):
         Args:
           data: Overpass QL query string
 
+          format: Response format: json (default), geojson, csv, ndjson
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -231,7 +241,11 @@ class AsyncQueryResource(AsyncAPIResource):
             "/api/v1/overpass",
             body=await async_maybe_transform({"data": data}, query_overpass_params.QueryOverpassParams),
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform({"format": format}, query_overpass_params.QueryOverpassParams),
             ),
             cast_to=FeatureCollection,
         )

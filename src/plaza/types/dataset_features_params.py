@@ -13,6 +13,9 @@ class DatasetFeaturesParams(TypedDict, total=False):
     cursor: str
     """Cursor for pagination"""
 
+    format: str
+    """Response format: json (default), geojson, csv, ndjson"""
+
     limit: int
     """Maximum results"""
 

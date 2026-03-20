@@ -10,6 +10,9 @@ __all__ = ["ElevationLookupPostParams"]
 
 
 class ElevationLookupPostParams(TypedDict, total=False):
+    format: str
+    """Response format: json (default), geojson, csv, ndjson"""
+
     lat: float
     """Latitude (single point)"""
 

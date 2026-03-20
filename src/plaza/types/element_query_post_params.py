@@ -26,6 +26,13 @@ class ElementQueryPostParams(TypedDict, total=False):
     cursor: str
     """Cursor for pagination"""
 
+    format: str
+    """Response format.
+
+    json (default) returns paginated GeoJSON. geojson/csv/ndjson stream via chunked
+    transfer encoding.
+    """
+
     h3: str
     """Legacy shorthand. H3 cell index. Use spatial predicates instead."""
 

@@ -54,6 +54,7 @@ class TestOptimize:
                     "lng": 2.2945,
                 },
             ],
+            format="format",
             mode="auto",
             roundtrip=False,
         )
@@ -190,6 +191,7 @@ class TestAsyncOptimize:
                     "lng": 2.2945,
                 },
             ],
+            format="format",
             mode="auto",
             roundtrip=False,
         )

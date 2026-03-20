@@ -10,3 +10,6 @@ __all__ = ["QueryOverpassParams"]
 class QueryOverpassParams(TypedDict, total=False):
     data: Required[str]
     """Overpass QL query string"""
+
+    format: str
+    """Response format: json (default), geojson, csv, ndjson"""

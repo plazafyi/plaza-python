@@ -49,6 +49,7 @@ class OptimizeResource(SyncAPIResource):
         self,
         *,
         waypoints: Iterable[optimize_create_params.Waypoint],
+        format: str | Omit = omit,
         mode: Literal["auto", "foot", "bicycle"] | Omit = omit,
         roundtrip: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -63,6 +64,8 @@ class OptimizeResource(SyncAPIResource):
 
         Args:
           waypoints: Waypoints to visit in optimized order (2-50 points)
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           mode: Travel mode (default: `auto`)
 
@@ -89,7 +92,11 @@ class OptimizeResource(SyncAPIResource):
                     optimize_create_params.OptimizeCreateParams,
                 ),
                 options=make_request_options(
-                    extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                    extra_headers=extra_headers,
+                    extra_query=extra_query,
+                    extra_body=extra_body,
+                    timeout=timeout,
+                    query=maybe_transform({"format": format}, optimize_create_params.OptimizeCreateParams),
                 ),
                 cast_to=cast(Any, OptimizeResult),  # Union types cannot be passed in as arguments in the type system
             ),
@@ -153,6 +160,7 @@ class AsyncOptimizeResource(AsyncAPIResource):
         self,
         *,
         waypoints: Iterable[optimize_create_params.Waypoint],
+        format: str | Omit = omit,
         mode: Literal["auto", "foot", "bicycle"] | Omit = omit,
         roundtrip: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -167,6 +175,8 @@ class AsyncOptimizeResource(AsyncAPIResource):
 
         Args:
           waypoints: Waypoints to visit in optimized order (2-50 points)
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           mode: Travel mode (default: `auto`)
 
@@ -193,7 +203,11 @@ class AsyncOptimizeResource(AsyncAPIResource):
                     optimize_create_params.OptimizeCreateParams,
                 ),
                 options=make_request_options(
-                    extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                    extra_headers=extra_headers,
+                    extra_query=extra_query,
+                    extra_body=extra_body,
+                    timeout=timeout,
+                    query=await async_maybe_transform({"format": format}, optimize_create_params.OptimizeCreateParams),
                 ),
                 cast_to=cast(Any, OptimizeResult),  # Union types cannot be passed in as arguments in the type system
             ),

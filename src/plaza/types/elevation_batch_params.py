@@ -12,6 +12,9 @@ class ElevationBatchParams(TypedDict, total=False):
     coordinates: Required[Iterable[Coordinate]]
     """Coordinates to look up elevations for (max 50)"""
 
+    format: str
+    """Response format: json (default), geojson, csv, ndjson"""
+
 
 class Coordinate(TypedDict, total=False):
     """Geographic coordinate as a JSON object with `lat` and `lng` fields."""

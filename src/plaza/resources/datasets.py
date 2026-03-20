@@ -195,6 +195,7 @@ class DatasetsResource(SyncAPIResource):
         id: str,
         *,
         cursor: str | Omit = omit,
+        format: str | Omit = omit,
         limit: int | Omit = omit,
         output_buffer: float | Omit = omit,
         output_centroid: bool | Omit = omit,
@@ -216,6 +217,8 @@ class DatasetsResource(SyncAPIResource):
 
         Args:
           cursor: Cursor for pagination
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           limit: Maximum results
 
@@ -255,6 +258,7 @@ class DatasetsResource(SyncAPIResource):
                 query=maybe_transform(
                     {
                         "cursor": cursor,
+                        "format": format,
                         "limit": limit,
                         "output_buffer": output_buffer,
                         "output_centroid": output_centroid,
@@ -442,6 +446,7 @@ class AsyncDatasetsResource(AsyncAPIResource):
         id: str,
         *,
         cursor: str | Omit = omit,
+        format: str | Omit = omit,
         limit: int | Omit = omit,
         output_buffer: float | Omit = omit,
         output_centroid: bool | Omit = omit,
@@ -463,6 +468,8 @@ class AsyncDatasetsResource(AsyncAPIResource):
 
         Args:
           cursor: Cursor for pagination
+
+          format: Response format: json (default), geojson, csv, ndjson
 
           limit: Maximum results
 
@@ -502,6 +509,7 @@ class AsyncDatasetsResource(AsyncAPIResource):
                 query=await async_maybe_transform(
                     {
                         "cursor": cursor,
+                        "format": format,
                         "limit": limit,
                         "output_buffer": output_buffer,
                         "output_centroid": output_centroid,

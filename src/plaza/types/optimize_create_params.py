@@ -12,6 +12,9 @@ class OptimizeCreateParams(TypedDict, total=False):
     waypoints: Required[Iterable[Waypoint]]
     """Waypoints to visit in optimized order (2-50 points)"""
 
+    format: str
+    """Response format: json (default), geojson, csv, ndjson"""
+
     mode: Literal["auto", "foot", "bicycle"]
     """Travel mode (default: `auto`)"""
 

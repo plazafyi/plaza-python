@@ -328,6 +328,7 @@ class ElementsResource(SyncAPIResource):
         contains: str | Omit = omit,
         crosses: str | Omit = omit,
         cursor: str | Omit = omit,
+        format: str | Omit = omit,
         h3: str | Omit = omit,
         intersects: str | Omit = omit,
         limit: int | Omit = omit,
@@ -363,6 +364,9 @@ class ElementsResource(SyncAPIResource):
           crosses: Geometry that features must cross
 
           cursor: Cursor for pagination
+
+          format: Response format. json (default) returns paginated GeoJSON. geojson/csv/ndjson
+              stream via chunked transfer encoding.
 
           h3: Legacy shorthand. H3 cell index. Use spatial predicates instead.
 
@@ -417,6 +421,7 @@ class ElementsResource(SyncAPIResource):
                         "contains": contains,
                         "crosses": crosses,
                         "cursor": cursor,
+                        "format": format,
                         "h3": h3,
                         "intersects": intersects,
                         "limit": limit,
@@ -447,6 +452,7 @@ class ElementsResource(SyncAPIResource):
         contains: str | Omit = omit,
         crosses: str | Omit = omit,
         cursor: str | Omit = omit,
+        format: str | Omit = omit,
         h3: str | Omit = omit,
         intersects: str | Omit = omit,
         limit: int | Omit = omit,
@@ -482,6 +488,9 @@ class ElementsResource(SyncAPIResource):
           crosses: Geometry that features must cross
 
           cursor: Cursor for pagination
+
+          format: Response format. json (default) returns paginated GeoJSON. geojson/csv/ndjson
+              stream via chunked transfer encoding.
 
           h3: Legacy shorthand. H3 cell index. Use spatial predicates instead.
 
@@ -536,6 +545,7 @@ class ElementsResource(SyncAPIResource):
                         "contains": contains,
                         "crosses": crosses,
                         "cursor": cursor,
+                        "format": format,
                         "h3": h3,
                         "intersects": intersects,
                         "limit": limit,
@@ -858,6 +868,7 @@ class AsyncElementsResource(AsyncAPIResource):
         contains: str | Omit = omit,
         crosses: str | Omit = omit,
         cursor: str | Omit = omit,
+        format: str | Omit = omit,
         h3: str | Omit = omit,
         intersects: str | Omit = omit,
         limit: int | Omit = omit,
@@ -893,6 +904,9 @@ class AsyncElementsResource(AsyncAPIResource):
           crosses: Geometry that features must cross
 
           cursor: Cursor for pagination
+
+          format: Response format. json (default) returns paginated GeoJSON. geojson/csv/ndjson
+              stream via chunked transfer encoding.
 
           h3: Legacy shorthand. H3 cell index. Use spatial predicates instead.
 
@@ -947,6 +961,7 @@ class AsyncElementsResource(AsyncAPIResource):
                         "contains": contains,
                         "crosses": crosses,
                         "cursor": cursor,
+                        "format": format,
                         "h3": h3,
                         "intersects": intersects,
                         "limit": limit,
@@ -977,6 +992,7 @@ class AsyncElementsResource(AsyncAPIResource):
         contains: str | Omit = omit,
         crosses: str | Omit = omit,
         cursor: str | Omit = omit,
+        format: str | Omit = omit,
         h3: str | Omit = omit,
         intersects: str | Omit = omit,
         limit: int | Omit = omit,
@@ -1012,6 +1028,9 @@ class AsyncElementsResource(AsyncAPIResource):
           crosses: Geometry that features must cross
 
           cursor: Cursor for pagination
+
+          format: Response format. json (default) returns paginated GeoJSON. geojson/csv/ndjson
+              stream via chunked transfer encoding.
 
           h3: Legacy shorthand. H3 cell index. Use spatial predicates instead.
 
@@ -1066,6 +1085,7 @@ class AsyncElementsResource(AsyncAPIResource):
                         "contains": contains,
                         "crosses": crosses,
                         "cursor": cursor,
+                        "format": format,
                         "h3": h3,
                         "intersects": intersects,
                         "limit": limit,
