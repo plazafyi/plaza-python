@@ -21,7 +21,6 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestElevation:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_batch(self, client: Plaza) -> None:
         elevation = client.elevation.batch(
@@ -32,7 +31,6 @@ class TestElevation:
         )
         assert_matches_type(ElevationBatchResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_batch(self, client: Plaza) -> None:
         response = client.elevation.with_raw_response.batch(
@@ -47,7 +45,6 @@ class TestElevation:
         elevation = response.parse()
         assert_matches_type(ElevationBatchResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_batch(self, client: Plaza) -> None:
         with client.elevation.with_streaming_response.batch(
@@ -64,13 +61,11 @@ class TestElevation:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_lookup(self, client: Plaza) -> None:
         elevation = client.elevation.lookup()
         assert_matches_type(ElevationLookupResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_lookup_with_all_params(self, client: Plaza) -> None:
         elevation = client.elevation.lookup(
@@ -80,7 +75,6 @@ class TestElevation:
         )
         assert_matches_type(ElevationLookupResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_lookup(self, client: Plaza) -> None:
         response = client.elevation.with_raw_response.lookup()
@@ -90,7 +84,6 @@ class TestElevation:
         elevation = response.parse()
         assert_matches_type(ElevationLookupResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_lookup(self, client: Plaza) -> None:
         with client.elevation.with_streaming_response.lookup() as response:
@@ -102,7 +95,6 @@ class TestElevation:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_profile(self, client: Plaza) -> None:
         elevation = client.elevation.profile(
@@ -113,7 +105,6 @@ class TestElevation:
         )
         assert_matches_type(ElevationProfileResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_profile(self, client: Plaza) -> None:
         response = client.elevation.with_raw_response.profile(
@@ -128,7 +119,6 @@ class TestElevation:
         elevation = response.parse()
         assert_matches_type(ElevationProfileResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_profile(self, client: Plaza) -> None:
         with client.elevation.with_streaming_response.profile(
@@ -151,7 +141,6 @@ class TestAsyncElevation:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_batch(self, async_client: AsyncPlaza) -> None:
         elevation = await async_client.elevation.batch(
@@ -162,7 +151,6 @@ class TestAsyncElevation:
         )
         assert_matches_type(ElevationBatchResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_batch(self, async_client: AsyncPlaza) -> None:
         response = await async_client.elevation.with_raw_response.batch(
@@ -177,7 +165,6 @@ class TestAsyncElevation:
         elevation = await response.parse()
         assert_matches_type(ElevationBatchResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_batch(self, async_client: AsyncPlaza) -> None:
         async with async_client.elevation.with_streaming_response.batch(
@@ -194,13 +181,11 @@ class TestAsyncElevation:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_lookup(self, async_client: AsyncPlaza) -> None:
         elevation = await async_client.elevation.lookup()
         assert_matches_type(ElevationLookupResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_lookup_with_all_params(self, async_client: AsyncPlaza) -> None:
         elevation = await async_client.elevation.lookup(
@@ -210,7 +195,6 @@ class TestAsyncElevation:
         )
         assert_matches_type(ElevationLookupResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_lookup(self, async_client: AsyncPlaza) -> None:
         response = await async_client.elevation.with_raw_response.lookup()
@@ -220,7 +204,6 @@ class TestAsyncElevation:
         elevation = await response.parse()
         assert_matches_type(ElevationLookupResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_lookup(self, async_client: AsyncPlaza) -> None:
         async with async_client.elevation.with_streaming_response.lookup() as response:
@@ -232,7 +215,6 @@ class TestAsyncElevation:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_profile(self, async_client: AsyncPlaza) -> None:
         elevation = await async_client.elevation.profile(
@@ -243,7 +225,6 @@ class TestAsyncElevation:
         )
         assert_matches_type(ElevationProfileResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_profile(self, async_client: AsyncPlaza) -> None:
         response = await async_client.elevation.with_raw_response.profile(
@@ -258,7 +239,6 @@ class TestAsyncElevation:
         elevation = await response.parse()
         assert_matches_type(ElevationProfileResult, elevation, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_profile(self, async_client: AsyncPlaza) -> None:
         async with async_client.elevation.with_streaming_response.profile(

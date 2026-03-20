@@ -17,7 +17,6 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestSearch:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_query(self, client: Plaza) -> None:
         search = client.search.query(
@@ -25,7 +24,6 @@ class TestSearch:
         )
         assert_matches_type(FeatureCollection, search, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_query_with_all_params(self, client: Plaza) -> None:
         search = client.search.query(
@@ -35,7 +33,6 @@ class TestSearch:
         )
         assert_matches_type(FeatureCollection, search, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_query(self, client: Plaza) -> None:
         response = client.search.with_raw_response.query(
@@ -47,7 +44,6 @@ class TestSearch:
         search = response.parse()
         assert_matches_type(FeatureCollection, search, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_query(self, client: Plaza) -> None:
         with client.search.with_streaming_response.query(
@@ -67,7 +63,6 @@ class TestAsyncSearch:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_query(self, async_client: AsyncPlaza) -> None:
         search = await async_client.search.query(
@@ -75,7 +70,6 @@ class TestAsyncSearch:
         )
         assert_matches_type(FeatureCollection, search, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_query_with_all_params(self, async_client: AsyncPlaza) -> None:
         search = await async_client.search.query(
@@ -85,7 +79,6 @@ class TestAsyncSearch:
         )
         assert_matches_type(FeatureCollection, search, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_query(self, async_client: AsyncPlaza) -> None:
         response = await async_client.search.with_raw_response.query(
@@ -97,7 +90,6 @@ class TestAsyncSearch:
         search = await response.parse()
         assert_matches_type(FeatureCollection, search, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_query(self, async_client: AsyncPlaza) -> None:
         async with async_client.search.with_streaming_response.query(

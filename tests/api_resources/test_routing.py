@@ -22,7 +22,6 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestRouting:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_isochrone(self, client: Plaza) -> None:
         routing = client.routing.isochrone(
@@ -32,7 +31,6 @@ class TestRouting:
         )
         assert_matches_type(GeoJsonFeature, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_isochrone_with_all_params(self, client: Plaza) -> None:
         routing = client.routing.isochrone(
@@ -43,7 +41,6 @@ class TestRouting:
         )
         assert_matches_type(GeoJsonFeature, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_isochrone(self, client: Plaza) -> None:
         response = client.routing.with_raw_response.isochrone(
@@ -57,7 +54,6 @@ class TestRouting:
         routing = response.parse()
         assert_matches_type(GeoJsonFeature, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_isochrone(self, client: Plaza) -> None:
         with client.routing.with_streaming_response.isochrone(
@@ -73,7 +69,6 @@ class TestRouting:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_matrix(self, client: Plaza) -> None:
         routing = client.routing.matrix(
@@ -88,7 +83,6 @@ class TestRouting:
         )
         assert_matches_type(MatrixResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_matrix_with_all_params(self, client: Plaza) -> None:
         routing = client.routing.matrix(
@@ -104,7 +98,6 @@ class TestRouting:
         )
         assert_matches_type(MatrixResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_matrix(self, client: Plaza) -> None:
         response = client.routing.with_raw_response.matrix(
@@ -123,7 +116,6 @@ class TestRouting:
         routing = response.parse()
         assert_matches_type(MatrixResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_matrix(self, client: Plaza) -> None:
         with client.routing.with_streaming_response.matrix(
@@ -144,7 +136,6 @@ class TestRouting:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_nearest(self, client: Plaza) -> None:
         routing = client.routing.nearest(
@@ -153,7 +144,6 @@ class TestRouting:
         )
         assert_matches_type(NearestResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_nearest_with_all_params(self, client: Plaza) -> None:
         routing = client.routing.nearest(
@@ -163,7 +153,6 @@ class TestRouting:
         )
         assert_matches_type(NearestResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_nearest(self, client: Plaza) -> None:
         response = client.routing.with_raw_response.nearest(
@@ -176,7 +165,6 @@ class TestRouting:
         routing = response.parse()
         assert_matches_type(NearestResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_nearest(self, client: Plaza) -> None:
         with client.routing.with_streaming_response.nearest(
@@ -191,7 +179,6 @@ class TestRouting:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_route(self, client: Plaza) -> None:
         routing = client.routing.route(
@@ -206,7 +193,6 @@ class TestRouting:
         )
         assert_matches_type(RouteResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_route_with_all_params(self, client: Plaza) -> None:
         routing = client.routing.route(
@@ -222,7 +208,6 @@ class TestRouting:
         )
         assert_matches_type(RouteResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_route(self, client: Plaza) -> None:
         response = client.routing.with_raw_response.route(
@@ -241,7 +226,6 @@ class TestRouting:
         routing = response.parse()
         assert_matches_type(RouteResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_route(self, client: Plaza) -> None:
         with client.routing.with_streaming_response.route(
@@ -268,7 +252,6 @@ class TestAsyncRouting:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_isochrone(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.isochrone(
@@ -278,7 +261,6 @@ class TestAsyncRouting:
         )
         assert_matches_type(GeoJsonFeature, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_isochrone_with_all_params(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.isochrone(
@@ -289,7 +271,6 @@ class TestAsyncRouting:
         )
         assert_matches_type(GeoJsonFeature, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_isochrone(self, async_client: AsyncPlaza) -> None:
         response = await async_client.routing.with_raw_response.isochrone(
@@ -303,7 +284,6 @@ class TestAsyncRouting:
         routing = await response.parse()
         assert_matches_type(GeoJsonFeature, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_isochrone(self, async_client: AsyncPlaza) -> None:
         async with async_client.routing.with_streaming_response.isochrone(
@@ -319,7 +299,6 @@ class TestAsyncRouting:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_matrix(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.matrix(
@@ -334,7 +313,6 @@ class TestAsyncRouting:
         )
         assert_matches_type(MatrixResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_matrix_with_all_params(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.matrix(
@@ -350,7 +328,6 @@ class TestAsyncRouting:
         )
         assert_matches_type(MatrixResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_matrix(self, async_client: AsyncPlaza) -> None:
         response = await async_client.routing.with_raw_response.matrix(
@@ -369,7 +346,6 @@ class TestAsyncRouting:
         routing = await response.parse()
         assert_matches_type(MatrixResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_matrix(self, async_client: AsyncPlaza) -> None:
         async with async_client.routing.with_streaming_response.matrix(
@@ -390,7 +366,6 @@ class TestAsyncRouting:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_nearest(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.nearest(
@@ -399,7 +374,6 @@ class TestAsyncRouting:
         )
         assert_matches_type(NearestResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_nearest_with_all_params(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.nearest(
@@ -409,7 +383,6 @@ class TestAsyncRouting:
         )
         assert_matches_type(NearestResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_nearest(self, async_client: AsyncPlaza) -> None:
         response = await async_client.routing.with_raw_response.nearest(
@@ -422,7 +395,6 @@ class TestAsyncRouting:
         routing = await response.parse()
         assert_matches_type(NearestResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_nearest(self, async_client: AsyncPlaza) -> None:
         async with async_client.routing.with_streaming_response.nearest(
@@ -437,7 +409,6 @@ class TestAsyncRouting:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_route(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.route(
@@ -452,7 +423,6 @@ class TestAsyncRouting:
         )
         assert_matches_type(RouteResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_route_with_all_params(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.route(
@@ -468,7 +438,6 @@ class TestAsyncRouting:
         )
         assert_matches_type(RouteResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_route(self, async_client: AsyncPlaza) -> None:
         response = await async_client.routing.with_raw_response.route(
@@ -487,7 +456,6 @@ class TestAsyncRouting:
         routing = await response.parse()
         assert_matches_type(RouteResult, routing, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_route(self, async_client: AsyncPlaza) -> None:
         async with async_client.routing.with_streaming_response.route(
