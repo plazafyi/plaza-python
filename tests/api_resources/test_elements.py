@@ -20,7 +20,6 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestElements:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_retrieve(self, client: Plaza) -> None:
         element = client.elements.retrieve(
@@ -29,7 +28,6 @@ class TestElements:
         )
         assert_matches_type(GeoJsonFeature, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_retrieve(self, client: Plaza) -> None:
         response = client.elements.with_raw_response.retrieve(
@@ -42,7 +40,6 @@ class TestElements:
         element = response.parse()
         assert_matches_type(GeoJsonFeature, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_retrieve(self, client: Plaza) -> None:
         with client.elements.with_streaming_response.retrieve(
@@ -57,7 +54,6 @@ class TestElements:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_path_params_retrieve(self, client: Plaza) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `type` but received ''"):
@@ -66,7 +62,6 @@ class TestElements:
                 type="",
             )
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_batch(self, client: Plaza) -> None:
         element = client.elements.batch(
@@ -79,7 +74,6 @@ class TestElements:
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_batch(self, client: Plaza) -> None:
         response = client.elements.with_raw_response.batch(
@@ -96,7 +90,6 @@ class TestElements:
         element = response.parse()
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_batch(self, client: Plaza) -> None:
         with client.elements.with_streaming_response.batch(
@@ -115,7 +108,6 @@ class TestElements:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_nearby(self, client: Plaza) -> None:
         element = client.elements.nearby(
@@ -124,7 +116,6 @@ class TestElements:
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_nearby_with_all_params(self, client: Plaza) -> None:
         element = client.elements.nearby(
@@ -135,7 +126,6 @@ class TestElements:
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_nearby(self, client: Plaza) -> None:
         response = client.elements.with_raw_response.nearby(
@@ -148,7 +138,6 @@ class TestElements:
         element = response.parse()
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_nearby(self, client: Plaza) -> None:
         with client.elements.with_streaming_response.nearby(
@@ -163,13 +152,11 @@ class TestElements:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_query(self, client: Plaza) -> None:
         element = client.elements.query()
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_query_with_all_params(self, client: Plaza) -> None:
         element = client.elements.query(
@@ -181,7 +168,6 @@ class TestElements:
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_query(self, client: Plaza) -> None:
         response = client.elements.with_raw_response.query()
@@ -191,7 +177,6 @@ class TestElements:
         element = response.parse()
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_query(self, client: Plaza) -> None:
         with client.elements.with_streaming_response.query() as response:
@@ -209,7 +194,6 @@ class TestAsyncElements:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_retrieve(self, async_client: AsyncPlaza) -> None:
         element = await async_client.elements.retrieve(
@@ -218,7 +202,6 @@ class TestAsyncElements:
         )
         assert_matches_type(GeoJsonFeature, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_retrieve(self, async_client: AsyncPlaza) -> None:
         response = await async_client.elements.with_raw_response.retrieve(
@@ -231,7 +214,6 @@ class TestAsyncElements:
         element = await response.parse()
         assert_matches_type(GeoJsonFeature, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_retrieve(self, async_client: AsyncPlaza) -> None:
         async with async_client.elements.with_streaming_response.retrieve(
@@ -246,7 +228,6 @@ class TestAsyncElements:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_path_params_retrieve(self, async_client: AsyncPlaza) -> None:
         with pytest.raises(ValueError, match=r"Expected a non-empty value for `type` but received ''"):
@@ -255,7 +236,6 @@ class TestAsyncElements:
                 type="",
             )
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_batch(self, async_client: AsyncPlaza) -> None:
         element = await async_client.elements.batch(
@@ -268,7 +248,6 @@ class TestAsyncElements:
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_batch(self, async_client: AsyncPlaza) -> None:
         response = await async_client.elements.with_raw_response.batch(
@@ -285,7 +264,6 @@ class TestAsyncElements:
         element = await response.parse()
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_batch(self, async_client: AsyncPlaza) -> None:
         async with async_client.elements.with_streaming_response.batch(
@@ -304,7 +282,6 @@ class TestAsyncElements:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_nearby(self, async_client: AsyncPlaza) -> None:
         element = await async_client.elements.nearby(
@@ -313,7 +290,6 @@ class TestAsyncElements:
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_nearby_with_all_params(self, async_client: AsyncPlaza) -> None:
         element = await async_client.elements.nearby(
@@ -324,7 +300,6 @@ class TestAsyncElements:
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_nearby(self, async_client: AsyncPlaza) -> None:
         response = await async_client.elements.with_raw_response.nearby(
@@ -337,7 +312,6 @@ class TestAsyncElements:
         element = await response.parse()
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_nearby(self, async_client: AsyncPlaza) -> None:
         async with async_client.elements.with_streaming_response.nearby(
@@ -352,13 +326,11 @@ class TestAsyncElements:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_query(self, async_client: AsyncPlaza) -> None:
         element = await async_client.elements.query()
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_query_with_all_params(self, async_client: AsyncPlaza) -> None:
         element = await async_client.elements.query(
@@ -370,7 +342,6 @@ class TestAsyncElements:
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_query(self, async_client: AsyncPlaza) -> None:
         response = await async_client.elements.with_raw_response.query()
@@ -380,7 +351,6 @@ class TestAsyncElements:
         element = await response.parse()
         assert_matches_type(FeatureCollection, element, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_query(self, async_client: AsyncPlaza) -> None:
         async with async_client.elements.with_streaming_response.query() as response:

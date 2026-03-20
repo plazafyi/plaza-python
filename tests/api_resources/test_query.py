@@ -17,7 +17,6 @@ base_url = os.environ.get("TEST_API_BASE_URL", "http://127.0.0.1:4010")
 class TestQuery:
     parametrize = pytest.mark.parametrize("client", [False, True], indirect=True, ids=["loose", "strict"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_overpass(self, client: Plaza) -> None:
         query = client.query.overpass(
@@ -25,7 +24,6 @@ class TestQuery:
         )
         assert_matches_type(FeatureCollection, query, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_overpass(self, client: Plaza) -> None:
         response = client.query.with_raw_response.overpass(
@@ -37,7 +35,6 @@ class TestQuery:
         query = response.parse()
         assert_matches_type(FeatureCollection, query, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_overpass(self, client: Plaza) -> None:
         with client.query.with_streaming_response.overpass(
@@ -51,7 +48,6 @@ class TestQuery:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_method_sparql(self, client: Plaza) -> None:
         query = client.query.sparql(
@@ -59,7 +55,6 @@ class TestQuery:
         )
         assert_matches_type(SparqlResult, query, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_raw_response_sparql(self, client: Plaza) -> None:
         response = client.query.with_raw_response.sparql(
@@ -71,7 +66,6 @@ class TestQuery:
         query = response.parse()
         assert_matches_type(SparqlResult, query, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     def test_streaming_response_sparql(self, client: Plaza) -> None:
         with client.query.with_streaming_response.sparql(
@@ -91,7 +85,6 @@ class TestAsyncQuery:
         "async_client", [False, True, {"http_client": "aiohttp"}], indirect=True, ids=["loose", "strict", "aiohttp"]
     )
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_overpass(self, async_client: AsyncPlaza) -> None:
         query = await async_client.query.overpass(
@@ -99,7 +92,6 @@ class TestAsyncQuery:
         )
         assert_matches_type(FeatureCollection, query, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_overpass(self, async_client: AsyncPlaza) -> None:
         response = await async_client.query.with_raw_response.overpass(
@@ -111,7 +103,6 @@ class TestAsyncQuery:
         query = await response.parse()
         assert_matches_type(FeatureCollection, query, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_overpass(self, async_client: AsyncPlaza) -> None:
         async with async_client.query.with_streaming_response.overpass(
@@ -125,7 +116,6 @@ class TestAsyncQuery:
 
         assert cast(Any, response.is_closed) is True
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_method_sparql(self, async_client: AsyncPlaza) -> None:
         query = await async_client.query.sparql(
@@ -133,7 +123,6 @@ class TestAsyncQuery:
         )
         assert_matches_type(SparqlResult, query, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_raw_response_sparql(self, async_client: AsyncPlaza) -> None:
         response = await async_client.query.with_raw_response.sparql(
@@ -145,7 +134,6 @@ class TestAsyncQuery:
         query = await response.parse()
         assert_matches_type(SparqlResult, query, path=["response"])
 
-    @pytest.mark.skip(reason="Mock server doesn't support callbacks yet")
     @parametrize
     async def test_streaming_response_sparql(self, async_client: AsyncPlaza) -> None:
         async with async_client.query.with_streaming_response.sparql(
