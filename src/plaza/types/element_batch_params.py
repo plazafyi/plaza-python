@@ -10,9 +10,14 @@ __all__ = ["ElementBatchParams", "Element"]
 
 class ElementBatchParams(TypedDict, total=False):
     elements: Required[Iterable[Element]]
+    """Array of element references to fetch"""
 
 
 class Element(TypedDict, total=False):
+    """Reference to a single OSM element"""
+
     id: Required[int]
+    """OSM element ID"""
 
     type: Required[Literal["node", "way", "relation"]]
+    """OSM element type"""

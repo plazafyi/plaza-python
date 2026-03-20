@@ -8,10 +8,13 @@ __all__ = ["OptimizeProcessingResult"]
 
 
 class OptimizeProcessingResult(BaseModel):
-    """Async optimization in progress — poll with the job_id"""
+    """Async optimization in progress.
+
+    Poll `GET /api/v1/optimize/{job_id}` until the status changes to `completed` or `failed`.
+    """
 
     job_id: str
-    """Job ID for polling"""
+    """Job ID for polling the result"""
 
     status: Literal["processing"]
-    """Job status"""
+    """Always `processing`"""

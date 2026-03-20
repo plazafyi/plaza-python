@@ -4,18 +4,23 @@ from typing import Optional
 from typing_extensions import Literal
 
 from .._models import BaseModel
+from .optimize_completed_result import OptimizeCompletedResult
 
 __all__ = ["OptimizeJobStatus"]
 
 
 class OptimizeJobStatus(BaseModel):
-    """Status of an async optimization job"""
+    """Status of an async optimization job.
 
-    status: Literal["completed", "processing", "failed"]
-    """Job status"""
+    When `completed`, the `result` field contains the full OptimizeCompletedResult. When `processing`, the job is still running — poll again. Failed jobs return a standard Error response (HTTP 422), not this schema.
+    """
 
-    error: Optional[str] = None
-    """Error message when failed"""
+    status: Literal["completed", "processing"]
+    """Current job state"""
 
-    result: Optional[object] = None
-    """Optimization result when completed"""
+    result: Optional[OptimizeCompletedResult] = None
+    """Completed optimization result as a GeoJSON FeatureCollection.
+
+    Each Feature is a waypoint in optimized visit order. Top-level fields provide
+    summary statistics.
+    """

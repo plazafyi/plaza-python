@@ -20,28 +20,28 @@ class TestDatasets:
     @parametrize
     def test_method_create(self, client: Plaza) -> None:
         dataset = client.datasets.create(
-            name="name",
-            slug="slug",
+            name="NYC Bike Lanes",
+            slug="nyc-bike-lanes",
         )
         assert_matches_type(Dataset, dataset, path=["response"])
 
     @parametrize
     def test_method_create_with_all_params(self, client: Plaza) -> None:
         dataset = client.datasets.create(
-            name="name",
-            slug="slug",
+            name="NYC Bike Lanes",
+            slug="nyc-bike-lanes",
             attribution="attribution",
             description="description",
             license="license",
-            source_url="source_url",
+            source_url="https://example.com",
         )
         assert_matches_type(Dataset, dataset, path=["response"])
 
     @parametrize
     def test_raw_response_create(self, client: Plaza) -> None:
         response = client.datasets.with_raw_response.create(
-            name="name",
-            slug="slug",
+            name="NYC Bike Lanes",
+            slug="nyc-bike-lanes",
         )
 
         assert response.is_closed is True
@@ -52,8 +52,8 @@ class TestDatasets:
     @parametrize
     def test_streaming_response_create(self, client: Plaza) -> None:
         with client.datasets.with_streaming_response.create(
-            name="name",
-            slug="slug",
+            name="NYC Bike Lanes",
+            slug="nyc-bike-lanes",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -177,6 +177,14 @@ class TestDatasets:
             id="id",
             cursor="cursor",
             limit=0,
+            output_buffer=0,
+            output_centroid=True,
+            output_fields="output[fields]",
+            output_geometry=True,
+            output_include="output[include]",
+            output_precision=0,
+            output_simplify=0,
+            output_sort="output[sort]",
         )
         assert_matches_type(FeatureCollection, dataset, path=["response"])
 
@@ -220,28 +228,28 @@ class TestAsyncDatasets:
     @parametrize
     async def test_method_create(self, async_client: AsyncPlaza) -> None:
         dataset = await async_client.datasets.create(
-            name="name",
-            slug="slug",
+            name="NYC Bike Lanes",
+            slug="nyc-bike-lanes",
         )
         assert_matches_type(Dataset, dataset, path=["response"])
 
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncPlaza) -> None:
         dataset = await async_client.datasets.create(
-            name="name",
-            slug="slug",
+            name="NYC Bike Lanes",
+            slug="nyc-bike-lanes",
             attribution="attribution",
             description="description",
             license="license",
-            source_url="source_url",
+            source_url="https://example.com",
         )
         assert_matches_type(Dataset, dataset, path=["response"])
 
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncPlaza) -> None:
         response = await async_client.datasets.with_raw_response.create(
-            name="name",
-            slug="slug",
+            name="NYC Bike Lanes",
+            slug="nyc-bike-lanes",
         )
 
         assert response.is_closed is True
@@ -252,8 +260,8 @@ class TestAsyncDatasets:
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncPlaza) -> None:
         async with async_client.datasets.with_streaming_response.create(
-            name="name",
-            slug="slug",
+            name="NYC Bike Lanes",
+            slug="nyc-bike-lanes",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -377,6 +385,14 @@ class TestAsyncDatasets:
             id="id",
             cursor="cursor",
             limit=0,
+            output_buffer=0,
+            output_centroid=True,
+            output_fields="output[fields]",
+            output_geometry=True,
+            output_include="output[include]",
+            output_precision=0,
+            output_simplify=0,
+            output_sort="output[sort]",
         )
         assert_matches_type(FeatureCollection, dataset, path=["response"])
 

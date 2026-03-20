@@ -20,32 +20,62 @@ class TestOptimize:
     @parametrize
     def test_method_create(self, client: Plaza) -> None:
         optimize = client.optimize.create(
-            waypoints={
-                "coordinates": [0],
-                "type": "Point",
-            },
+            waypoints=[
+                {
+                    "lat": 48.8566,
+                    "lng": 2.3522,
+                },
+                {
+                    "lat": 48.8606,
+                    "lng": 2.3376,
+                },
+                {
+                    "lat": 48.8584,
+                    "lng": 2.2945,
+                },
+            ],
         )
         assert_matches_type(OptimizeResult, optimize, path=["response"])
 
     @parametrize
     def test_method_create_with_all_params(self, client: Plaza) -> None:
         optimize = client.optimize.create(
-            waypoints={
-                "coordinates": [0],
-                "type": "Point",
-            },
+            waypoints=[
+                {
+                    "lat": 48.8566,
+                    "lng": 2.3522,
+                },
+                {
+                    "lat": 48.8606,
+                    "lng": 2.3376,
+                },
+                {
+                    "lat": 48.8584,
+                    "lng": 2.2945,
+                },
+            ],
             mode="auto",
-            roundtrip=True,
+            roundtrip=False,
         )
         assert_matches_type(OptimizeResult, optimize, path=["response"])
 
     @parametrize
     def test_raw_response_create(self, client: Plaza) -> None:
         response = client.optimize.with_raw_response.create(
-            waypoints={
-                "coordinates": [0],
-                "type": "Point",
-            },
+            waypoints=[
+                {
+                    "lat": 48.8566,
+                    "lng": 2.3522,
+                },
+                {
+                    "lat": 48.8606,
+                    "lng": 2.3376,
+                },
+                {
+                    "lat": 48.8584,
+                    "lng": 2.2945,
+                },
+            ],
         )
 
         assert response.is_closed is True
@@ -56,10 +86,20 @@ class TestOptimize:
     @parametrize
     def test_streaming_response_create(self, client: Plaza) -> None:
         with client.optimize.with_streaming_response.create(
-            waypoints={
-                "coordinates": [0],
-                "type": "Point",
-            },
+            waypoints=[
+                {
+                    "lat": 48.8566,
+                    "lng": 2.3522,
+                },
+                {
+                    "lat": 48.8606,
+                    "lng": 2.3376,
+                },
+                {
+                    "lat": 48.8584,
+                    "lng": 2.2945,
+                },
+            ],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -116,32 +156,62 @@ class TestAsyncOptimize:
     @parametrize
     async def test_method_create(self, async_client: AsyncPlaza) -> None:
         optimize = await async_client.optimize.create(
-            waypoints={
-                "coordinates": [0],
-                "type": "Point",
-            },
+            waypoints=[
+                {
+                    "lat": 48.8566,
+                    "lng": 2.3522,
+                },
+                {
+                    "lat": 48.8606,
+                    "lng": 2.3376,
+                },
+                {
+                    "lat": 48.8584,
+                    "lng": 2.2945,
+                },
+            ],
         )
         assert_matches_type(OptimizeResult, optimize, path=["response"])
 
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncPlaza) -> None:
         optimize = await async_client.optimize.create(
-            waypoints={
-                "coordinates": [0],
-                "type": "Point",
-            },
+            waypoints=[
+                {
+                    "lat": 48.8566,
+                    "lng": 2.3522,
+                },
+                {
+                    "lat": 48.8606,
+                    "lng": 2.3376,
+                },
+                {
+                    "lat": 48.8584,
+                    "lng": 2.2945,
+                },
+            ],
             mode="auto",
-            roundtrip=True,
+            roundtrip=False,
         )
         assert_matches_type(OptimizeResult, optimize, path=["response"])
 
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncPlaza) -> None:
         response = await async_client.optimize.with_raw_response.create(
-            waypoints={
-                "coordinates": [0],
-                "type": "Point",
-            },
+            waypoints=[
+                {
+                    "lat": 48.8566,
+                    "lng": 2.3522,
+                },
+                {
+                    "lat": 48.8606,
+                    "lng": 2.3376,
+                },
+                {
+                    "lat": 48.8584,
+                    "lng": 2.2945,
+                },
+            ],
         )
 
         assert response.is_closed is True
@@ -152,10 +222,20 @@ class TestAsyncOptimize:
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncPlaza) -> None:
         async with async_client.optimize.with_streaming_response.create(
-            waypoints={
-                "coordinates": [0],
-                "type": "Point",
-            },
+            waypoints=[
+                {
+                    "lat": 48.8566,
+                    "lng": 2.3522,
+                },
+                {
+                    "lat": 48.8606,
+                    "lng": 2.3376,
+                },
+                {
+                    "lat": 48.8584,
+                    "lng": 2.2945,
+                },
+            ],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

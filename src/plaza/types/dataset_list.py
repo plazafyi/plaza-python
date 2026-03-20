@@ -9,4 +9,7 @@ __all__ = ["DatasetList"]
 
 
 class DatasetList(BaseModel):
+    """List of all available datasets."""
+
     datasets: List[Dataset]
+    """Array of dataset metadata objects"""

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, cast
+from typing import Any, Iterable, cast
 from typing_extensions import Literal
 
 import httpx
@@ -21,7 +21,6 @@ from .._response import (
 from .._base_client import make_request_options
 from ..types.optimize_result import OptimizeResult
 from ..types.optimize_job_status import OptimizeJobStatus
-from ..types.geo_json_geometry_param import GeoJsonGeometryParam
 
 __all__ = ["OptimizeResource", "AsyncOptimizeResource"]
 
@@ -49,7 +48,7 @@ class OptimizeResource(SyncAPIResource):
     def create(
         self,
         *,
-        waypoints: GeoJsonGeometryParam,
+        waypoints: Iterable[optimize_create_params.Waypoint],
         mode: Literal["auto", "foot", "bicycle"] | Omit = omit,
         roundtrip: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -63,11 +62,11 @@ class OptimizeResource(SyncAPIResource):
         Optimize route through waypoints
 
         Args:
-          waypoints: Waypoints to visit (GeoJSON MultiPoint geometry, minimum 2 points)
+          waypoints: Waypoints to visit in optimized order (2-50 points)
 
-          mode: Travel mode (default: auto)
+          mode: Travel mode (default: `auto`)
 
-          roundtrip: Whether route returns to start (default: true)
+          roundtrip: Whether the route should return to the starting waypoint (default: true)
 
           extra_headers: Send extra headers
 
@@ -77,7 +76,6 @@ class OptimizeResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return cast(
             OptimizeResult,
             self._post(
@@ -154,7 +152,7 @@ class AsyncOptimizeResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        waypoints: GeoJsonGeometryParam,
+        waypoints: Iterable[optimize_create_params.Waypoint],
         mode: Literal["auto", "foot", "bicycle"] | Omit = omit,
         roundtrip: bool | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
@@ -168,11 +166,11 @@ class AsyncOptimizeResource(AsyncAPIResource):
         Optimize route through waypoints
 
         Args:
-          waypoints: Waypoints to visit (GeoJSON MultiPoint geometry, minimum 2 points)
+          waypoints: Waypoints to visit in optimized order (2-50 points)
 
-          mode: Travel mode (default: auto)
+          mode: Travel mode (default: `auto`)
 
-          roundtrip: Whether route returns to start (default: true)
+          roundtrip: Whether the route should return to the starting waypoint (default: true)
 
           extra_headers: Send extra headers
 
@@ -182,7 +180,6 @@ class AsyncOptimizeResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return cast(
             OptimizeResult,
             await self._post(

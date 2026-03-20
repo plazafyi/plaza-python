@@ -10,19 +10,19 @@ __all__ = ["DatasetCreateParams"]
 
 class DatasetCreateParams(TypedDict, total=False):
     name: Required[str]
-    """Dataset name"""
+    """Human-readable dataset name"""
 
     slug: Required[str]
-    """URL-friendly slug"""
+    """URL-friendly identifier (lowercase, hyphens, no spaces)"""
 
     attribution: Optional[str]
-    """Attribution text"""
+    """Required attribution text"""
 
     description: Optional[str]
     """Dataset description"""
 
     license: Optional[str]
-    """License identifier"""
+    """License identifier (e.g. CC-BY-4.0)"""
 
     source_url: Optional[str]
     """Source data URL"""

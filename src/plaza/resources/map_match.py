@@ -19,7 +19,6 @@ from .._response import (
 )
 from .._base_client import make_request_options
 from ..types.map_match_result import MapMatchResult
-from ..types.geo_json_geometry_param import GeoJsonGeometryParam
 
 __all__ = ["MapMatchResource", "AsyncMapMatchResource"]
 
@@ -47,7 +46,7 @@ class MapMatchResource(SyncAPIResource):
     def match(
         self,
         *,
-        trace: GeoJsonGeometryParam,
+        coordinates: Iterable[map_match_match_params.Coordinate],
         radiuses: Optional[Iterable[float]] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -60,9 +59,10 @@ class MapMatchResource(SyncAPIResource):
         Match GPS coordinates to the road network
 
         Args:
-          trace: GPS trace (GeoJSON LineString geometry)
+          coordinates: GPS coordinates to match, in order of travel (max 50 points)
 
-          radiuses: Search radius per coordinate in meters (optional, default 50)
+          radiuses: Search radius per coordinate in meters. Must have the same length as
+              `coordinates` or be omitted entirely. Default: 50m per point.
 
           extra_headers: Send extra headers
 
@@ -72,12 +72,11 @@ class MapMatchResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return self._post(
             "/api/v1/map-match",
             body=maybe_transform(
                 {
-                    "trace": trace,
+                    "coordinates": coordinates,
                     "radiuses": radiuses,
                 },
                 map_match_match_params.MapMatchMatchParams,
@@ -112,7 +111,7 @@ class AsyncMapMatchResource(AsyncAPIResource):
     async def match(
         self,
         *,
-        trace: GeoJsonGeometryParam,
+        coordinates: Iterable[map_match_match_params.Coordinate],
         radiuses: Optional[Iterable[float]] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -125,9 +124,10 @@ class AsyncMapMatchResource(AsyncAPIResource):
         Match GPS coordinates to the road network
 
         Args:
-          trace: GPS trace (GeoJSON LineString geometry)
+          coordinates: GPS coordinates to match, in order of travel (max 50 points)
 
-          radiuses: Search radius per coordinate in meters (optional, default 50)
+          radiuses: Search radius per coordinate in meters. Must have the same length as
+              `coordinates` or be omitted entirely. Default: 50m per point.
 
           extra_headers: Send extra headers
 
@@ -137,12 +137,11 @@ class AsyncMapMatchResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return await self._post(
             "/api/v1/map-match",
             body=await async_maybe_transform(
                 {
-                    "trace": trace,
+                    "coordinates": coordinates,
                     "radiuses": radiuses,
                 },
                 map_match_match_params.MapMatchMatchParams,

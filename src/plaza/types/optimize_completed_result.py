@@ -1,33 +1,59 @@
 # File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
 
-from typing import List, Optional
+from typing import List
 from typing_extensions import Literal
 
 from .._models import BaseModel
 from .geo_json_geometry import GeoJsonGeometry
 
-__all__ = ["OptimizeCompletedResult", "Properties"]
+__all__ = ["OptimizeCompletedResult", "Feature", "FeatureProperties"]
 
 
-class Properties(BaseModel):
-    distance: Optional[float] = None
-    """Total distance in meters"""
+class FeatureProperties(BaseModel):
+    cost_s: float
+    """
+    Travel time in seconds from the previous waypoint to this one (0 for the first
+    waypoint)
+    """
 
-    duration: Optional[float] = None
-    """Estimated duration in seconds"""
+    cumulative_cost_s: float
+    """Cumulative travel time in seconds from the start to this waypoint"""
 
-    waypoint_order: Optional[List[int]] = None
-    """Optimized waypoint ordering"""
+    waypoint_index: int
+    """Position of this waypoint in the optimized visit order (0-based)"""
+
+
+class Feature(BaseModel):
+    """GeoJSON Point Feature representing an optimized waypoint with cost data."""
+
+    geometry: GeoJsonGeometry
+    """GeoJSON Geometry object per RFC 7946.
+
+    Coordinates use [longitude, latitude] order. 3D coordinates [lng, lat,
+    elevation] are used for elevation endpoints.
+    """
+
+    properties: FeatureProperties
+
+    type: Literal["Feature"]
 
 
 class OptimizeCompletedResult(BaseModel):
-    """Completed optimization — GeoJSON Feature with optimized route"""
+    """Completed optimization result as a GeoJSON FeatureCollection.
 
-    geometry: GeoJsonGeometry
+    Each Feature is a waypoint in optimized visit order. Top-level fields provide summary statistics.
+    """
 
-    properties: Properties
+    features: List[Feature]
+    """Waypoints in optimized visit order"""
 
-    status: Literal["completed"]
-    """Job status"""
+    optimization: str
+    """Optimization method used (e.g. `nearest_neighbor`, `2opt`)"""
 
-    type: Literal["Feature"]
+    roundtrip: bool
+    """Whether the route returns to the starting waypoint"""
+
+    total_cost_s: float
+    """Total travel time for the optimized route in seconds"""
+
+    type: Literal["FeatureCollection"]

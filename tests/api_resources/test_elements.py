@@ -67,9 +67,13 @@ class TestElements:
         element = client.elements.batch(
             elements=[
                 {
-                    "id": 0,
+                    "id": 21154906,
                     "type": "node",
-                }
+                },
+                {
+                    "id": 4589123,
+                    "type": "way",
+                },
             ],
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
@@ -79,9 +83,13 @@ class TestElements:
         response = client.elements.with_raw_response.batch(
             elements=[
                 {
-                    "id": 0,
+                    "id": 21154906,
                     "type": "node",
-                }
+                },
+                {
+                    "id": 4589123,
+                    "type": "way",
+                },
             ],
         )
 
@@ -95,9 +103,13 @@ class TestElements:
         with client.elements.with_streaming_response.batch(
             elements=[
                 {
-                    "id": 0,
+                    "id": 21154906,
                     "type": "node",
-                }
+                },
+                {
+                    "id": 4589123,
+                    "type": "way",
+                },
             ],
         ) as response:
             assert not response.is_closed
@@ -109,29 +121,57 @@ class TestElements:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
+    def test_method_lookup(self, client: Plaza) -> None:
+        element = client.elements.lookup()
+        assert_matches_type(GeoJsonFeature, element, path=["response"])
+
+    @parametrize
+    def test_raw_response_lookup(self, client: Plaza) -> None:
+        response = client.elements.with_raw_response.lookup()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        element = response.parse()
+        assert_matches_type(GeoJsonFeature, element, path=["response"])
+
+    @parametrize
+    def test_streaming_response_lookup(self, client: Plaza) -> None:
+        with client.elements.with_streaming_response.lookup() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            element = response.parse()
+            assert_matches_type(GeoJsonFeature, element, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
     def test_method_nearby(self, client: Plaza) -> None:
-        element = client.elements.nearby(
-            lat=0,
-            lng=0,
-        )
+        element = client.elements.nearby()
         assert_matches_type(FeatureCollection, element, path=["response"])
 
     @parametrize
     def test_method_nearby_with_all_params(self, client: Plaza) -> None:
         element = client.elements.nearby(
             lat=0,
-            lng=0,
             limit=0,
+            lng=0,
+            near="near",
+            output_buffer=0,
+            output_centroid=True,
+            output_fields="output[fields]",
+            output_geometry=True,
+            output_include="output[include]",
+            output_precision=0,
+            output_simplify=0,
+            output_sort="output[sort]",
             radius=0,
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
     @parametrize
     def test_raw_response_nearby(self, client: Plaza) -> None:
-        response = client.elements.with_raw_response.nearby(
-            lat=0,
-            lng=0,
-        )
+        response = client.elements.with_raw_response.nearby()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -140,10 +180,51 @@ class TestElements:
 
     @parametrize
     def test_streaming_response_nearby(self, client: Plaza) -> None:
-        with client.elements.with_streaming_response.nearby(
+        with client.elements.with_streaming_response.nearby() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            element = response.parse()
+            assert_matches_type(FeatureCollection, element, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_method_nearby_post(self, client: Plaza) -> None:
+        element = client.elements.nearby_post()
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    def test_method_nearby_post_with_all_params(self, client: Plaza) -> None:
+        element = client.elements.nearby_post(
             lat=0,
+            limit=0,
             lng=0,
-        ) as response:
+            near="near",
+            output_buffer=0,
+            output_centroid=True,
+            output_fields="output[fields]",
+            output_geometry=True,
+            output_include="output[include]",
+            output_precision=0,
+            output_simplify=0,
+            output_sort="output[sort]",
+            radius=0,
+        )
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    def test_raw_response_nearby_post(self, client: Plaza) -> None:
+        response = client.elements.with_raw_response.nearby_post()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        element = response.parse()
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    def test_streaming_response_nearby_post(self, client: Plaza) -> None:
+        with client.elements.with_streaming_response.nearby_post() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -161,10 +242,25 @@ class TestElements:
     def test_method_query_with_all_params(self, client: Plaza) -> None:
         element = client.elements.query(
             bbox="bbox",
+            contains="contains",
+            crosses="crosses",
             cursor="cursor",
             h3="h3",
+            intersects="intersects",
             limit=0,
+            near="near",
+            output_buffer=0,
+            output_centroid=True,
+            output_fields="output[fields]",
+            output_geometry=True,
+            output_include="output[include]",
+            output_precision=0,
+            output_simplify=0,
+            output_sort="output[sort]",
+            radius=0,
+            touches="touches",
             type="type",
+            within="within",
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
@@ -180,6 +276,57 @@ class TestElements:
     @parametrize
     def test_streaming_response_query(self, client: Plaza) -> None:
         with client.elements.with_streaming_response.query() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            element = response.parse()
+            assert_matches_type(FeatureCollection, element, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    def test_method_query_post(self, client: Plaza) -> None:
+        element = client.elements.query_post()
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    def test_method_query_post_with_all_params(self, client: Plaza) -> None:
+        element = client.elements.query_post(
+            bbox="bbox",
+            contains="contains",
+            crosses="crosses",
+            cursor="cursor",
+            h3="h3",
+            intersects="intersects",
+            limit=0,
+            near="near",
+            output_buffer=0,
+            output_centroid=True,
+            output_fields="output[fields]",
+            output_geometry=True,
+            output_include="output[include]",
+            output_precision=0,
+            output_simplify=0,
+            output_sort="output[sort]",
+            radius=0,
+            touches="touches",
+            type="type",
+            within="within",
+        )
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    def test_raw_response_query_post(self, client: Plaza) -> None:
+        response = client.elements.with_raw_response.query_post()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        element = response.parse()
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    def test_streaming_response_query_post(self, client: Plaza) -> None:
+        with client.elements.with_streaming_response.query_post() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -241,9 +388,13 @@ class TestAsyncElements:
         element = await async_client.elements.batch(
             elements=[
                 {
-                    "id": 0,
+                    "id": 21154906,
                     "type": "node",
-                }
+                },
+                {
+                    "id": 4589123,
+                    "type": "way",
+                },
             ],
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
@@ -253,9 +404,13 @@ class TestAsyncElements:
         response = await async_client.elements.with_raw_response.batch(
             elements=[
                 {
-                    "id": 0,
+                    "id": 21154906,
                     "type": "node",
-                }
+                },
+                {
+                    "id": 4589123,
+                    "type": "way",
+                },
             ],
         )
 
@@ -269,9 +424,13 @@ class TestAsyncElements:
         async with async_client.elements.with_streaming_response.batch(
             elements=[
                 {
-                    "id": 0,
+                    "id": 21154906,
                     "type": "node",
-                }
+                },
+                {
+                    "id": 4589123,
+                    "type": "way",
+                },
             ],
         ) as response:
             assert not response.is_closed
@@ -283,29 +442,57 @@ class TestAsyncElements:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
+    async def test_method_lookup(self, async_client: AsyncPlaza) -> None:
+        element = await async_client.elements.lookup()
+        assert_matches_type(GeoJsonFeature, element, path=["response"])
+
+    @parametrize
+    async def test_raw_response_lookup(self, async_client: AsyncPlaza) -> None:
+        response = await async_client.elements.with_raw_response.lookup()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        element = await response.parse()
+        assert_matches_type(GeoJsonFeature, element, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_lookup(self, async_client: AsyncPlaza) -> None:
+        async with async_client.elements.with_streaming_response.lookup() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            element = await response.parse()
+            assert_matches_type(GeoJsonFeature, element, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
     async def test_method_nearby(self, async_client: AsyncPlaza) -> None:
-        element = await async_client.elements.nearby(
-            lat=0,
-            lng=0,
-        )
+        element = await async_client.elements.nearby()
         assert_matches_type(FeatureCollection, element, path=["response"])
 
     @parametrize
     async def test_method_nearby_with_all_params(self, async_client: AsyncPlaza) -> None:
         element = await async_client.elements.nearby(
             lat=0,
-            lng=0,
             limit=0,
+            lng=0,
+            near="near",
+            output_buffer=0,
+            output_centroid=True,
+            output_fields="output[fields]",
+            output_geometry=True,
+            output_include="output[include]",
+            output_precision=0,
+            output_simplify=0,
+            output_sort="output[sort]",
             radius=0,
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
     @parametrize
     async def test_raw_response_nearby(self, async_client: AsyncPlaza) -> None:
-        response = await async_client.elements.with_raw_response.nearby(
-            lat=0,
-            lng=0,
-        )
+        response = await async_client.elements.with_raw_response.nearby()
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -314,10 +501,51 @@ class TestAsyncElements:
 
     @parametrize
     async def test_streaming_response_nearby(self, async_client: AsyncPlaza) -> None:
-        async with async_client.elements.with_streaming_response.nearby(
+        async with async_client.elements.with_streaming_response.nearby() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            element = await response.parse()
+            assert_matches_type(FeatureCollection, element, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_method_nearby_post(self, async_client: AsyncPlaza) -> None:
+        element = await async_client.elements.nearby_post()
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    async def test_method_nearby_post_with_all_params(self, async_client: AsyncPlaza) -> None:
+        element = await async_client.elements.nearby_post(
             lat=0,
+            limit=0,
             lng=0,
-        ) as response:
+            near="near",
+            output_buffer=0,
+            output_centroid=True,
+            output_fields="output[fields]",
+            output_geometry=True,
+            output_include="output[include]",
+            output_precision=0,
+            output_simplify=0,
+            output_sort="output[sort]",
+            radius=0,
+        )
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    async def test_raw_response_nearby_post(self, async_client: AsyncPlaza) -> None:
+        response = await async_client.elements.with_raw_response.nearby_post()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        element = await response.parse()
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_nearby_post(self, async_client: AsyncPlaza) -> None:
+        async with async_client.elements.with_streaming_response.nearby_post() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -335,10 +563,25 @@ class TestAsyncElements:
     async def test_method_query_with_all_params(self, async_client: AsyncPlaza) -> None:
         element = await async_client.elements.query(
             bbox="bbox",
+            contains="contains",
+            crosses="crosses",
             cursor="cursor",
             h3="h3",
+            intersects="intersects",
             limit=0,
+            near="near",
+            output_buffer=0,
+            output_centroid=True,
+            output_fields="output[fields]",
+            output_geometry=True,
+            output_include="output[include]",
+            output_precision=0,
+            output_simplify=0,
+            output_sort="output[sort]",
+            radius=0,
+            touches="touches",
             type="type",
+            within="within",
         )
         assert_matches_type(FeatureCollection, element, path=["response"])
 
@@ -354,6 +597,57 @@ class TestAsyncElements:
     @parametrize
     async def test_streaming_response_query(self, async_client: AsyncPlaza) -> None:
         async with async_client.elements.with_streaming_response.query() as response:
+            assert not response.is_closed
+            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+
+            element = await response.parse()
+            assert_matches_type(FeatureCollection, element, path=["response"])
+
+        assert cast(Any, response.is_closed) is True
+
+    @parametrize
+    async def test_method_query_post(self, async_client: AsyncPlaza) -> None:
+        element = await async_client.elements.query_post()
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    async def test_method_query_post_with_all_params(self, async_client: AsyncPlaza) -> None:
+        element = await async_client.elements.query_post(
+            bbox="bbox",
+            contains="contains",
+            crosses="crosses",
+            cursor="cursor",
+            h3="h3",
+            intersects="intersects",
+            limit=0,
+            near="near",
+            output_buffer=0,
+            output_centroid=True,
+            output_fields="output[fields]",
+            output_geometry=True,
+            output_include="output[include]",
+            output_precision=0,
+            output_simplify=0,
+            output_sort="output[sort]",
+            radius=0,
+            touches="touches",
+            type="type",
+            within="within",
+        )
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    async def test_raw_response_query_post(self, async_client: AsyncPlaza) -> None:
+        response = await async_client.elements.with_raw_response.query_post()
+
+        assert response.is_closed is True
+        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
+        element = await response.parse()
+        assert_matches_type(FeatureCollection, element, path=["response"])
+
+    @parametrize
+    async def test_streaming_response_query_post(self, async_client: AsyncPlaza) -> None:
+        async with async_client.elements.with_streaming_response.query_post() as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 

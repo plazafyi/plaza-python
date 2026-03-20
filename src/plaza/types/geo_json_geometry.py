@@ -9,7 +9,17 @@ __all__ = ["GeoJsonGeometry"]
 
 
 class GeoJsonGeometry(BaseModel):
+    """GeoJSON Geometry object per RFC 7946.
+
+    Coordinates use [longitude, latitude] order. 3D coordinates [lng, lat, elevation] are used for elevation endpoints.
+    """
+
     coordinates: Union[List[float], List[List[float]], List[List[List[float]]], List[List[List[List[float]]]]]
-    """GeoJSON coordinates array (nesting depth varies by geometry type)"""
+    """Coordinates array.
+
+    Nesting depth varies by geometry type: Point = [lng, lat], LineString = [[lng,
+    lat], ...], Polygon = [[[lng, lat], ...], ...], etc.
+    """
 
     type: Literal["Point", "LineString", "Polygon", "MultiPoint", "MultiLineString", "MultiPolygon"]
+    """Geometry type"""
