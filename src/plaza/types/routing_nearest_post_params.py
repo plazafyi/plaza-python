@@ -6,33 +6,24 @@ from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["RoutingIsochroneParams"]
+__all__ = ["RoutingNearestPostParams"]
 
 
-class RoutingIsochroneParams(TypedDict, total=False):
+class RoutingNearestPostParams(TypedDict, total=False):
     lat: Required[float]
     """Latitude"""
 
     lng: Required[float]
     """Longitude"""
 
-    time: Required[float]
-    """Travel time in seconds (1-7200)"""
-
-    mode: str
-    """Travel mode (auto, foot, bicycle)"""
-
     output_fields: Annotated[str, PropertyInfo(alias="output[fields]")]
     """Comma-separated property fields to include"""
 
-    output_geometry: Annotated[bool, PropertyInfo(alias="output[geometry]")]
-    """Include geometry (default true)"""
-
     output_include: Annotated[str, PropertyInfo(alias="output[include]")]
-    """Extra computed fields: bbox, center"""
+    """Extra computed fields: bbox, distance, center"""
 
     output_precision: Annotated[int, PropertyInfo(alias="output[precision]")]
     """Coordinate decimal precision (1-15, default 7)"""
 
-    output_simplify: Annotated[float, PropertyInfo(alias="output[simplify]")]
-    """Simplify geometry tolerance in meters"""
+    radius: int
+    """Search radius in meters (default 500, max 5000)"""

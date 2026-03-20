@@ -6,15 +6,37 @@ from typing_extensions import Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["DatasetFeaturesParams"]
+__all__ = ["ElementQueryPostParams"]
 
 
-class DatasetFeaturesParams(TypedDict, total=False):
+class ElementQueryPostParams(TypedDict, total=False):
+    bbox: str
+    """Legacy shorthand.
+
+    Bounding box: south,west,north,east. Use spatial predicates (near, within,
+    intersects) instead.
+    """
+
+    contains: str
+    """Geometry that features must contain"""
+
+    crosses: str
+    """Geometry that features must cross"""
+
     cursor: str
     """Cursor for pagination"""
 
+    h3: str
+    """Legacy shorthand. H3 cell index. Use spatial predicates instead."""
+
+    intersects: str
+    """Geometry that features must intersect"""
+
     limit: int
-    """Maximum results"""
+    """Maximum results (default 100, max 10000)"""
+
+    near: str
+    """Point geometry for proximity search (lat,lng). Requires radius."""
 
     output_buffer: Annotated[float, PropertyInfo(alias="output[buffer]")]
     """Buffer geometry by meters"""
@@ -39,3 +61,15 @@ class DatasetFeaturesParams(TypedDict, total=False):
 
     output_sort: Annotated[str, PropertyInfo(alias="output[sort]")]
     """Sort by: distance, name, osm_id"""
+
+    radius: float
+    """Search radius in meters (for near) or buffer distance (for other predicates)"""
+
+    touches: str
+    """Geometry that features must touch"""
+
+    type: str
+    """Element types (comma-separated: node,way,relation)"""
+
+    within: str
+    """Geometry that features must be within"""

@@ -2,25 +2,25 @@
 
 from __future__ import annotations
 
-from typing_extensions import Annotated, TypedDict
+from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["DatasetFeaturesParams"]
+__all__ = ["RoutingIsochronePostParams"]
 
 
-class DatasetFeaturesParams(TypedDict, total=False):
-    cursor: str
-    """Cursor for pagination"""
+class RoutingIsochronePostParams(TypedDict, total=False):
+    lat: Required[float]
+    """Latitude"""
 
-    limit: int
-    """Maximum results"""
+    lng: Required[float]
+    """Longitude"""
 
-    output_buffer: Annotated[float, PropertyInfo(alias="output[buffer]")]
-    """Buffer geometry by meters"""
+    time: Required[float]
+    """Travel time in seconds (1-7200)"""
 
-    output_centroid: Annotated[bool, PropertyInfo(alias="output[centroid]")]
-    """Replace geometry with centroid"""
+    mode: str
+    """Travel mode (auto, foot, bicycle)"""
 
     output_fields: Annotated[str, PropertyInfo(alias="output[fields]")]
     """Comma-separated property fields to include"""
@@ -29,13 +29,10 @@ class DatasetFeaturesParams(TypedDict, total=False):
     """Include geometry (default true)"""
 
     output_include: Annotated[str, PropertyInfo(alias="output[include]")]
-    """Extra computed fields: bbox, distance, center"""
+    """Extra computed fields: bbox, center"""
 
     output_precision: Annotated[int, PropertyInfo(alias="output[precision]")]
     """Coordinate decimal precision (1-15, default 7)"""
 
     output_simplify: Annotated[float, PropertyInfo(alias="output[simplify]")]
     """Simplify geometry tolerance in meters"""
-
-    output_sort: Annotated[str, PropertyInfo(alias="output[sort]")]
-    """Sort by: distance, name, osm_id"""

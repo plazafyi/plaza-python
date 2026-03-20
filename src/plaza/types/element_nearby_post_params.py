@@ -6,15 +6,24 @@ from typing_extensions import Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["DatasetFeaturesParams"]
+__all__ = ["ElementNearbyPostParams"]
 
 
-class DatasetFeaturesParams(TypedDict, total=False):
-    cursor: str
-    """Cursor for pagination"""
+class ElementNearbyPostParams(TypedDict, total=False):
+    lat: float
+    """Legacy shorthand. Latitude (-90 to 90). Use near param instead."""
 
     limit: int
-    """Maximum results"""
+    """Maximum results (default 20, max 100)"""
+
+    lng: float
+    """Legacy shorthand. Longitude (-180 to 180). Use near param instead."""
+
+    near: str
+    """Point geometry for proximity search (lat,lng or GeoJSON).
+
+    Alternative to lat/lng params.
+    """
 
     output_buffer: Annotated[float, PropertyInfo(alias="output[buffer]")]
     """Buffer geometry by meters"""
@@ -39,3 +48,6 @@ class DatasetFeaturesParams(TypedDict, total=False):
 
     output_sort: Annotated[str, PropertyInfo(alias="output[sort]")]
     """Sort by: distance, name, osm_id"""
+
+    radius: int
+    """Search radius in meters (default 500, max 10000)"""

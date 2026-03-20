@@ -10,9 +10,12 @@ __all__ = ["ElevationBatchResult"]
 
 
 class ElevationBatchResult(BaseModel):
-    """GeoJSON FeatureCollection of elevation Point Features with 3D coordinates"""
+    """GeoJSON FeatureCollection of elevation Point Features with 3D coordinates.
+
+    Order matches the input coordinates array.
+    """
 
     features: List[ElevationLookupResult]
-    """Elevation Point Features for each queried point"""
+    """Elevation results in the same order as input coordinates"""
 
     type: Literal["FeatureCollection"]

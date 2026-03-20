@@ -65,15 +65,15 @@ class DatasetsResource(SyncAPIResource):
         Create a new dataset (admin only)
 
         Args:
-          name: Dataset name
+          name: Human-readable dataset name
 
-          slug: URL-friendly slug
+          slug: URL-friendly identifier (lowercase, hyphens, no spaces)
 
-          attribution: Attribution text
+          attribution: Required attribution text
 
           description: Dataset description
 
-          license: License identifier
+          license: License identifier (e.g. CC-BY-4.0)
 
           source_url: Source data URL
 
@@ -196,6 +196,14 @@ class DatasetsResource(SyncAPIResource):
         *,
         cursor: str | Omit = omit,
         limit: int | Omit = omit,
+        output_buffer: float | Omit = omit,
+        output_centroid: bool | Omit = omit,
+        output_fields: str | Omit = omit,
+        output_geometry: bool | Omit = omit,
+        output_include: str | Omit = omit,
+        output_precision: int | Omit = omit,
+        output_simplify: float | Omit = omit,
+        output_sort: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -211,6 +219,22 @@ class DatasetsResource(SyncAPIResource):
 
           limit: Maximum results
 
+          output_buffer: Buffer geometry by meters
+
+          output_centroid: Replace geometry with centroid
+
+          output_fields: Comma-separated property fields to include
+
+          output_geometry: Include geometry (default true)
+
+          output_include: Extra computed fields: bbox, distance, center
+
+          output_precision: Coordinate decimal precision (1-15, default 7)
+
+          output_simplify: Simplify geometry tolerance in meters
+
+          output_sort: Sort by: distance, name, osm_id
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -221,7 +245,6 @@ class DatasetsResource(SyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return self._get(
             path_template("/api/v1/datasets/{id}/features", id=id),
             options=make_request_options(
@@ -233,6 +256,14 @@ class DatasetsResource(SyncAPIResource):
                     {
                         "cursor": cursor,
                         "limit": limit,
+                        "output_buffer": output_buffer,
+                        "output_centroid": output_centroid,
+                        "output_fields": output_fields,
+                        "output_geometry": output_geometry,
+                        "output_include": output_include,
+                        "output_precision": output_precision,
+                        "output_simplify": output_simplify,
+                        "output_sort": output_sort,
                     },
                     dataset_features_params.DatasetFeaturesParams,
                 ),
@@ -281,15 +312,15 @@ class AsyncDatasetsResource(AsyncAPIResource):
         Create a new dataset (admin only)
 
         Args:
-          name: Dataset name
+          name: Human-readable dataset name
 
-          slug: URL-friendly slug
+          slug: URL-friendly identifier (lowercase, hyphens, no spaces)
 
-          attribution: Attribution text
+          attribution: Required attribution text
 
           description: Dataset description
 
-          license: License identifier
+          license: License identifier (e.g. CC-BY-4.0)
 
           source_url: Source data URL
 
@@ -412,6 +443,14 @@ class AsyncDatasetsResource(AsyncAPIResource):
         *,
         cursor: str | Omit = omit,
         limit: int | Omit = omit,
+        output_buffer: float | Omit = omit,
+        output_centroid: bool | Omit = omit,
+        output_fields: str | Omit = omit,
+        output_geometry: bool | Omit = omit,
+        output_include: str | Omit = omit,
+        output_precision: int | Omit = omit,
+        output_simplify: float | Omit = omit,
+        output_sort: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -427,6 +466,22 @@ class AsyncDatasetsResource(AsyncAPIResource):
 
           limit: Maximum results
 
+          output_buffer: Buffer geometry by meters
+
+          output_centroid: Replace geometry with centroid
+
+          output_fields: Comma-separated property fields to include
+
+          output_geometry: Include geometry (default true)
+
+          output_include: Extra computed fields: bbox, distance, center
+
+          output_precision: Coordinate decimal precision (1-15, default 7)
+
+          output_simplify: Simplify geometry tolerance in meters
+
+          output_sort: Sort by: distance, name, osm_id
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -437,7 +492,6 @@ class AsyncDatasetsResource(AsyncAPIResource):
         """
         if not id:
             raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return await self._get(
             path_template("/api/v1/datasets/{id}/features", id=id),
             options=make_request_options(
@@ -449,6 +503,14 @@ class AsyncDatasetsResource(AsyncAPIResource):
                     {
                         "cursor": cursor,
                         "limit": limit,
+                        "output_buffer": output_buffer,
+                        "output_centroid": output_centroid,
+                        "output_fields": output_fields,
+                        "output_geometry": output_geometry,
+                        "output_include": output_include,
+                        "output_precision": output_precision,
+                        "output_simplify": output_simplify,
+                        "output_sort": output_sort,
                     },
                     dataset_features_params.DatasetFeaturesParams,
                 ),

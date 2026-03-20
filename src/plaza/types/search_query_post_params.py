@@ -2,40 +2,31 @@
 
 from __future__ import annotations
 
-from typing_extensions import Annotated, TypedDict
+from typing_extensions import Required, Annotated, TypedDict
 
 from .._utils import PropertyInfo
 
-__all__ = ["DatasetFeaturesParams"]
+__all__ = ["SearchQueryPostParams"]
 
 
-class DatasetFeaturesParams(TypedDict, total=False):
+class SearchQueryPostParams(TypedDict, total=False):
+    q: Required[str]
+    """Search query string"""
+
     cursor: str
     """Cursor for pagination"""
 
     limit: int
-    """Maximum results"""
-
-    output_buffer: Annotated[float, PropertyInfo(alias="output[buffer]")]
-    """Buffer geometry by meters"""
-
-    output_centroid: Annotated[bool, PropertyInfo(alias="output[centroid]")]
-    """Replace geometry with centroid"""
+    """Maximum results (default 25, max 100)"""
 
     output_fields: Annotated[str, PropertyInfo(alias="output[fields]")]
     """Comma-separated property fields to include"""
-
-    output_geometry: Annotated[bool, PropertyInfo(alias="output[geometry]")]
-    """Include geometry (default true)"""
 
     output_include: Annotated[str, PropertyInfo(alias="output[include]")]
     """Extra computed fields: bbox, distance, center"""
 
     output_precision: Annotated[int, PropertyInfo(alias="output[precision]")]
     """Coordinate decimal precision (1-15, default 7)"""
-
-    output_simplify: Annotated[float, PropertyInfo(alias="output[simplify]")]
-    """Simplify geometry tolerance in meters"""
 
     output_sort: Annotated[str, PropertyInfo(alias="output[sort]")]
     """Sort by: distance, name, osm_id"""

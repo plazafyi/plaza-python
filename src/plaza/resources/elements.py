@@ -6,7 +6,13 @@ from typing import Iterable
 
 import httpx
 
-from ..types import element_batch_params, element_query_params, element_nearby_params
+from ..types import (
+    element_batch_params,
+    element_query_params,
+    element_nearby_params,
+    element_query_post_params,
+    element_nearby_post_params,
+)
 from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from .._utils import path_template, maybe_transform, async_maybe_transform
 from .._compat import cached_property
@@ -70,7 +76,6 @@ class ElementsResource(SyncAPIResource):
         """
         if not type:
             raise ValueError(f"Expected a non-empty value for `type` but received {type!r}")
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return self._get(
             path_template("/api/v1/features/{type}/{id}", type=type, id=id),
             options=make_request_options(
@@ -94,6 +99,8 @@ class ElementsResource(SyncAPIResource):
         Fetch multiple features by type and ID
 
         Args:
+          elements: Array of element references to fetch
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -102,7 +109,6 @@ class ElementsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return self._post(
             "/api/v1/features/batch",
             body=maybe_transform({"elements": elements}, element_batch_params.ElementBatchParams),
@@ -112,12 +118,40 @@ class ElementsResource(SyncAPIResource):
             cast_to=FeatureCollection,
         )
 
+    def lookup(
+        self,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> GeoJsonFeature:
+        """Get feature by type and ID"""
+        return self._post(
+            "/api/v1/features/lookup",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=GeoJsonFeature,
+        )
+
     def nearby(
         self,
         *,
-        lat: float,
-        lng: float,
+        lat: float | Omit = omit,
         limit: int | Omit = omit,
+        lng: float | Omit = omit,
+        near: str | Omit = omit,
+        output_buffer: float | Omit = omit,
+        output_centroid: bool | Omit = omit,
+        output_fields: str | Omit = omit,
+        output_geometry: bool | Omit = omit,
+        output_include: str | Omit = omit,
+        output_precision: int | Omit = omit,
+        output_simplify: float | Omit = omit,
+        output_sort: str | Omit = omit,
         radius: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -126,15 +160,35 @@ class ElementsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FeatureCollection:
-        """
-        Find features near a geographic point
+        """Find features near a geographic point
 
         Args:
-          lat: Latitude (-90 to 90)
+          lat: Legacy shorthand.
 
-          lng: Longitude (-180 to 180)
+        Latitude (-90 to 90). Use near param instead.
 
           limit: Maximum results (default 20, max 100)
+
+          lng: Legacy shorthand. Longitude (-180 to 180). Use near param instead.
+
+          near: Point geometry for proximity search (lat,lng or GeoJSON). Alternative to lat/lng
+              params.
+
+          output_buffer: Buffer geometry by meters
+
+          output_centroid: Replace geometry with centroid
+
+          output_fields: Comma-separated property fields to include
+
+          output_geometry: Include geometry (default true)
+
+          output_include: Extra computed fields: bbox, distance, center
+
+          output_precision: Coordinate decimal precision (1-15, default 7)
+
+          output_simplify: Simplify geometry tolerance in meters
+
+          output_sort: Sort by: distance, name, osm_id
 
           radius: Search radius in meters (default 500, max 10000)
 
@@ -146,7 +200,6 @@ class ElementsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return self._get(
             "/api/v1/features/nearby",
             options=make_request_options(
@@ -157,8 +210,17 @@ class ElementsResource(SyncAPIResource):
                 query=maybe_transform(
                     {
                         "lat": lat,
-                        "lng": lng,
                         "limit": limit,
+                        "lng": lng,
+                        "near": near,
+                        "output_buffer": output_buffer,
+                        "output_centroid": output_centroid,
+                        "output_fields": output_fields,
+                        "output_geometry": output_geometry,
+                        "output_include": output_include,
+                        "output_precision": output_precision,
+                        "output_simplify": output_simplify,
+                        "output_sort": output_sort,
                         "radius": radius,
                     },
                     element_nearby_params.ElementNearbyParams,
@@ -167,14 +229,22 @@ class ElementsResource(SyncAPIResource):
             cast_to=FeatureCollection,
         )
 
-    def query(
+    def nearby_post(
         self,
         *,
-        bbox: str | Omit = omit,
-        cursor: str | Omit = omit,
-        h3: str | Omit = omit,
+        lat: float | Omit = omit,
         limit: int | Omit = omit,
-        type: str | Omit = omit,
+        lng: float | Omit = omit,
+        near: str | Omit = omit,
+        output_buffer: float | Omit = omit,
+        output_centroid: bool | Omit = omit,
+        output_fields: str | Omit = omit,
+        output_geometry: bool | Omit = omit,
+        output_include: str | Omit = omit,
+        output_precision: int | Omit = omit,
+        output_simplify: float | Omit = omit,
+        output_sort: str | Omit = omit,
+        radius: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -182,19 +252,37 @@ class ElementsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FeatureCollection:
-        """
-        Query features by bounding box or H3 cell
+        """Find features near a geographic point
 
         Args:
-          bbox: Bounding box: south,west,north,east. At least one of bbox or h3 is required.
+          lat: Legacy shorthand.
 
-          cursor: Cursor for pagination
+        Latitude (-90 to 90). Use near param instead.
 
-          h3: H3 cell index. At least one of bbox or h3 is required.
+          limit: Maximum results (default 20, max 100)
 
-          limit: Maximum results (default 100, max 10000)
+          lng: Legacy shorthand. Longitude (-180 to 180). Use near param instead.
 
-          type: Element types (comma-separated: node,way,relation)
+          near: Point geometry for proximity search (lat,lng or GeoJSON). Alternative to lat/lng
+              params.
+
+          output_buffer: Buffer geometry by meters
+
+          output_centroid: Replace geometry with centroid
+
+          output_fields: Comma-separated property fields to include
+
+          output_geometry: Include geometry (default true)
+
+          output_include: Extra computed fields: bbox, distance, center
+
+          output_precision: Coordinate decimal precision (1-15, default 7)
+
+          output_simplify: Simplify geometry tolerance in meters
+
+          output_sort: Sort by: distance, name, osm_id
+
+          radius: Search radius in meters (default 500, max 10000)
 
           extra_headers: Send extra headers
 
@@ -204,7 +292,118 @@ class ElementsResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
+        return self._post(
+            "/api/v1/features/nearby",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "lat": lat,
+                        "limit": limit,
+                        "lng": lng,
+                        "near": near,
+                        "output_buffer": output_buffer,
+                        "output_centroid": output_centroid,
+                        "output_fields": output_fields,
+                        "output_geometry": output_geometry,
+                        "output_include": output_include,
+                        "output_precision": output_precision,
+                        "output_simplify": output_simplify,
+                        "output_sort": output_sort,
+                        "radius": radius,
+                    },
+                    element_nearby_post_params.ElementNearbyPostParams,
+                ),
+            ),
+            cast_to=FeatureCollection,
+        )
+
+    def query(
+        self,
+        *,
+        bbox: str | Omit = omit,
+        contains: str | Omit = omit,
+        crosses: str | Omit = omit,
+        cursor: str | Omit = omit,
+        h3: str | Omit = omit,
+        intersects: str | Omit = omit,
+        limit: int | Omit = omit,
+        near: str | Omit = omit,
+        output_buffer: float | Omit = omit,
+        output_centroid: bool | Omit = omit,
+        output_fields: str | Omit = omit,
+        output_geometry: bool | Omit = omit,
+        output_include: str | Omit = omit,
+        output_precision: int | Omit = omit,
+        output_simplify: float | Omit = omit,
+        output_sort: str | Omit = omit,
+        radius: float | Omit = omit,
+        touches: str | Omit = omit,
+        type: str | Omit = omit,
+        within: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FeatureCollection:
+        """
+        Query features by spatial predicate, bounding box, or H3 cell
+
+        Args:
+          bbox: Legacy shorthand. Bounding box: south,west,north,east. Use spatial predicates
+              (near, within, intersects) instead.
+
+          contains: Geometry that features must contain
+
+          crosses: Geometry that features must cross
+
+          cursor: Cursor for pagination
+
+          h3: Legacy shorthand. H3 cell index. Use spatial predicates instead.
+
+          intersects: Geometry that features must intersect
+
+          limit: Maximum results (default 100, max 10000)
+
+          near: Point geometry for proximity search (lat,lng). Requires radius.
+
+          output_buffer: Buffer geometry by meters
+
+          output_centroid: Replace geometry with centroid
+
+          output_fields: Comma-separated property fields to include
+
+          output_geometry: Include geometry (default true)
+
+          output_include: Extra computed fields: bbox, distance, center
+
+          output_precision: Coordinate decimal precision (1-15, default 7)
+
+          output_simplify: Simplify geometry tolerance in meters
+
+          output_sort: Sort by: distance, name, osm_id
+
+          radius: Search radius in meters (for near) or buffer distance (for other predicates)
+
+          touches: Geometry that features must touch
+
+          type: Element types (comma-separated: node,way,relation)
+
+          within: Geometry that features must be within
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
         return self._get(
             "/api/v1/features",
             options=make_request_options(
@@ -215,12 +414,146 @@ class ElementsResource(SyncAPIResource):
                 query=maybe_transform(
                     {
                         "bbox": bbox,
+                        "contains": contains,
+                        "crosses": crosses,
                         "cursor": cursor,
                         "h3": h3,
+                        "intersects": intersects,
                         "limit": limit,
+                        "near": near,
+                        "output_buffer": output_buffer,
+                        "output_centroid": output_centroid,
+                        "output_fields": output_fields,
+                        "output_geometry": output_geometry,
+                        "output_include": output_include,
+                        "output_precision": output_precision,
+                        "output_simplify": output_simplify,
+                        "output_sort": output_sort,
+                        "radius": radius,
+                        "touches": touches,
                         "type": type,
+                        "within": within,
                     },
                     element_query_params.ElementQueryParams,
+                ),
+            ),
+            cast_to=FeatureCollection,
+        )
+
+    def query_post(
+        self,
+        *,
+        bbox: str | Omit = omit,
+        contains: str | Omit = omit,
+        crosses: str | Omit = omit,
+        cursor: str | Omit = omit,
+        h3: str | Omit = omit,
+        intersects: str | Omit = omit,
+        limit: int | Omit = omit,
+        near: str | Omit = omit,
+        output_buffer: float | Omit = omit,
+        output_centroid: bool | Omit = omit,
+        output_fields: str | Omit = omit,
+        output_geometry: bool | Omit = omit,
+        output_include: str | Omit = omit,
+        output_precision: int | Omit = omit,
+        output_simplify: float | Omit = omit,
+        output_sort: str | Omit = omit,
+        radius: float | Omit = omit,
+        touches: str | Omit = omit,
+        type: str | Omit = omit,
+        within: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FeatureCollection:
+        """
+        Query features by spatial predicate, bounding box, or H3 cell
+
+        Args:
+          bbox: Legacy shorthand. Bounding box: south,west,north,east. Use spatial predicates
+              (near, within, intersects) instead.
+
+          contains: Geometry that features must contain
+
+          crosses: Geometry that features must cross
+
+          cursor: Cursor for pagination
+
+          h3: Legacy shorthand. H3 cell index. Use spatial predicates instead.
+
+          intersects: Geometry that features must intersect
+
+          limit: Maximum results (default 100, max 10000)
+
+          near: Point geometry for proximity search (lat,lng). Requires radius.
+
+          output_buffer: Buffer geometry by meters
+
+          output_centroid: Replace geometry with centroid
+
+          output_fields: Comma-separated property fields to include
+
+          output_geometry: Include geometry (default true)
+
+          output_include: Extra computed fields: bbox, distance, center
+
+          output_precision: Coordinate decimal precision (1-15, default 7)
+
+          output_simplify: Simplify geometry tolerance in meters
+
+          output_sort: Sort by: distance, name, osm_id
+
+          radius: Search radius in meters (for near) or buffer distance (for other predicates)
+
+          touches: Geometry that features must touch
+
+          type: Element types (comma-separated: node,way,relation)
+
+          within: Geometry that features must be within
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return self._post(
+            "/api/v1/features",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform(
+                    {
+                        "bbox": bbox,
+                        "contains": contains,
+                        "crosses": crosses,
+                        "cursor": cursor,
+                        "h3": h3,
+                        "intersects": intersects,
+                        "limit": limit,
+                        "near": near,
+                        "output_buffer": output_buffer,
+                        "output_centroid": output_centroid,
+                        "output_fields": output_fields,
+                        "output_geometry": output_geometry,
+                        "output_include": output_include,
+                        "output_precision": output_precision,
+                        "output_simplify": output_simplify,
+                        "output_sort": output_sort,
+                        "radius": radius,
+                        "touches": touches,
+                        "type": type,
+                        "within": within,
+                    },
+                    element_query_post_params.ElementQueryPostParams,
                 ),
             ),
             cast_to=FeatureCollection,
@@ -273,7 +606,6 @@ class AsyncElementsResource(AsyncAPIResource):
         """
         if not type:
             raise ValueError(f"Expected a non-empty value for `type` but received {type!r}")
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return await self._get(
             path_template("/api/v1/features/{type}/{id}", type=type, id=id),
             options=make_request_options(
@@ -297,6 +629,8 @@ class AsyncElementsResource(AsyncAPIResource):
         Fetch multiple features by type and ID
 
         Args:
+          elements: Array of element references to fetch
+
           extra_headers: Send extra headers
 
           extra_query: Add additional query parameters to the request
@@ -305,7 +639,6 @@ class AsyncElementsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return await self._post(
             "/api/v1/features/batch",
             body=await async_maybe_transform({"elements": elements}, element_batch_params.ElementBatchParams),
@@ -315,12 +648,40 @@ class AsyncElementsResource(AsyncAPIResource):
             cast_to=FeatureCollection,
         )
 
+    async def lookup(
+        self,
+        *,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> GeoJsonFeature:
+        """Get feature by type and ID"""
+        return await self._post(
+            "/api/v1/features/lookup",
+            options=make_request_options(
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+            ),
+            cast_to=GeoJsonFeature,
+        )
+
     async def nearby(
         self,
         *,
-        lat: float,
-        lng: float,
+        lat: float | Omit = omit,
         limit: int | Omit = omit,
+        lng: float | Omit = omit,
+        near: str | Omit = omit,
+        output_buffer: float | Omit = omit,
+        output_centroid: bool | Omit = omit,
+        output_fields: str | Omit = omit,
+        output_geometry: bool | Omit = omit,
+        output_include: str | Omit = omit,
+        output_precision: int | Omit = omit,
+        output_simplify: float | Omit = omit,
+        output_sort: str | Omit = omit,
         radius: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
@@ -329,15 +690,35 @@ class AsyncElementsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FeatureCollection:
-        """
-        Find features near a geographic point
+        """Find features near a geographic point
 
         Args:
-          lat: Latitude (-90 to 90)
+          lat: Legacy shorthand.
 
-          lng: Longitude (-180 to 180)
+        Latitude (-90 to 90). Use near param instead.
 
           limit: Maximum results (default 20, max 100)
+
+          lng: Legacy shorthand. Longitude (-180 to 180). Use near param instead.
+
+          near: Point geometry for proximity search (lat,lng or GeoJSON). Alternative to lat/lng
+              params.
+
+          output_buffer: Buffer geometry by meters
+
+          output_centroid: Replace geometry with centroid
+
+          output_fields: Comma-separated property fields to include
+
+          output_geometry: Include geometry (default true)
+
+          output_include: Extra computed fields: bbox, distance, center
+
+          output_precision: Coordinate decimal precision (1-15, default 7)
+
+          output_simplify: Simplify geometry tolerance in meters
+
+          output_sort: Sort by: distance, name, osm_id
 
           radius: Search radius in meters (default 500, max 10000)
 
@@ -349,7 +730,6 @@ class AsyncElementsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
         return await self._get(
             "/api/v1/features/nearby",
             options=make_request_options(
@@ -360,8 +740,17 @@ class AsyncElementsResource(AsyncAPIResource):
                 query=await async_maybe_transform(
                     {
                         "lat": lat,
-                        "lng": lng,
                         "limit": limit,
+                        "lng": lng,
+                        "near": near,
+                        "output_buffer": output_buffer,
+                        "output_centroid": output_centroid,
+                        "output_fields": output_fields,
+                        "output_geometry": output_geometry,
+                        "output_include": output_include,
+                        "output_precision": output_precision,
+                        "output_simplify": output_simplify,
+                        "output_sort": output_sort,
                         "radius": radius,
                     },
                     element_nearby_params.ElementNearbyParams,
@@ -370,14 +759,22 @@ class AsyncElementsResource(AsyncAPIResource):
             cast_to=FeatureCollection,
         )
 
-    async def query(
+    async def nearby_post(
         self,
         *,
-        bbox: str | Omit = omit,
-        cursor: str | Omit = omit,
-        h3: str | Omit = omit,
+        lat: float | Omit = omit,
         limit: int | Omit = omit,
-        type: str | Omit = omit,
+        lng: float | Omit = omit,
+        near: str | Omit = omit,
+        output_buffer: float | Omit = omit,
+        output_centroid: bool | Omit = omit,
+        output_fields: str | Omit = omit,
+        output_geometry: bool | Omit = omit,
+        output_include: str | Omit = omit,
+        output_precision: int | Omit = omit,
+        output_simplify: float | Omit = omit,
+        output_sort: str | Omit = omit,
+        radius: int | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -385,19 +782,37 @@ class AsyncElementsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> FeatureCollection:
-        """
-        Query features by bounding box or H3 cell
+        """Find features near a geographic point
 
         Args:
-          bbox: Bounding box: south,west,north,east. At least one of bbox or h3 is required.
+          lat: Legacy shorthand.
 
-          cursor: Cursor for pagination
+        Latitude (-90 to 90). Use near param instead.
 
-          h3: H3 cell index. At least one of bbox or h3 is required.
+          limit: Maximum results (default 20, max 100)
 
-          limit: Maximum results (default 100, max 10000)
+          lng: Legacy shorthand. Longitude (-180 to 180). Use near param instead.
 
-          type: Element types (comma-separated: node,way,relation)
+          near: Point geometry for proximity search (lat,lng or GeoJSON). Alternative to lat/lng
+              params.
+
+          output_buffer: Buffer geometry by meters
+
+          output_centroid: Replace geometry with centroid
+
+          output_fields: Comma-separated property fields to include
+
+          output_geometry: Include geometry (default true)
+
+          output_include: Extra computed fields: bbox, distance, center
+
+          output_precision: Coordinate decimal precision (1-15, default 7)
+
+          output_simplify: Simplify geometry tolerance in meters
+
+          output_sort: Sort by: distance, name, osm_id
+
+          radius: Search radius in meters (default 500, max 10000)
 
           extra_headers: Send extra headers
 
@@ -407,7 +822,118 @@ class AsyncElementsResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        extra_headers = {"Accept": "application/geo+json", **(extra_headers or {})}
+        return await self._post(
+            "/api/v1/features/nearby",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "lat": lat,
+                        "limit": limit,
+                        "lng": lng,
+                        "near": near,
+                        "output_buffer": output_buffer,
+                        "output_centroid": output_centroid,
+                        "output_fields": output_fields,
+                        "output_geometry": output_geometry,
+                        "output_include": output_include,
+                        "output_precision": output_precision,
+                        "output_simplify": output_simplify,
+                        "output_sort": output_sort,
+                        "radius": radius,
+                    },
+                    element_nearby_post_params.ElementNearbyPostParams,
+                ),
+            ),
+            cast_to=FeatureCollection,
+        )
+
+    async def query(
+        self,
+        *,
+        bbox: str | Omit = omit,
+        contains: str | Omit = omit,
+        crosses: str | Omit = omit,
+        cursor: str | Omit = omit,
+        h3: str | Omit = omit,
+        intersects: str | Omit = omit,
+        limit: int | Omit = omit,
+        near: str | Omit = omit,
+        output_buffer: float | Omit = omit,
+        output_centroid: bool | Omit = omit,
+        output_fields: str | Omit = omit,
+        output_geometry: bool | Omit = omit,
+        output_include: str | Omit = omit,
+        output_precision: int | Omit = omit,
+        output_simplify: float | Omit = omit,
+        output_sort: str | Omit = omit,
+        radius: float | Omit = omit,
+        touches: str | Omit = omit,
+        type: str | Omit = omit,
+        within: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FeatureCollection:
+        """
+        Query features by spatial predicate, bounding box, or H3 cell
+
+        Args:
+          bbox: Legacy shorthand. Bounding box: south,west,north,east. Use spatial predicates
+              (near, within, intersects) instead.
+
+          contains: Geometry that features must contain
+
+          crosses: Geometry that features must cross
+
+          cursor: Cursor for pagination
+
+          h3: Legacy shorthand. H3 cell index. Use spatial predicates instead.
+
+          intersects: Geometry that features must intersect
+
+          limit: Maximum results (default 100, max 10000)
+
+          near: Point geometry for proximity search (lat,lng). Requires radius.
+
+          output_buffer: Buffer geometry by meters
+
+          output_centroid: Replace geometry with centroid
+
+          output_fields: Comma-separated property fields to include
+
+          output_geometry: Include geometry (default true)
+
+          output_include: Extra computed fields: bbox, distance, center
+
+          output_precision: Coordinate decimal precision (1-15, default 7)
+
+          output_simplify: Simplify geometry tolerance in meters
+
+          output_sort: Sort by: distance, name, osm_id
+
+          radius: Search radius in meters (for near) or buffer distance (for other predicates)
+
+          touches: Geometry that features must touch
+
+          type: Element types (comma-separated: node,way,relation)
+
+          within: Geometry that features must be within
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
         return await self._get(
             "/api/v1/features",
             options=make_request_options(
@@ -418,12 +944,146 @@ class AsyncElementsResource(AsyncAPIResource):
                 query=await async_maybe_transform(
                     {
                         "bbox": bbox,
+                        "contains": contains,
+                        "crosses": crosses,
                         "cursor": cursor,
                         "h3": h3,
+                        "intersects": intersects,
                         "limit": limit,
+                        "near": near,
+                        "output_buffer": output_buffer,
+                        "output_centroid": output_centroid,
+                        "output_fields": output_fields,
+                        "output_geometry": output_geometry,
+                        "output_include": output_include,
+                        "output_precision": output_precision,
+                        "output_simplify": output_simplify,
+                        "output_sort": output_sort,
+                        "radius": radius,
+                        "touches": touches,
                         "type": type,
+                        "within": within,
                     },
                     element_query_params.ElementQueryParams,
+                ),
+            ),
+            cast_to=FeatureCollection,
+        )
+
+    async def query_post(
+        self,
+        *,
+        bbox: str | Omit = omit,
+        contains: str | Omit = omit,
+        crosses: str | Omit = omit,
+        cursor: str | Omit = omit,
+        h3: str | Omit = omit,
+        intersects: str | Omit = omit,
+        limit: int | Omit = omit,
+        near: str | Omit = omit,
+        output_buffer: float | Omit = omit,
+        output_centroid: bool | Omit = omit,
+        output_fields: str | Omit = omit,
+        output_geometry: bool | Omit = omit,
+        output_include: str | Omit = omit,
+        output_precision: int | Omit = omit,
+        output_simplify: float | Omit = omit,
+        output_sort: str | Omit = omit,
+        radius: float | Omit = omit,
+        touches: str | Omit = omit,
+        type: str | Omit = omit,
+        within: str | Omit = omit,
+        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
+        # The extra values given here take precedence over values defined on the client or passed to this method.
+        extra_headers: Headers | None = None,
+        extra_query: Query | None = None,
+        extra_body: Body | None = None,
+        timeout: float | httpx.Timeout | None | NotGiven = not_given,
+    ) -> FeatureCollection:
+        """
+        Query features by spatial predicate, bounding box, or H3 cell
+
+        Args:
+          bbox: Legacy shorthand. Bounding box: south,west,north,east. Use spatial predicates
+              (near, within, intersects) instead.
+
+          contains: Geometry that features must contain
+
+          crosses: Geometry that features must cross
+
+          cursor: Cursor for pagination
+
+          h3: Legacy shorthand. H3 cell index. Use spatial predicates instead.
+
+          intersects: Geometry that features must intersect
+
+          limit: Maximum results (default 100, max 10000)
+
+          near: Point geometry for proximity search (lat,lng). Requires radius.
+
+          output_buffer: Buffer geometry by meters
+
+          output_centroid: Replace geometry with centroid
+
+          output_fields: Comma-separated property fields to include
+
+          output_geometry: Include geometry (default true)
+
+          output_include: Extra computed fields: bbox, distance, center
+
+          output_precision: Coordinate decimal precision (1-15, default 7)
+
+          output_simplify: Simplify geometry tolerance in meters
+
+          output_sort: Sort by: distance, name, osm_id
+
+          radius: Search radius in meters (for near) or buffer distance (for other predicates)
+
+          touches: Geometry that features must touch
+
+          type: Element types (comma-separated: node,way,relation)
+
+          within: Geometry that features must be within
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
+        return await self._post(
+            "/api/v1/features",
+            options=make_request_options(
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform(
+                    {
+                        "bbox": bbox,
+                        "contains": contains,
+                        "crosses": crosses,
+                        "cursor": cursor,
+                        "h3": h3,
+                        "intersects": intersects,
+                        "limit": limit,
+                        "near": near,
+                        "output_buffer": output_buffer,
+                        "output_centroid": output_centroid,
+                        "output_fields": output_fields,
+                        "output_geometry": output_geometry,
+                        "output_include": output_include,
+                        "output_precision": output_precision,
+                        "output_simplify": output_simplify,
+                        "output_sort": output_sort,
+                        "radius": radius,
+                        "touches": touches,
+                        "type": type,
+                        "within": within,
+                    },
+                    element_query_post_params.ElementQueryPostParams,
                 ),
             ),
             cast_to=FeatureCollection,
@@ -440,11 +1100,20 @@ class ElementsResourceWithRawResponse:
         self.batch = to_raw_response_wrapper(
             elements.batch,
         )
+        self.lookup = to_raw_response_wrapper(
+            elements.lookup,
+        )
         self.nearby = to_raw_response_wrapper(
             elements.nearby,
         )
+        self.nearby_post = to_raw_response_wrapper(
+            elements.nearby_post,
+        )
         self.query = to_raw_response_wrapper(
             elements.query,
+        )
+        self.query_post = to_raw_response_wrapper(
+            elements.query_post,
         )
 
 
@@ -458,11 +1127,20 @@ class AsyncElementsResourceWithRawResponse:
         self.batch = async_to_raw_response_wrapper(
             elements.batch,
         )
+        self.lookup = async_to_raw_response_wrapper(
+            elements.lookup,
+        )
         self.nearby = async_to_raw_response_wrapper(
             elements.nearby,
         )
+        self.nearby_post = async_to_raw_response_wrapper(
+            elements.nearby_post,
+        )
         self.query = async_to_raw_response_wrapper(
             elements.query,
+        )
+        self.query_post = async_to_raw_response_wrapper(
+            elements.query_post,
         )
 
 
@@ -476,11 +1154,20 @@ class ElementsResourceWithStreamingResponse:
         self.batch = to_streamed_response_wrapper(
             elements.batch,
         )
+        self.lookup = to_streamed_response_wrapper(
+            elements.lookup,
+        )
         self.nearby = to_streamed_response_wrapper(
             elements.nearby,
         )
+        self.nearby_post = to_streamed_response_wrapper(
+            elements.nearby_post,
+        )
         self.query = to_streamed_response_wrapper(
             elements.query,
+        )
+        self.query_post = to_streamed_response_wrapper(
+            elements.query_post,
         )
 
 
@@ -494,9 +1181,18 @@ class AsyncElementsResourceWithStreamingResponse:
         self.batch = async_to_streamed_response_wrapper(
             elements.batch,
         )
+        self.lookup = async_to_streamed_response_wrapper(
+            elements.lookup,
+        )
         self.nearby = async_to_streamed_response_wrapper(
             elements.nearby,
         )
+        self.nearby_post = async_to_streamed_response_wrapper(
+            elements.nearby_post,
+        )
         self.query = async_to_streamed_response_wrapper(
             elements.query,
+        )
+        self.query_post = async_to_streamed_response_wrapper(
+            elements.query_post,
         )

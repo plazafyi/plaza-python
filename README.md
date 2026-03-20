@@ -43,9 +43,8 @@ client = Plaza(
     environment="local",
 )
 
-feature_collection = client.elements.nearby(
-    lat=48.8584,
-    lng=0,
+feature_collection = client.elements.query(
+    near="48.8584,2.2945",
     radius=500,
 )
 print(feature_collection.features)
@@ -73,9 +72,8 @@ client = AsyncPlaza(
 
 
 async def main() -> None:
-    feature_collection = await client.elements.nearby(
-        lat=48.8584,
-        lng=0,
+    feature_collection = await client.elements.query(
+        near="48.8584,2.2945",
         radius=500,
     )
     print(feature_collection.features)
@@ -111,9 +109,8 @@ async def main() -> None:
         api_key=os.environ.get("PLAZA_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        feature_collection = await client.elements.nearby(
-            lat=48.8584,
-            lng=0,
+        feature_collection = await client.elements.query(
+            near="48.8584,2.2945",
             radius=500,
         )
         print(feature_collection.features)
@@ -140,17 +137,17 @@ from plaza import Plaza
 
 client = Plaza()
 
-matrix_result = client.routing.matrix(
-    destinations={
-        "coordinates": [0],
-        "type": "Point",
+route_result = client.routing.route(
+    destination={
+        "lat": 48.8584,
+        "lng": 2.2945,
     },
-    origins={
-        "coordinates": [0],
-        "type": "Point",
+    origin={
+        "lat": 48.8566,
+        "lng": 2.3522,
     },
 )
-print(matrix_result.destinations)
+print(route_result.destination)
 ```
 
 ## Handling errors
@@ -169,9 +166,8 @@ from plaza import Plaza
 client = Plaza()
 
 try:
-    client.elements.nearby(
-        lat=48.8584,
-        lng=0,
+    client.elements.query(
+        near="48.8584,2.2945",
         radius=500,
     )
 except plaza.APIConnectionError as e:
@@ -216,9 +212,8 @@ client = Plaza(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).elements.nearby(
-    lat=48.8584,
-    lng=0,
+client.with_options(max_retries=5).elements.query(
+    near="48.8584,2.2945",
     radius=500,
 )
 ```
@@ -243,9 +238,8 @@ client = Plaza(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).elements.nearby(
-    lat=48.8584,
-    lng=0,
+client.with_options(timeout=5.0).elements.query(
+    near="48.8584,2.2945",
     radius=500,
 )
 ```
@@ -288,14 +282,13 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from plaza import Plaza
 
 client = Plaza()
-response = client.elements.with_raw_response.nearby(
-    lat=48.8584,
-    lng=0,
+response = client.elements.with_raw_response.query(
+    near="48.8584,2.2945",
     radius=500,
 )
 print(response.headers.get('X-My-Header'))
 
-element = response.parse()  # get the object that `elements.nearby()` would have returned
+element = response.parse()  # get the object that `elements.query()` would have returned
 print(element.features)
 ```
 
@@ -310,9 +303,8 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.elements.with_streaming_response.nearby(
-    lat=48.8584,
-    lng=0,
+with client.elements.with_streaming_response.query(
+    near="48.8584,2.2945",
     radius=500,
 ) as response:
     print(response.headers.get("X-My-Header"))

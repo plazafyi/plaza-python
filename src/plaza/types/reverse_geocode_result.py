@@ -10,8 +10,11 @@ __all__ = ["ReverseGeocodeResult"]
 
 
 class ReverseGeocodeResult(BaseModel):
-    """GeoJSON FeatureCollection of reverse geocoding results"""
+    """
+    GeoJSON FeatureCollection of reverse geocoding results, ordered by distance from the query point. Content-Type: `application/geo+json`.
+    """
 
     features: List[GeocodingFeature]
+    """Reverse geocoding results ordered by distance"""
 
     type: Literal["FeatureCollection"]

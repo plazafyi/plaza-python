@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing_extensions import TypedDict
 
-__all__ = ["GeocodeReverseParams"]
+__all__ = ["GeocodeReversePostParams"]
 
 
-class GeocodeReverseParams(TypedDict, total=False):
+class GeocodeReversePostParams(TypedDict, total=False):
     lang: str
     """Language code for localized names (e.g. en, de, fr)"""
 

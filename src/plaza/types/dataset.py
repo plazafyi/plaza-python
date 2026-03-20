@@ -9,29 +9,34 @@ __all__ = ["Dataset"]
 
 
 class Dataset(BaseModel):
+    """Metadata for a custom dataset.
+
+    Datasets contain user-uploaded geospatial features separate from the OSM data.
+    """
+
     id: str
-    """Dataset ID"""
+    """Dataset UUID"""
 
     inserted_at: datetime
-    """Creation timestamp"""
+    """Creation timestamp (UTC)"""
 
     name: str
-    """Dataset name"""
+    """Human-readable dataset name"""
 
     slug: str
-    """URL-friendly slug"""
+    """URL-friendly identifier"""
 
     updated_at: datetime
-    """Last update timestamp"""
+    """Last update timestamp (UTC)"""
 
     attribution: Optional[str] = None
-    """Attribution text"""
+    """Required attribution text"""
 
     description: Optional[str] = None
     """Dataset description"""
 
     license: Optional[str] = None
-    """License identifier"""
+    """License identifier (e.g. CC-BY-4.0)"""
 
     source_url: Optional[str] = None
-    """Source data URL"""
+    """URL of the original data source"""

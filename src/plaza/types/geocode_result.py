@@ -10,8 +10,12 @@ __all__ = ["GeocodeResult"]
 
 
 class GeocodeResult(BaseModel):
-    """GeoJSON FeatureCollection of geocoding results"""
+    """GeoJSON FeatureCollection of forward geocoding results, ordered by relevance.
+
+    Content-Type: `application/geo+json`.
+    """
 
     features: List[GeocodingFeature]
+    """Geocoding results ordered by relevance score"""
 
     type: Literal["FeatureCollection"]
