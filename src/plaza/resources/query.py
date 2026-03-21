@@ -6,7 +6,7 @@ from typing import Iterable
 
 import httpx
 
-from ..types import query_sparql_params, query_execute_params, query_overpass_params
+from ..types import query_execute_params, query_overpass_params
 from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
@@ -18,7 +18,6 @@ from .._response import (
     async_to_streamed_response_wrapper,
 )
 from .._base_client import make_request_options
-from ..types.sparql_result import SparqlResult
 from ..types.feature_collection import FeatureCollection
 from ..types.query_execute_response import QueryExecuteResponse
 
@@ -120,40 +119,6 @@ class QueryResource(SyncAPIResource):
             cast_to=FeatureCollection,
         )
 
-    def sparql(
-        self,
-        *,
-        query: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SparqlResult:
-        """
-        Execute a SPARQL query
-
-        Args:
-          query: SPARQL query string
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._post(
-            "/api/v1/sparql",
-            body=maybe_transform({"query": query}, query_sparql_params.QuerySparqlParams),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=SparqlResult,
-        )
-
 
 class AsyncQueryResource(AsyncAPIResource):
     @cached_property
@@ -250,40 +215,6 @@ class AsyncQueryResource(AsyncAPIResource):
             cast_to=FeatureCollection,
         )
 
-    async def sparql(
-        self,
-        *,
-        query: str,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> SparqlResult:
-        """
-        Execute a SPARQL query
-
-        Args:
-          query: SPARQL query string
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._post(
-            "/api/v1/sparql",
-            body=await async_maybe_transform({"query": query}, query_sparql_params.QuerySparqlParams),
-            options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
-            ),
-            cast_to=SparqlResult,
-        )
-
 
 class QueryResourceWithRawResponse:
     def __init__(self, query: QueryResource) -> None:
@@ -294,9 +225,6 @@ class QueryResourceWithRawResponse:
         )
         self.overpass = to_raw_response_wrapper(
             query.overpass,
-        )
-        self.sparql = to_raw_response_wrapper(
-            query.sparql,
         )
 
 
@@ -310,9 +238,6 @@ class AsyncQueryResourceWithRawResponse:
         self.overpass = async_to_raw_response_wrapper(
             query.overpass,
         )
-        self.sparql = async_to_raw_response_wrapper(
-            query.sparql,
-        )
 
 
 class QueryResourceWithStreamingResponse:
@@ -325,9 +250,6 @@ class QueryResourceWithStreamingResponse:
         self.overpass = to_streamed_response_wrapper(
             query.overpass,
         )
-        self.sparql = to_streamed_response_wrapper(
-            query.sparql,
-        )
 
 
 class AsyncQueryResourceWithStreamingResponse:
@@ -339,7 +261,4 @@ class AsyncQueryResourceWithStreamingResponse:
         )
         self.overpass = async_to_streamed_response_wrapper(
             query.overpass,
-        )
-        self.sparql = async_to_streamed_response_wrapper(
-            query.sparql,
         )
