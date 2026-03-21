@@ -6,7 +6,6 @@ from .dataset import Dataset as Dataset
 from .dataset_list import DatasetList as DatasetList
 from .route_result import RouteResult as RouteResult
 from .matrix_result import MatrixResult as MatrixResult
-from .sparql_result import SparqlResult as SparqlResult
 from .geocode_result import GeocodeResult as GeocodeResult
 from .nearest_result import NearestResult as NearestResult
 from .optimize_result import OptimizeResult as OptimizeResult
@@ -17,7 +16,6 @@ from .geocoding_feature import GeocodingFeature as GeocodingFeature
 from .feature_collection import FeatureCollection as FeatureCollection
 from .autocomplete_result import AutocompleteResult as AutocompleteResult
 from .optimize_job_status import OptimizeJobStatus as OptimizeJobStatus
-from .query_sparql_params import QuerySparqlParams as QuerySparqlParams
 from .search_query_params import SearchQueryParams as SearchQueryParams
 from .element_batch_params import ElementBatchParams as ElementBatchParams
 from .element_query_params import ElementQueryParams as ElementQueryParams

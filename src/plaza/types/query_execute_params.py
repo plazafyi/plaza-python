@@ -16,8 +16,8 @@ class QueryExecuteParams(TypedDict, total=False):
 class Step(TypedDict, total=False):
     """A single pipeline step"""
 
-    type: Required[Literal["overpass", "sparql", "filter", "transform"]]
-    """Step type: `overpass`, `sparql`, `filter`, or `transform`"""
+    type: Required[Literal["overpass", "filter", "transform"]]
+    """Step type: `overpass`, `filter`, or `transform`"""
 
     query: str
-    """Query string for this step (required for overpass/sparql steps)"""
+    """Query string for this step (required for overpass steps)"""
