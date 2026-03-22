@@ -24,7 +24,6 @@ from .query_execute_params import QueryExecuteParams as QueryExecuteParams
 from .routing_route_params import RoutingRouteParams as RoutingRouteParams
 from .dataset_create_params import DatasetCreateParams as DatasetCreateParams
 from .element_nearby_params import ElementNearbyParams as ElementNearbyParams
-from .query_overpass_params import QueryOverpassParams as QueryOverpassParams
 from .routing_matrix_params import RoutingMatrixParams as RoutingMatrixParams
 from .elevation_batch_params import ElevationBatchParams as ElevationBatchParams
 from .elevation_batch_result import ElevationBatchResult as ElevationBatchResult
@@ -33,7 +32,6 @@ from .geocode_forward_params import GeocodeForwardParams as GeocodeForwardParams
 from .geocode_reverse_params import GeocodeReverseParams as GeocodeReverseParams
 from .map_match_match_params import MapMatchMatchParams as MapMatchMatchParams
 from .optimize_create_params import OptimizeCreateParams as OptimizeCreateParams
-from .query_execute_response import QueryExecuteResponse as QueryExecuteResponse
 from .reverse_geocode_result import ReverseGeocodeResult as ReverseGeocodeResult
 from .routing_nearest_params import RoutingNearestParams as RoutingNearestParams
 from .dataset_features_params import DatasetFeaturesParams as DatasetFeaturesParams

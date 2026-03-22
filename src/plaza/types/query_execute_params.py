@@ -2,22 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Iterable
-from typing_extensions import Literal, Required, TypedDict
+from typing_extensions import Required, TypedDict
 
-__all__ = ["QueryExecuteParams", "Step"]
+__all__ = ["QueryExecuteParams"]
 
 
 class QueryExecuteParams(TypedDict, total=False):
-    steps: Required[Iterable[Step]]
-    """Ordered list of query steps to execute"""
+    data: Required[str]
+    """PlazaQL query string"""
 
-
-class Step(TypedDict, total=False):
-    """A single pipeline step"""
-
-    type: Required[Literal["overpass", "filter", "transform"]]
-    """Step type: `overpass`, `filter`, or `transform`"""
-
-    query: str
-    """Query string for this step (required for overpass steps)"""
+    format: str
+    """Response format: json (default), geojson, csv, ndjson"""
