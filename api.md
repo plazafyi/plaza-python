@@ -152,13 +152,12 @@ Methods:
 Types:
 
 ```python
-from plaza.types import OverpassQuery, QueryExecuteResponse
+from plaza.types import PlazaqlQuery
 ```
 
 Methods:
 
-- <code title="post /api/v1/query">client.query.<a href="./src/plaza/resources/query.py">execute</a>(\*\*<a href="src/plaza/types/query_execute_params.py">params</a>) -> <a href="./src/plaza/types/query_execute_response.py">QueryExecuteResponse</a></code>
-- <code title="post /api/v1/overpass">client.query.<a href="./src/plaza/resources/query.py">overpass</a>(\*\*<a href="src/plaza/types/query_overpass_params.py">params</a>) -> <a href="./src/plaza/types/feature_collection.py">FeatureCollection</a></code>
+- <code title="post /api/v1/query">client.query.<a href="./src/plaza/resources/query.py">execute</a>(\*\*<a href="src/plaza/types/query_execute_params.py">params</a>) -> <a href="./src/plaza/types/feature_collection.py">FeatureCollection</a></code>
 
 # Tiles
 
