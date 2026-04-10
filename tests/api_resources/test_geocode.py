@@ -25,28 +25,30 @@ class TestGeocode:
     @parametrize
     def test_method_autocomplete(self, client: Plaza) -> None:
         geocode = client.geocode.autocomplete(
-            q="q",
+            q="221B Bak",
         )
         assert_matches_type(AutocompleteResult, geocode, path=["response"])
 
     @parametrize
     def test_method_autocomplete_with_all_params(self, client: Plaza) -> None:
         geocode = client.geocode.autocomplete(
-            q="q",
-            country_code="country_code",
+            q="221B Bak",
             format="format",
+            country_code="xx",
+            focus={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
             lang="lang",
-            lat=0,
             layer="layer",
-            limit=0,
-            lng=0,
+            limit=1,
         )
         assert_matches_type(AutocompleteResult, geocode, path=["response"])
 
     @parametrize
     def test_raw_response_autocomplete(self, client: Plaza) -> None:
         response = client.geocode.with_raw_response.autocomplete(
-            q="q",
+            q="221B Bak",
         )
 
         assert response.is_closed is True
@@ -57,52 +59,7 @@ class TestGeocode:
     @parametrize
     def test_streaming_response_autocomplete(self, client: Plaza) -> None:
         with client.geocode.with_streaming_response.autocomplete(
-            q="q",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            geocode = response.parse()
-            assert_matches_type(AutocompleteResult, geocode, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_method_autocomplete_post(self, client: Plaza) -> None:
-        geocode = client.geocode.autocomplete_post(
-            q="q",
-        )
-        assert_matches_type(AutocompleteResult, geocode, path=["response"])
-
-    @parametrize
-    def test_method_autocomplete_post_with_all_params(self, client: Plaza) -> None:
-        geocode = client.geocode.autocomplete_post(
-            q="q",
-            country_code="country_code",
-            format="format",
-            lang="lang",
-            lat=0,
-            layer="layer",
-            limit=0,
-            lng=0,
-        )
-        assert_matches_type(AutocompleteResult, geocode, path=["response"])
-
-    @parametrize
-    def test_raw_response_autocomplete_post(self, client: Plaza) -> None:
-        response = client.geocode.with_raw_response.autocomplete_post(
-            q="q",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        geocode = response.parse()
-        assert_matches_type(AutocompleteResult, geocode, path=["response"])
-
-    @parametrize
-    def test_streaming_response_autocomplete_post(self, client: Plaza) -> None:
-        with client.geocode.with_streaming_response.autocomplete_post(
-            q="q",
+            q="221B Bak",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -146,29 +103,30 @@ class TestGeocode:
     @parametrize
     def test_method_forward(self, client: Plaza) -> None:
         geocode = client.geocode.forward(
-            q="q",
+            q="221B Baker Street, London",
         )
         assert_matches_type(GeocodeResult, geocode, path=["response"])
 
     @parametrize
     def test_method_forward_with_all_params(self, client: Plaza) -> None:
         geocode = client.geocode.forward(
-            q="q",
-            bbox="bbox",
-            country_code="country_code",
+            q="221B Baker Street, London",
             format="format",
+            country_code="xx",
+            focus={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
             lang="lang",
-            lat=0,
             layer="layer",
-            limit=0,
-            lng=0,
+            limit=1,
         )
         assert_matches_type(GeocodeResult, geocode, path=["response"])
 
     @parametrize
     def test_raw_response_forward(self, client: Plaza) -> None:
         response = client.geocode.with_raw_response.forward(
-            q="q",
+            q="221B Baker Street, London",
         )
 
         assert response.is_closed is True
@@ -179,53 +137,7 @@ class TestGeocode:
     @parametrize
     def test_streaming_response_forward(self, client: Plaza) -> None:
         with client.geocode.with_streaming_response.forward(
-            q="q",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            geocode = response.parse()
-            assert_matches_type(GeocodeResult, geocode, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_method_forward_post(self, client: Plaza) -> None:
-        geocode = client.geocode.forward_post(
-            q="q",
-        )
-        assert_matches_type(GeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    def test_method_forward_post_with_all_params(self, client: Plaza) -> None:
-        geocode = client.geocode.forward_post(
-            q="q",
-            bbox="bbox",
-            country_code="country_code",
-            format="format",
-            lang="lang",
-            lat=0,
-            layer="layer",
-            limit=0,
-            lng=0,
-        )
-        assert_matches_type(GeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    def test_raw_response_forward_post(self, client: Plaza) -> None:
-        response = client.geocode.with_raw_response.forward_post(
-            q="q",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        geocode = response.parse()
-        assert_matches_type(GeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    def test_streaming_response_forward_post(self, client: Plaza) -> None:
-        with client.geocode.with_streaming_response.forward_post(
-            q="q",
+            q="221B Baker Street, London",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -237,26 +149,36 @@ class TestGeocode:
 
     @parametrize
     def test_method_reverse(self, client: Plaza) -> None:
-        geocode = client.geocode.reverse()
+        geocode = client.geocode.reverse(
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+        )
         assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
 
     @parametrize
     def test_method_reverse_with_all_params(self, client: Plaza) -> None:
         geocode = client.geocode.reverse(
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
             format="format",
             lang="lang",
-            lat=0,
-            layer="layer",
-            limit=0,
-            lng=0,
-            near="near",
-            radius=0,
+            limit=1,
+            radius=1,
         )
         assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
 
     @parametrize
     def test_raw_response_reverse(self, client: Plaza) -> None:
-        response = client.geocode.with_raw_response.reverse()
+        response = client.geocode.with_raw_response.reverse(
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -265,46 +187,12 @@ class TestGeocode:
 
     @parametrize
     def test_streaming_response_reverse(self, client: Plaza) -> None:
-        with client.geocode.with_streaming_response.reverse() as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            geocode = response.parse()
-            assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_method_reverse_post(self, client: Plaza) -> None:
-        geocode = client.geocode.reverse_post()
-        assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    def test_method_reverse_post_with_all_params(self, client: Plaza) -> None:
-        geocode = client.geocode.reverse_post(
-            format="format",
-            lang="lang",
-            lat=0,
-            layer="layer",
-            limit=0,
-            lng=0,
-            near="near",
-            radius=0,
-        )
-        assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    def test_raw_response_reverse_post(self, client: Plaza) -> None:
-        response = client.geocode.with_raw_response.reverse_post()
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        geocode = response.parse()
-        assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    def test_streaming_response_reverse_post(self, client: Plaza) -> None:
-        with client.geocode.with_streaming_response.reverse_post() as response:
+        with client.geocode.with_streaming_response.reverse(
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 
@@ -322,28 +210,30 @@ class TestAsyncGeocode:
     @parametrize
     async def test_method_autocomplete(self, async_client: AsyncPlaza) -> None:
         geocode = await async_client.geocode.autocomplete(
-            q="q",
+            q="221B Bak",
         )
         assert_matches_type(AutocompleteResult, geocode, path=["response"])
 
     @parametrize
     async def test_method_autocomplete_with_all_params(self, async_client: AsyncPlaza) -> None:
         geocode = await async_client.geocode.autocomplete(
-            q="q",
-            country_code="country_code",
+            q="221B Bak",
             format="format",
+            country_code="xx",
+            focus={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
             lang="lang",
-            lat=0,
             layer="layer",
-            limit=0,
-            lng=0,
+            limit=1,
         )
         assert_matches_type(AutocompleteResult, geocode, path=["response"])
 
     @parametrize
     async def test_raw_response_autocomplete(self, async_client: AsyncPlaza) -> None:
         response = await async_client.geocode.with_raw_response.autocomplete(
-            q="q",
+            q="221B Bak",
         )
 
         assert response.is_closed is True
@@ -354,52 +244,7 @@ class TestAsyncGeocode:
     @parametrize
     async def test_streaming_response_autocomplete(self, async_client: AsyncPlaza) -> None:
         async with async_client.geocode.with_streaming_response.autocomplete(
-            q="q",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            geocode = await response.parse()
-            assert_matches_type(AutocompleteResult, geocode, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_method_autocomplete_post(self, async_client: AsyncPlaza) -> None:
-        geocode = await async_client.geocode.autocomplete_post(
-            q="q",
-        )
-        assert_matches_type(AutocompleteResult, geocode, path=["response"])
-
-    @parametrize
-    async def test_method_autocomplete_post_with_all_params(self, async_client: AsyncPlaza) -> None:
-        geocode = await async_client.geocode.autocomplete_post(
-            q="q",
-            country_code="country_code",
-            format="format",
-            lang="lang",
-            lat=0,
-            layer="layer",
-            limit=0,
-            lng=0,
-        )
-        assert_matches_type(AutocompleteResult, geocode, path=["response"])
-
-    @parametrize
-    async def test_raw_response_autocomplete_post(self, async_client: AsyncPlaza) -> None:
-        response = await async_client.geocode.with_raw_response.autocomplete_post(
-            q="q",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        geocode = await response.parse()
-        assert_matches_type(AutocompleteResult, geocode, path=["response"])
-
-    @parametrize
-    async def test_streaming_response_autocomplete_post(self, async_client: AsyncPlaza) -> None:
-        async with async_client.geocode.with_streaming_response.autocomplete_post(
-            q="q",
+            q="221B Bak",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -443,29 +288,30 @@ class TestAsyncGeocode:
     @parametrize
     async def test_method_forward(self, async_client: AsyncPlaza) -> None:
         geocode = await async_client.geocode.forward(
-            q="q",
+            q="221B Baker Street, London",
         )
         assert_matches_type(GeocodeResult, geocode, path=["response"])
 
     @parametrize
     async def test_method_forward_with_all_params(self, async_client: AsyncPlaza) -> None:
         geocode = await async_client.geocode.forward(
-            q="q",
-            bbox="bbox",
-            country_code="country_code",
+            q="221B Baker Street, London",
             format="format",
+            country_code="xx",
+            focus={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
             lang="lang",
-            lat=0,
             layer="layer",
-            limit=0,
-            lng=0,
+            limit=1,
         )
         assert_matches_type(GeocodeResult, geocode, path=["response"])
 
     @parametrize
     async def test_raw_response_forward(self, async_client: AsyncPlaza) -> None:
         response = await async_client.geocode.with_raw_response.forward(
-            q="q",
+            q="221B Baker Street, London",
         )
 
         assert response.is_closed is True
@@ -476,53 +322,7 @@ class TestAsyncGeocode:
     @parametrize
     async def test_streaming_response_forward(self, async_client: AsyncPlaza) -> None:
         async with async_client.geocode.with_streaming_response.forward(
-            q="q",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            geocode = await response.parse()
-            assert_matches_type(GeocodeResult, geocode, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_method_forward_post(self, async_client: AsyncPlaza) -> None:
-        geocode = await async_client.geocode.forward_post(
-            q="q",
-        )
-        assert_matches_type(GeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    async def test_method_forward_post_with_all_params(self, async_client: AsyncPlaza) -> None:
-        geocode = await async_client.geocode.forward_post(
-            q="q",
-            bbox="bbox",
-            country_code="country_code",
-            format="format",
-            lang="lang",
-            lat=0,
-            layer="layer",
-            limit=0,
-            lng=0,
-        )
-        assert_matches_type(GeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    async def test_raw_response_forward_post(self, async_client: AsyncPlaza) -> None:
-        response = await async_client.geocode.with_raw_response.forward_post(
-            q="q",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        geocode = await response.parse()
-        assert_matches_type(GeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    async def test_streaming_response_forward_post(self, async_client: AsyncPlaza) -> None:
-        async with async_client.geocode.with_streaming_response.forward_post(
-            q="q",
+            q="221B Baker Street, London",
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -534,26 +334,36 @@ class TestAsyncGeocode:
 
     @parametrize
     async def test_method_reverse(self, async_client: AsyncPlaza) -> None:
-        geocode = await async_client.geocode.reverse()
+        geocode = await async_client.geocode.reverse(
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+        )
         assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
 
     @parametrize
     async def test_method_reverse_with_all_params(self, async_client: AsyncPlaza) -> None:
         geocode = await async_client.geocode.reverse(
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
             format="format",
             lang="lang",
-            lat=0,
-            layer="layer",
-            limit=0,
-            lng=0,
-            near="near",
-            radius=0,
+            limit=1,
+            radius=1,
         )
         assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
 
     @parametrize
     async def test_raw_response_reverse(self, async_client: AsyncPlaza) -> None:
-        response = await async_client.geocode.with_raw_response.reverse()
+        response = await async_client.geocode.with_raw_response.reverse(
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+        )
 
         assert response.is_closed is True
         assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -562,46 +372,12 @@ class TestAsyncGeocode:
 
     @parametrize
     async def test_streaming_response_reverse(self, async_client: AsyncPlaza) -> None:
-        async with async_client.geocode.with_streaming_response.reverse() as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            geocode = await response.parse()
-            assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_method_reverse_post(self, async_client: AsyncPlaza) -> None:
-        geocode = await async_client.geocode.reverse_post()
-        assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    async def test_method_reverse_post_with_all_params(self, async_client: AsyncPlaza) -> None:
-        geocode = await async_client.geocode.reverse_post(
-            format="format",
-            lang="lang",
-            lat=0,
-            layer="layer",
-            limit=0,
-            lng=0,
-            near="near",
-            radius=0,
-        )
-        assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    async def test_raw_response_reverse_post(self, async_client: AsyncPlaza) -> None:
-        response = await async_client.geocode.with_raw_response.reverse_post()
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        geocode = await response.parse()
-        assert_matches_type(ReverseGeocodeResult, geocode, path=["response"])
-
-    @parametrize
-    async def test_streaming_response_reverse_post(self, async_client: AsyncPlaza) -> None:
-        async with async_client.geocode.with_streaming_response.reverse_post() as response:
+        async with async_client.geocode.with_streaming_response.reverse(
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+        ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
 

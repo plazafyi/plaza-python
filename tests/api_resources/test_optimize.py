@@ -20,40 +20,20 @@ class TestOptimize:
     @parametrize
     def test_method_create(self, client: Plaza) -> None:
         optimize = client.optimize.create(
-            waypoints=[
-                {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
-                },
-                {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
-                },
-                {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
-                },
-            ],
+            waypoints={
+                "coordinates": [[2.3522, 48.8566], [2.3376, 48.8606], [2.2945, 48.8584]],
+                "type": "MultiPoint",
+            },
         )
         assert_matches_type(OptimizeResult, optimize, path=["response"])
 
     @parametrize
     def test_method_create_with_all_params(self, client: Plaza) -> None:
         optimize = client.optimize.create(
-            waypoints=[
-                {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
-                },
-                {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
-                },
-                {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
-                },
-            ],
+            waypoints={
+                "coordinates": [[2.3522, 48.8566], [2.3376, 48.8606], [2.2945, 48.8584]],
+                "type": "MultiPoint",
+            },
             format="format",
             mode="auto",
             roundtrip=False,
@@ -63,20 +43,10 @@ class TestOptimize:
     @parametrize
     def test_raw_response_create(self, client: Plaza) -> None:
         response = client.optimize.with_raw_response.create(
-            waypoints=[
-                {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
-                },
-                {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
-                },
-                {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
-                },
-            ],
+            waypoints={
+                "coordinates": [[2.3522, 48.8566], [2.3376, 48.8606], [2.2945, 48.8584]],
+                "type": "MultiPoint",
+            },
         )
 
         assert response.is_closed is True
@@ -87,20 +57,10 @@ class TestOptimize:
     @parametrize
     def test_streaming_response_create(self, client: Plaza) -> None:
         with client.optimize.with_streaming_response.create(
-            waypoints=[
-                {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
-                },
-                {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
-                },
-                {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
-                },
-            ],
+            waypoints={
+                "coordinates": [[2.3522, 48.8566], [2.3376, 48.8606], [2.2945, 48.8584]],
+                "type": "MultiPoint",
+            },
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -157,40 +117,20 @@ class TestAsyncOptimize:
     @parametrize
     async def test_method_create(self, async_client: AsyncPlaza) -> None:
         optimize = await async_client.optimize.create(
-            waypoints=[
-                {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
-                },
-                {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
-                },
-                {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
-                },
-            ],
+            waypoints={
+                "coordinates": [[2.3522, 48.8566], [2.3376, 48.8606], [2.2945, 48.8584]],
+                "type": "MultiPoint",
+            },
         )
         assert_matches_type(OptimizeResult, optimize, path=["response"])
 
     @parametrize
     async def test_method_create_with_all_params(self, async_client: AsyncPlaza) -> None:
         optimize = await async_client.optimize.create(
-            waypoints=[
-                {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
-                },
-                {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
-                },
-                {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
-                },
-            ],
+            waypoints={
+                "coordinates": [[2.3522, 48.8566], [2.3376, 48.8606], [2.2945, 48.8584]],
+                "type": "MultiPoint",
+            },
             format="format",
             mode="auto",
             roundtrip=False,
@@ -200,20 +140,10 @@ class TestAsyncOptimize:
     @parametrize
     async def test_raw_response_create(self, async_client: AsyncPlaza) -> None:
         response = await async_client.optimize.with_raw_response.create(
-            waypoints=[
-                {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
-                },
-                {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
-                },
-                {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
-                },
-            ],
+            waypoints={
+                "coordinates": [[2.3522, 48.8566], [2.3376, 48.8606], [2.2945, 48.8584]],
+                "type": "MultiPoint",
+            },
         )
 
         assert response.is_closed is True
@@ -224,20 +154,10 @@ class TestAsyncOptimize:
     @parametrize
     async def test_streaming_response_create(self, async_client: AsyncPlaza) -> None:
         async with async_client.optimize.with_streaming_response.create(
-            waypoints=[
-                {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
-                },
-                {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
-                },
-                {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
-                },
-            ],
+            waypoints={
+                "coordinates": [[2.3522, 48.8566], [2.3376, 48.8606], [2.2945, 48.8584]],
+                "type": "MultiPoint",
+            },
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"

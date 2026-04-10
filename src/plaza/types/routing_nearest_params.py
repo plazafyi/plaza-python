@@ -2,28 +2,21 @@
 
 from __future__ import annotations
 
-from typing_extensions import Required, Annotated, TypedDict
+from typing import Optional
+from typing_extensions import Required, TypedDict
 
-from .._utils import PropertyInfo
+from .point_geometry_param import PointGeometryParam
 
 __all__ = ["RoutingNearestParams"]
 
 
 class RoutingNearestParams(TypedDict, total=False):
-    lat: Required[float]
-    """Latitude"""
+    geometry: Required[PointGeometryParam]
+    """GeoJSON Point geometry per RFC 7946.
 
-    lng: Required[float]
-    """Longitude"""
+    Coordinates use [longitude, latitude] order. Optional third element is altitude
+    in meters.
+    """
 
-    output_fields: Annotated[str, PropertyInfo(alias="output[fields]")]
-    """Comma-separated property fields to include"""
-
-    output_include: Annotated[str, PropertyInfo(alias="output[include]")]
-    """Extra computed fields: bbox, distance, center"""
-
-    output_precision: Annotated[int, PropertyInfo(alias="output[precision]")]
-    """Coordinate decimal precision (1-15, default 7)"""
-
-    radius: int
-    """Search radius in meters (default 500, max 5000)"""
+    radius: Optional[float]
+    """Maximum search radius in meters (default: 100)"""

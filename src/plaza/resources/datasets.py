@@ -6,7 +6,7 @@ from typing import Optional
 
 import httpx
 
-from ..types import dataset_create_params, dataset_features_params
+from ..types import dataset_list_params, dataset_create_params
 from .._types import Body, Omit, Query, Headers, NoneType, NotGiven, omit, not_given
 from .._utils import path_template, maybe_transform, async_maybe_transform
 from .._compat import cached_property
@@ -20,7 +20,6 @@ from .._response import (
 from .._base_client import make_request_options
 from ..types.dataset import Dataset
 from ..types.dataset_list import DatasetList
-from ..types.feature_collection import FeatureCollection
 
 __all__ = ["DatasetsResource", "AsyncDatasetsResource"]
 
@@ -54,6 +53,7 @@ class DatasetsResource(SyncAPIResource):
         description: Optional[str] | Omit = omit,
         license: Optional[str] | Omit = omit,
         source_url: Optional[str] | Omit = omit,
+        strict_mode: Optional[bool] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -62,7 +62,7 @@ class DatasetsResource(SyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Dataset:
         """
-        Create a new dataset (admin only)
+        Create a new dataset
 
         Args:
           name: Human-readable dataset name
@@ -76,6 +76,8 @@ class DatasetsResource(SyncAPIResource):
           license: License identifier (e.g. CC-BY-4.0)
 
           source_url: Source data URL
+
+          strict_mode: Enable strict schema validation (default true)
 
           extra_headers: Send extra headers
 
@@ -95,6 +97,7 @@ class DatasetsResource(SyncAPIResource):
                     "description": description,
                     "license": license,
                     "source_url": source_url,
+                    "strict_mode": strict_mode,
                 },
                 dataset_create_params.DatasetCreateParams,
             ),
@@ -140,6 +143,7 @@ class DatasetsResource(SyncAPIResource):
     def list(
         self,
         *,
+        scope: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -147,11 +151,29 @@ class DatasetsResource(SyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DatasetList:
-        """List all datasets"""
+        """List datasets
+
+        Args:
+          scope: Filter by scope: plaza, user.
+
+        Default shows user's own + plaza datasets.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
         return self._get(
             "/api/v1/datasets",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=maybe_transform({"scope": scope}, dataset_list_params.DatasetListParams),
             ),
             cast_to=DatasetList,
         )
@@ -190,91 +212,6 @@ class DatasetsResource(SyncAPIResource):
             cast_to=NoneType,
         )
 
-    def features(
-        self,
-        id: str,
-        *,
-        cursor: str | Omit = omit,
-        format: str | Omit = omit,
-        limit: int | Omit = omit,
-        output_buffer: float | Omit = omit,
-        output_centroid: bool | Omit = omit,
-        output_fields: str | Omit = omit,
-        output_geometry: bool | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        output_simplify: float | Omit = omit,
-        output_sort: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FeatureCollection:
-        """
-        Query features in a dataset
-
-        Args:
-          cursor: Cursor for pagination
-
-          format: Response format: json (default), geojson, csv, ndjson
-
-          limit: Maximum results
-
-          output_buffer: Buffer geometry by meters
-
-          output_centroid: Replace geometry with centroid
-
-          output_fields: Comma-separated property fields to include
-
-          output_geometry: Include geometry (default true)
-
-          output_include: Extra computed fields: bbox, distance, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          output_simplify: Simplify geometry tolerance in meters
-
-          output_sort: Sort by: distance, name, osm_id
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        return self._get(
-            path_template("/api/v1/datasets/{id}/features", id=id),
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "cursor": cursor,
-                        "format": format,
-                        "limit": limit,
-                        "output_buffer": output_buffer,
-                        "output_centroid": output_centroid,
-                        "output_fields": output_fields,
-                        "output_geometry": output_geometry,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "output_simplify": output_simplify,
-                        "output_sort": output_sort,
-                    },
-                    dataset_features_params.DatasetFeaturesParams,
-                ),
-            ),
-            cast_to=FeatureCollection,
-        )
-
 
 class AsyncDatasetsResource(AsyncAPIResource):
     @cached_property
@@ -305,6 +242,7 @@ class AsyncDatasetsResource(AsyncAPIResource):
         description: Optional[str] | Omit = omit,
         license: Optional[str] | Omit = omit,
         source_url: Optional[str] | Omit = omit,
+        strict_mode: Optional[bool] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -313,7 +251,7 @@ class AsyncDatasetsResource(AsyncAPIResource):
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> Dataset:
         """
-        Create a new dataset (admin only)
+        Create a new dataset
 
         Args:
           name: Human-readable dataset name
@@ -327,6 +265,8 @@ class AsyncDatasetsResource(AsyncAPIResource):
           license: License identifier (e.g. CC-BY-4.0)
 
           source_url: Source data URL
+
+          strict_mode: Enable strict schema validation (default true)
 
           extra_headers: Send extra headers
 
@@ -346,6 +286,7 @@ class AsyncDatasetsResource(AsyncAPIResource):
                     "description": description,
                     "license": license,
                     "source_url": source_url,
+                    "strict_mode": strict_mode,
                 },
                 dataset_create_params.DatasetCreateParams,
             ),
@@ -391,6 +332,7 @@ class AsyncDatasetsResource(AsyncAPIResource):
     async def list(
         self,
         *,
+        scope: str | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -398,11 +340,29 @@ class AsyncDatasetsResource(AsyncAPIResource):
         extra_body: Body | None = None,
         timeout: float | httpx.Timeout | None | NotGiven = not_given,
     ) -> DatasetList:
-        """List all datasets"""
+        """List datasets
+
+        Args:
+          scope: Filter by scope: plaza, user.
+
+        Default shows user's own + plaza datasets.
+
+          extra_headers: Send extra headers
+
+          extra_query: Add additional query parameters to the request
+
+          extra_body: Add additional JSON properties to the request
+
+          timeout: Override the client-level default timeout for this request, in seconds
+        """
         return await self._get(
             "/api/v1/datasets",
             options=make_request_options(
-                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
+                extra_headers=extra_headers,
+                extra_query=extra_query,
+                extra_body=extra_body,
+                timeout=timeout,
+                query=await async_maybe_transform({"scope": scope}, dataset_list_params.DatasetListParams),
             ),
             cast_to=DatasetList,
         )
@@ -441,91 +401,6 @@ class AsyncDatasetsResource(AsyncAPIResource):
             cast_to=NoneType,
         )
 
-    async def features(
-        self,
-        id: str,
-        *,
-        cursor: str | Omit = omit,
-        format: str | Omit = omit,
-        limit: int | Omit = omit,
-        output_buffer: float | Omit = omit,
-        output_centroid: bool | Omit = omit,
-        output_fields: str | Omit = omit,
-        output_geometry: bool | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        output_simplify: float | Omit = omit,
-        output_sort: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FeatureCollection:
-        """
-        Query features in a dataset
-
-        Args:
-          cursor: Cursor for pagination
-
-          format: Response format: json (default), geojson, csv, ndjson
-
-          limit: Maximum results
-
-          output_buffer: Buffer geometry by meters
-
-          output_centroid: Replace geometry with centroid
-
-          output_fields: Comma-separated property fields to include
-
-          output_geometry: Include geometry (default true)
-
-          output_include: Extra computed fields: bbox, distance, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          output_simplify: Simplify geometry tolerance in meters
-
-          output_sort: Sort by: distance, name, osm_id
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        if not id:
-            raise ValueError(f"Expected a non-empty value for `id` but received {id!r}")
-        return await self._get(
-            path_template("/api/v1/datasets/{id}/features", id=id),
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "cursor": cursor,
-                        "format": format,
-                        "limit": limit,
-                        "output_buffer": output_buffer,
-                        "output_centroid": output_centroid,
-                        "output_fields": output_fields,
-                        "output_geometry": output_geometry,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "output_simplify": output_simplify,
-                        "output_sort": output_sort,
-                    },
-                    dataset_features_params.DatasetFeaturesParams,
-                ),
-            ),
-            cast_to=FeatureCollection,
-        )
-
 
 class DatasetsResourceWithRawResponse:
     def __init__(self, datasets: DatasetsResource) -> None:
@@ -542,9 +417,6 @@ class DatasetsResourceWithRawResponse:
         )
         self.delete = to_raw_response_wrapper(
             datasets.delete,
-        )
-        self.features = to_raw_response_wrapper(
-            datasets.features,
         )
 
 
@@ -564,9 +436,6 @@ class AsyncDatasetsResourceWithRawResponse:
         self.delete = async_to_raw_response_wrapper(
             datasets.delete,
         )
-        self.features = async_to_raw_response_wrapper(
-            datasets.features,
-        )
 
 
 class DatasetsResourceWithStreamingResponse:
@@ -585,9 +454,6 @@ class DatasetsResourceWithStreamingResponse:
         self.delete = to_streamed_response_wrapper(
             datasets.delete,
         )
-        self.features = to_streamed_response_wrapper(
-            datasets.features,
-        )
 
 
 class AsyncDatasetsResourceWithStreamingResponse:
@@ -605,7 +471,4 @@ class AsyncDatasetsResourceWithStreamingResponse:
         )
         self.delete = async_to_streamed_response_wrapper(
             datasets.delete,
-        )
-        self.features = async_to_streamed_response_wrapper(
-            datasets.features,
         )

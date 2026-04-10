@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Optional
+
 import httpx
 
 from ..types import (
@@ -9,9 +11,6 @@ from ..types import (
     geocode_forward_params,
     geocode_reverse_params,
     geocode_autocomplete_params,
-    geocode_forward_post_params,
-    geocode_reverse_post_params,
-    geocode_autocomplete_post_params,
 )
 from .._types import Body, Omit, Query, Headers, NotGiven, SequenceNotStr, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
@@ -26,6 +25,7 @@ from .._response import (
 from .._base_client import make_request_options
 from ..types.geocode_result import GeocodeResult
 from ..types.autocomplete_result import AutocompleteResult
+from ..types.point_geometry_param import PointGeometryParam
 from ..types.geocode_batch_response import GeocodeBatchResponse
 from ..types.reverse_geocode_result import ReverseGeocodeResult
 
@@ -56,13 +56,12 @@ class GeocodeResource(SyncAPIResource):
         self,
         *,
         q: str,
-        country_code: str | Omit = omit,
         format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
+        country_code: Optional[str] | Omit = omit,
+        focus: Optional[PointGeometryParam] | Omit = omit,
+        lang: Optional[str] | Omit = omit,
+        layer: Optional[str] | Omit = omit,
+        limit: Optional[int] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -74,91 +73,20 @@ class GeocodeResource(SyncAPIResource):
         Autocomplete a partial address
 
         Args:
-          q: Partial address query
-
-          country_code: ISO 3166-1 alpha-2 country code filter
+          q: Partial address or place name input
 
           format: Response format: json (default), geojson, csv, ndjson
 
-          lang: Language code for localized names (e.g. en, de, fr)
+          country_code: ISO 3166-1 alpha-2 country code to restrict results
 
-          lat: Focus latitude
+          focus: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
-          layer: Filter by layer: address, poi, or admin
+          lang: Preferred response language (ISO 639-1)
 
-          limit: Maximum results (default 10, max 20)
+          layer: Filter by result layer (e.g. `address`, `place`, `poi`)
 
-          lng: Focus longitude
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get(
-            "/api/v1/geocode/autocomplete",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "q": q,
-                        "country_code": country_code,
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                    },
-                    geocode_autocomplete_params.GeocodeAutocompleteParams,
-                ),
-            ),
-            cast_to=AutocompleteResult,
-        )
-
-    def autocomplete_post(
-        self,
-        *,
-        q: str,
-        country_code: str | Omit = omit,
-        format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AutocompleteResult:
-        """
-        Autocomplete a partial address
-
-        Args:
-          q: Partial address query
-
-          country_code: ISO 3166-1 alpha-2 country code filter
-
-          format: Response format: json (default), geojson, csv, ndjson
-
-          lang: Language code for localized names (e.g. en, de, fr)
-
-          lat: Focus latitude
-
-          layer: Filter by layer: address, poi, or admin
-
-          limit: Maximum results (default 10, max 20)
-
-          lng: Focus longitude
+          limit: Maximum number of suggestions (default: 5, max: 20)
 
           extra_headers: Send extra headers
 
@@ -170,24 +98,23 @@ class GeocodeResource(SyncAPIResource):
         """
         return self._post(
             "/api/v1/geocode/autocomplete",
+            body=maybe_transform(
+                {
+                    "q": q,
+                    "country_code": country_code,
+                    "focus": focus,
+                    "lang": lang,
+                    "layer": layer,
+                    "limit": limit,
+                },
+                geocode_autocomplete_params.GeocodeAutocompleteParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "q": q,
-                        "country_code": country_code,
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                    },
-                    geocode_autocomplete_post_params.GeocodeAutocompletePostParams,
-                ),
+                query=maybe_transform({"format": format}, geocode_autocomplete_params.GeocodeAutocompleteParams),
             ),
             cast_to=AutocompleteResult,
         )
@@ -228,14 +155,12 @@ class GeocodeResource(SyncAPIResource):
         self,
         *,
         q: str,
-        bbox: str | Omit = omit,
-        country_code: str | Omit = omit,
         format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
+        country_code: Optional[str] | Omit = omit,
+        focus: Optional[PointGeometryParam] | Omit = omit,
+        lang: Optional[str] | Omit = omit,
+        layer: Optional[str] | Omit = omit,
+        limit: Optional[int] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -247,97 +172,20 @@ class GeocodeResource(SyncAPIResource):
         Forward geocode an address
 
         Args:
-          q: Address or place name
-
-          bbox: Bounding box filter: south,west,north,east
-
-          country_code: ISO 3166-1 alpha-2 country code filter
+          q: Address or place name to geocode
 
           format: Response format: json (default), geojson, csv, ndjson
 
-          lang: Language code for localized names (e.g. en, de, fr)
+          country_code: ISO 3166-1 alpha-2 country code to restrict results
 
-          lat: Focus latitude
+          focus: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
-          layer: Filter by layer: address, poi, or admin
+          lang: Preferred response language (ISO 639-1)
 
-          limit: Maximum results (default 20, max 100)
+          layer: Filter by result layer (e.g. `address`, `place`, `poi`)
 
-          lng: Focus longitude
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get(
-            "/api/v1/geocode",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "q": q,
-                        "bbox": bbox,
-                        "country_code": country_code,
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                    },
-                    geocode_forward_params.GeocodeForwardParams,
-                ),
-            ),
-            cast_to=GeocodeResult,
-        )
-
-    def forward_post(
-        self,
-        *,
-        q: str,
-        bbox: str | Omit = omit,
-        country_code: str | Omit = omit,
-        format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> GeocodeResult:
-        """
-        Forward geocode an address
-
-        Args:
-          q: Address or place name
-
-          bbox: Bounding box filter: south,west,north,east
-
-          country_code: ISO 3166-1 alpha-2 country code filter
-
-          format: Response format: json (default), geojson, csv, ndjson
-
-          lang: Language code for localized names (e.g. en, de, fr)
-
-          lat: Focus latitude
-
-          layer: Filter by layer: address, poi, or admin
-
-          limit: Maximum results (default 20, max 100)
-
-          lng: Focus longitude
+          limit: Maximum number of results (default: 5, max: 50)
 
           extra_headers: Send extra headers
 
@@ -349,25 +197,23 @@ class GeocodeResource(SyncAPIResource):
         """
         return self._post(
             "/api/v1/geocode",
+            body=maybe_transform(
+                {
+                    "q": q,
+                    "country_code": country_code,
+                    "focus": focus,
+                    "lang": lang,
+                    "layer": layer,
+                    "limit": limit,
+                },
+                geocode_forward_params.GeocodeForwardParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "q": q,
-                        "bbox": bbox,
-                        "country_code": country_code,
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                    },
-                    geocode_forward_post_params.GeocodeForwardPostParams,
-                ),
+                query=maybe_transform({"format": format}, geocode_forward_params.GeocodeForwardParams),
             ),
             cast_to=GeocodeResult,
         )
@@ -375,14 +221,11 @@ class GeocodeResource(SyncAPIResource):
     def reverse(
         self,
         *,
+        geometry: PointGeometryParam,
         format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
-        near: str | Omit = omit,
-        radius: int | Omit = omit,
+        lang: Optional[str] | Omit = omit,
+        limit: Optional[int] | Omit = omit,
+        radius: Optional[float] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -394,93 +237,16 @@ class GeocodeResource(SyncAPIResource):
         Reverse geocode a coordinate
 
         Args:
+          geometry: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
+
           format: Response format: json (default), geojson, csv, ndjson
 
-          lang: Language code for localized names (e.g. en, de, fr)
+          lang: Preferred response language (ISO 639-1)
 
-          lat: Legacy shorthand. Latitude. Use near param instead.
+          limit: Maximum number of results (default: 1, max: 50)
 
-          layer: Filter by layer: house or poi
-
-          limit: Maximum results (default 1, max 20)
-
-          lng: Legacy shorthand. Longitude. Use near param instead.
-
-          near: Point geometry for reverse geocode (lat,lng or GeoJSON). Alternative to lat/lng
-              params.
-
-          radius: Search radius in meters (default 200, max 5000)
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get(
-            "/api/v1/geocode/reverse",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                        "near": near,
-                        "radius": radius,
-                    },
-                    geocode_reverse_params.GeocodeReverseParams,
-                ),
-            ),
-            cast_to=ReverseGeocodeResult,
-        )
-
-    def reverse_post(
-        self,
-        *,
-        format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
-        near: str | Omit = omit,
-        radius: int | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ReverseGeocodeResult:
-        """
-        Reverse geocode a coordinate
-
-        Args:
-          format: Response format: json (default), geojson, csv, ndjson
-
-          lang: Language code for localized names (e.g. en, de, fr)
-
-          lat: Legacy shorthand. Latitude. Use near param instead.
-
-          layer: Filter by layer: house or poi
-
-          limit: Maximum results (default 1, max 20)
-
-          lng: Legacy shorthand. Longitude. Use near param instead.
-
-          near: Point geometry for reverse geocode (lat,lng or GeoJSON). Alternative to lat/lng
-              params.
-
-          radius: Search radius in meters (default 200, max 5000)
+          radius: Search radius in meters (default: 100)
 
           extra_headers: Send extra headers
 
@@ -492,24 +258,21 @@ class GeocodeResource(SyncAPIResource):
         """
         return self._post(
             "/api/v1/geocode/reverse",
+            body=maybe_transform(
+                {
+                    "geometry": geometry,
+                    "lang": lang,
+                    "limit": limit,
+                    "radius": radius,
+                },
+                geocode_reverse_params.GeocodeReverseParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                        "near": near,
-                        "radius": radius,
-                    },
-                    geocode_reverse_post_params.GeocodeReversePostParams,
-                ),
+                query=maybe_transform({"format": format}, geocode_reverse_params.GeocodeReverseParams),
             ),
             cast_to=ReverseGeocodeResult,
         )
@@ -539,13 +302,12 @@ class AsyncGeocodeResource(AsyncAPIResource):
         self,
         *,
         q: str,
-        country_code: str | Omit = omit,
         format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
+        country_code: Optional[str] | Omit = omit,
+        focus: Optional[PointGeometryParam] | Omit = omit,
+        lang: Optional[str] | Omit = omit,
+        layer: Optional[str] | Omit = omit,
+        limit: Optional[int] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -557,91 +319,20 @@ class AsyncGeocodeResource(AsyncAPIResource):
         Autocomplete a partial address
 
         Args:
-          q: Partial address query
-
-          country_code: ISO 3166-1 alpha-2 country code filter
+          q: Partial address or place name input
 
           format: Response format: json (default), geojson, csv, ndjson
 
-          lang: Language code for localized names (e.g. en, de, fr)
+          country_code: ISO 3166-1 alpha-2 country code to restrict results
 
-          lat: Focus latitude
+          focus: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
-          layer: Filter by layer: address, poi, or admin
+          lang: Preferred response language (ISO 639-1)
 
-          limit: Maximum results (default 10, max 20)
+          layer: Filter by result layer (e.g. `address`, `place`, `poi`)
 
-          lng: Focus longitude
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._get(
-            "/api/v1/geocode/autocomplete",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "q": q,
-                        "country_code": country_code,
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                    },
-                    geocode_autocomplete_params.GeocodeAutocompleteParams,
-                ),
-            ),
-            cast_to=AutocompleteResult,
-        )
-
-    async def autocomplete_post(
-        self,
-        *,
-        q: str,
-        country_code: str | Omit = omit,
-        format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> AutocompleteResult:
-        """
-        Autocomplete a partial address
-
-        Args:
-          q: Partial address query
-
-          country_code: ISO 3166-1 alpha-2 country code filter
-
-          format: Response format: json (default), geojson, csv, ndjson
-
-          lang: Language code for localized names (e.g. en, de, fr)
-
-          lat: Focus latitude
-
-          layer: Filter by layer: address, poi, or admin
-
-          limit: Maximum results (default 10, max 20)
-
-          lng: Focus longitude
+          limit: Maximum number of suggestions (default: 5, max: 20)
 
           extra_headers: Send extra headers
 
@@ -653,23 +344,24 @@ class AsyncGeocodeResource(AsyncAPIResource):
         """
         return await self._post(
             "/api/v1/geocode/autocomplete",
+            body=await async_maybe_transform(
+                {
+                    "q": q,
+                    "country_code": country_code,
+                    "focus": focus,
+                    "lang": lang,
+                    "layer": layer,
+                    "limit": limit,
+                },
+                geocode_autocomplete_params.GeocodeAutocompleteParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
                 query=await async_maybe_transform(
-                    {
-                        "q": q,
-                        "country_code": country_code,
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                    },
-                    geocode_autocomplete_post_params.GeocodeAutocompletePostParams,
+                    {"format": format}, geocode_autocomplete_params.GeocodeAutocompleteParams
                 ),
             ),
             cast_to=AutocompleteResult,
@@ -711,14 +403,12 @@ class AsyncGeocodeResource(AsyncAPIResource):
         self,
         *,
         q: str,
-        bbox: str | Omit = omit,
-        country_code: str | Omit = omit,
         format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
+        country_code: Optional[str] | Omit = omit,
+        focus: Optional[PointGeometryParam] | Omit = omit,
+        lang: Optional[str] | Omit = omit,
+        layer: Optional[str] | Omit = omit,
+        limit: Optional[int] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -730,97 +420,20 @@ class AsyncGeocodeResource(AsyncAPIResource):
         Forward geocode an address
 
         Args:
-          q: Address or place name
-
-          bbox: Bounding box filter: south,west,north,east
-
-          country_code: ISO 3166-1 alpha-2 country code filter
+          q: Address or place name to geocode
 
           format: Response format: json (default), geojson, csv, ndjson
 
-          lang: Language code for localized names (e.g. en, de, fr)
+          country_code: ISO 3166-1 alpha-2 country code to restrict results
 
-          lat: Focus latitude
+          focus: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
-          layer: Filter by layer: address, poi, or admin
+          lang: Preferred response language (ISO 639-1)
 
-          limit: Maximum results (default 20, max 100)
+          layer: Filter by result layer (e.g. `address`, `place`, `poi`)
 
-          lng: Focus longitude
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._get(
-            "/api/v1/geocode",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "q": q,
-                        "bbox": bbox,
-                        "country_code": country_code,
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                    },
-                    geocode_forward_params.GeocodeForwardParams,
-                ),
-            ),
-            cast_to=GeocodeResult,
-        )
-
-    async def forward_post(
-        self,
-        *,
-        q: str,
-        bbox: str | Omit = omit,
-        country_code: str | Omit = omit,
-        format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> GeocodeResult:
-        """
-        Forward geocode an address
-
-        Args:
-          q: Address or place name
-
-          bbox: Bounding box filter: south,west,north,east
-
-          country_code: ISO 3166-1 alpha-2 country code filter
-
-          format: Response format: json (default), geojson, csv, ndjson
-
-          lang: Language code for localized names (e.g. en, de, fr)
-
-          lat: Focus latitude
-
-          layer: Filter by layer: address, poi, or admin
-
-          limit: Maximum results (default 20, max 100)
-
-          lng: Focus longitude
+          limit: Maximum number of results (default: 5, max: 50)
 
           extra_headers: Send extra headers
 
@@ -832,25 +445,23 @@ class AsyncGeocodeResource(AsyncAPIResource):
         """
         return await self._post(
             "/api/v1/geocode",
+            body=await async_maybe_transform(
+                {
+                    "q": q,
+                    "country_code": country_code,
+                    "focus": focus,
+                    "lang": lang,
+                    "layer": layer,
+                    "limit": limit,
+                },
+                geocode_forward_params.GeocodeForwardParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "q": q,
-                        "bbox": bbox,
-                        "country_code": country_code,
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                    },
-                    geocode_forward_post_params.GeocodeForwardPostParams,
-                ),
+                query=await async_maybe_transform({"format": format}, geocode_forward_params.GeocodeForwardParams),
             ),
             cast_to=GeocodeResult,
         )
@@ -858,14 +469,11 @@ class AsyncGeocodeResource(AsyncAPIResource):
     async def reverse(
         self,
         *,
+        geometry: PointGeometryParam,
         format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
-        near: str | Omit = omit,
-        radius: int | Omit = omit,
+        lang: Optional[str] | Omit = omit,
+        limit: Optional[int] | Omit = omit,
+        radius: Optional[float] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -877,93 +485,16 @@ class AsyncGeocodeResource(AsyncAPIResource):
         Reverse geocode a coordinate
 
         Args:
+          geometry: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
+
           format: Response format: json (default), geojson, csv, ndjson
 
-          lang: Language code for localized names (e.g. en, de, fr)
+          lang: Preferred response language (ISO 639-1)
 
-          lat: Legacy shorthand. Latitude. Use near param instead.
+          limit: Maximum number of results (default: 1, max: 50)
 
-          layer: Filter by layer: house or poi
-
-          limit: Maximum results (default 1, max 20)
-
-          lng: Legacy shorthand. Longitude. Use near param instead.
-
-          near: Point geometry for reverse geocode (lat,lng or GeoJSON). Alternative to lat/lng
-              params.
-
-          radius: Search radius in meters (default 200, max 5000)
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._get(
-            "/api/v1/geocode/reverse",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                        "near": near,
-                        "radius": radius,
-                    },
-                    geocode_reverse_params.GeocodeReverseParams,
-                ),
-            ),
-            cast_to=ReverseGeocodeResult,
-        )
-
-    async def reverse_post(
-        self,
-        *,
-        format: str | Omit = omit,
-        lang: str | Omit = omit,
-        lat: float | Omit = omit,
-        layer: str | Omit = omit,
-        limit: int | Omit = omit,
-        lng: float | Omit = omit,
-        near: str | Omit = omit,
-        radius: int | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> ReverseGeocodeResult:
-        """
-        Reverse geocode a coordinate
-
-        Args:
-          format: Response format: json (default), geojson, csv, ndjson
-
-          lang: Language code for localized names (e.g. en, de, fr)
-
-          lat: Legacy shorthand. Latitude. Use near param instead.
-
-          layer: Filter by layer: house or poi
-
-          limit: Maximum results (default 1, max 20)
-
-          lng: Legacy shorthand. Longitude. Use near param instead.
-
-          near: Point geometry for reverse geocode (lat,lng or GeoJSON). Alternative to lat/lng
-              params.
-
-          radius: Search radius in meters (default 200, max 5000)
+          radius: Search radius in meters (default: 100)
 
           extra_headers: Send extra headers
 
@@ -975,24 +506,21 @@ class AsyncGeocodeResource(AsyncAPIResource):
         """
         return await self._post(
             "/api/v1/geocode/reverse",
+            body=await async_maybe_transform(
+                {
+                    "geometry": geometry,
+                    "lang": lang,
+                    "limit": limit,
+                    "radius": radius,
+                },
+                geocode_reverse_params.GeocodeReverseParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "format": format,
-                        "lang": lang,
-                        "lat": lat,
-                        "layer": layer,
-                        "limit": limit,
-                        "lng": lng,
-                        "near": near,
-                        "radius": radius,
-                    },
-                    geocode_reverse_post_params.GeocodeReversePostParams,
-                ),
+                query=await async_maybe_transform({"format": format}, geocode_reverse_params.GeocodeReverseParams),
             ),
             cast_to=ReverseGeocodeResult,
         )
@@ -1005,23 +533,14 @@ class GeocodeResourceWithRawResponse:
         self.autocomplete = to_raw_response_wrapper(
             geocode.autocomplete,
         )
-        self.autocomplete_post = to_raw_response_wrapper(
-            geocode.autocomplete_post,
-        )
         self.batch = to_raw_response_wrapper(
             geocode.batch,
         )
         self.forward = to_raw_response_wrapper(
             geocode.forward,
         )
-        self.forward_post = to_raw_response_wrapper(
-            geocode.forward_post,
-        )
         self.reverse = to_raw_response_wrapper(
             geocode.reverse,
-        )
-        self.reverse_post = to_raw_response_wrapper(
-            geocode.reverse_post,
         )
 
 
@@ -1032,23 +551,14 @@ class AsyncGeocodeResourceWithRawResponse:
         self.autocomplete = async_to_raw_response_wrapper(
             geocode.autocomplete,
         )
-        self.autocomplete_post = async_to_raw_response_wrapper(
-            geocode.autocomplete_post,
-        )
         self.batch = async_to_raw_response_wrapper(
             geocode.batch,
         )
         self.forward = async_to_raw_response_wrapper(
             geocode.forward,
         )
-        self.forward_post = async_to_raw_response_wrapper(
-            geocode.forward_post,
-        )
         self.reverse = async_to_raw_response_wrapper(
             geocode.reverse,
-        )
-        self.reverse_post = async_to_raw_response_wrapper(
-            geocode.reverse_post,
         )
 
 
@@ -1059,23 +569,14 @@ class GeocodeResourceWithStreamingResponse:
         self.autocomplete = to_streamed_response_wrapper(
             geocode.autocomplete,
         )
-        self.autocomplete_post = to_streamed_response_wrapper(
-            geocode.autocomplete_post,
-        )
         self.batch = to_streamed_response_wrapper(
             geocode.batch,
         )
         self.forward = to_streamed_response_wrapper(
             geocode.forward,
         )
-        self.forward_post = to_streamed_response_wrapper(
-            geocode.forward_post,
-        )
         self.reverse = to_streamed_response_wrapper(
             geocode.reverse,
-        )
-        self.reverse_post = to_streamed_response_wrapper(
-            geocode.reverse_post,
         )
 
 
@@ -1086,21 +587,12 @@ class AsyncGeocodeResourceWithStreamingResponse:
         self.autocomplete = async_to_streamed_response_wrapper(
             geocode.autocomplete,
         )
-        self.autocomplete_post = async_to_streamed_response_wrapper(
-            geocode.autocomplete_post,
-        )
         self.batch = async_to_streamed_response_wrapper(
             geocode.batch,
         )
         self.forward = async_to_streamed_response_wrapper(
             geocode.forward,
         )
-        self.forward_post = async_to_streamed_response_wrapper(
-            geocode.forward_post,
-        )
         self.reverse = async_to_streamed_response_wrapper(
             geocode.reverse,
-        )
-        self.reverse_post = async_to_streamed_response_wrapper(
-            geocode.reverse_post,
         )

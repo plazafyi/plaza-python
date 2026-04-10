@@ -26,3 +26,6 @@ class DatasetCreateParams(TypedDict, total=False):
 
     source_url: Optional[str]
     """Source data URL"""
+
+    strict_mode: Optional[bool]
+    """Enable strict schema validation (default true)"""

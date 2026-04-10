@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import httpx
 
-from ..types import search_query_params, search_query_post_params
+from ..types import search_query_params
 from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
 from .._compat import cached_property
@@ -87,76 +87,6 @@ class SearchResource(SyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return self._get(
-            "/api/v1/search",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "q": q,
-                        "cursor": cursor,
-                        "format": format,
-                        "limit": limit,
-                        "output_fields": output_fields,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "output_sort": output_sort,
-                    },
-                    search_query_params.SearchQueryParams,
-                ),
-            ),
-            cast_to=FeatureCollection,
-        )
-
-    def query_post(
-        self,
-        *,
-        q: str,
-        cursor: str | Omit = omit,
-        format: str | Omit = omit,
-        limit: int | Omit = omit,
-        output_fields: str | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        output_sort: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FeatureCollection:
-        """
-        Search OSM features by name
-
-        Args:
-          q: Search query string
-
-          cursor: Cursor for pagination
-
-          format: Response format: json (default), geojson, csv, ndjson
-
-          limit: Maximum results (default 25, max 100)
-
-          output_fields: Comma-separated property fields to include
-
-          output_include: Extra computed fields: bbox, distance, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          output_sort: Sort by: distance, name, osm_id
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
         return self._post(
             "/api/v1/search",
             options=make_request_options(
@@ -175,7 +105,7 @@ class SearchResource(SyncAPIResource):
                         "output_precision": output_precision,
                         "output_sort": output_sort,
                     },
-                    search_query_post_params.SearchQueryPostParams,
+                    search_query_params.SearchQueryParams,
                 ),
             ),
             cast_to=FeatureCollection,
@@ -248,7 +178,7 @@ class AsyncSearchResource(AsyncAPIResource):
 
           timeout: Override the client-level default timeout for this request, in seconds
         """
-        return await self._get(
+        return await self._post(
             "/api/v1/search",
             options=make_request_options(
                 extra_headers=extra_headers,
@@ -272,76 +202,6 @@ class AsyncSearchResource(AsyncAPIResource):
             cast_to=FeatureCollection,
         )
 
-    async def query_post(
-        self,
-        *,
-        q: str,
-        cursor: str | Omit = omit,
-        format: str | Omit = omit,
-        limit: int | Omit = omit,
-        output_fields: str | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        output_sort: str | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> FeatureCollection:
-        """
-        Search OSM features by name
-
-        Args:
-          q: Search query string
-
-          cursor: Cursor for pagination
-
-          format: Response format: json (default), geojson, csv, ndjson
-
-          limit: Maximum results (default 25, max 100)
-
-          output_fields: Comma-separated property fields to include
-
-          output_include: Extra computed fields: bbox, distance, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          output_sort: Sort by: distance, name, osm_id
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._post(
-            "/api/v1/search",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "q": q,
-                        "cursor": cursor,
-                        "format": format,
-                        "limit": limit,
-                        "output_fields": output_fields,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "output_sort": output_sort,
-                    },
-                    search_query_post_params.SearchQueryPostParams,
-                ),
-            ),
-            cast_to=FeatureCollection,
-        )
-
 
 class SearchResourceWithRawResponse:
     def __init__(self, search: SearchResource) -> None:
@@ -349,9 +209,6 @@ class SearchResourceWithRawResponse:
 
         self.query = to_raw_response_wrapper(
             search.query,
-        )
-        self.query_post = to_raw_response_wrapper(
-            search.query_post,
         )
 
 
@@ -362,9 +219,6 @@ class AsyncSearchResourceWithRawResponse:
         self.query = async_to_raw_response_wrapper(
             search.query,
         )
-        self.query_post = async_to_raw_response_wrapper(
-            search.query_post,
-        )
 
 
 class SearchResourceWithStreamingResponse:
@@ -374,9 +228,6 @@ class SearchResourceWithStreamingResponse:
         self.query = to_streamed_response_wrapper(
             search.query,
         )
-        self.query_post = to_streamed_response_wrapper(
-            search.query_post,
-        )
 
 
 class AsyncSearchResourceWithStreamingResponse:
@@ -385,7 +236,4 @@ class AsyncSearchResourceWithStreamingResponse:
 
         self.query = async_to_streamed_response_wrapper(
             search.query,
-        )
-        self.query_post = async_to_streamed_response_wrapper(
-            search.query_post,
         )

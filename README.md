@@ -43,8 +43,11 @@ client = Plaza(
     environment="local",
 )
 
-feature_collection = client.elements.query(
-    near="48.8584,2.2945",
+feature_collection = client.features.query(
+    around={
+        "type": "Point",
+        "coordinates": [2.2945, 48.8584],
+    },
     radius=500,
 )
 print(feature_collection.features)
@@ -72,8 +75,11 @@ client = AsyncPlaza(
 
 
 async def main() -> None:
-    feature_collection = await client.elements.query(
-        near="48.8584,2.2945",
+    feature_collection = await client.features.query(
+        around={
+            "type": "Point",
+            "coordinates": [2.2945, 48.8584],
+        },
         radius=500,
     )
     print(feature_collection.features)
@@ -109,8 +115,11 @@ async def main() -> None:
         api_key=os.environ.get("PLAZA_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        feature_collection = await client.elements.query(
-            near="48.8584,2.2945",
+        feature_collection = await client.features.query(
+            around={
+                "type": "Point",
+                "coordinates": [2.2945, 48.8584],
+            },
             radius=500,
         )
         print(feature_collection.features)
@@ -137,17 +146,14 @@ from plaza import Plaza
 
 client = Plaza()
 
-route_result = client.routing.route(
-    destination={
-        "lat": 48.8584,
-        "lng": 2.2945,
-    },
-    origin={
-        "lat": 48.8566,
-        "lng": 2.3522,
+autocomplete_result = client.geocode.autocomplete(
+    q="221B Bak",
+    focus={
+        "coordinates": [2.3522, 48.8566],
+        "type": "Point",
     },
 )
-print(route_result.destination)
+print(autocomplete_result.focus)
 ```
 
 ## Handling errors
@@ -166,8 +172,11 @@ from plaza import Plaza
 client = Plaza()
 
 try:
-    client.elements.query(
-        near="48.8584,2.2945",
+    client.features.query(
+        around={
+            "type": "Point",
+            "coordinates": [2.2945, 48.8584],
+        },
         radius=500,
     )
 except plaza.APIConnectionError as e:
@@ -212,8 +221,11 @@ client = Plaza(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).elements.query(
-    near="48.8584,2.2945",
+client.with_options(max_retries=5).features.query(
+    around={
+        "type": "Point",
+        "coordinates": [2.2945, 48.8584],
+    },
     radius=500,
 )
 ```
@@ -238,8 +250,11 @@ client = Plaza(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).elements.query(
-    near="48.8584,2.2945",
+client.with_options(timeout=5.0).features.query(
+    around={
+        "type": "Point",
+        "coordinates": [2.2945, 48.8584],
+    },
     radius=500,
 )
 ```
@@ -282,14 +297,17 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from plaza import Plaza
 
 client = Plaza()
-response = client.elements.with_raw_response.query(
-    near="48.8584,2.2945",
+response = client.features.with_raw_response.query(
+    around={
+        "type": "Point",
+        "coordinates": [2.2945, 48.8584],
+    },
     radius=500,
 )
 print(response.headers.get('X-My-Header'))
 
-element = response.parse()  # get the object that `elements.query()` would have returned
-print(element.features)
+feature = response.parse()  # get the object that `features.query()` would have returned
+print(feature.features)
 ```
 
 These methods return an [`APIResponse`](https://github.com/plazafyi/plaza-python/tree/main/src/plaza/_response.py) object.
@@ -303,8 +321,11 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.elements.with_streaming_response.query(
-    near="48.8584,2.2945",
+with client.features.with_streaming_response.query(
+    around={
+        "type": "Point",
+        "coordinates": [2.2945, 48.8584],
+    },
     radius=500,
 ) as response:
     print(response.headers.get("X-My-Header"))

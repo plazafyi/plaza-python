@@ -31,14 +31,14 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import query, tiles, search, geocode, routing, datasets, elements, optimize, elevation, map_match
+    from .resources import query, tiles, search, geocode, routing, datasets, features, optimize, elevation, map_match
     from .resources.query import QueryResource, AsyncQueryResource
     from .resources.tiles import TilesResource, AsyncTilesResource
     from .resources.search import SearchResource, AsyncSearchResource
     from .resources.geocode import GeocodeResource, AsyncGeocodeResource
     from .resources.routing import RoutingResource, AsyncRoutingResource
     from .resources.datasets import DatasetsResource, AsyncDatasetsResource
-    from .resources.elements import ElementsResource, AsyncElementsResource
+    from .resources.features import FeaturesResource, AsyncFeaturesResource
     from .resources.optimize import OptimizeResource, AsyncOptimizeResource
     from .resources.elevation import ElevationResource, AsyncElevationResource
     from .resources.map_match import MapMatchResource, AsyncMapMatchResource
@@ -141,10 +141,10 @@ class Plaza(SyncAPIClient):
         )
 
     @cached_property
-    def elements(self) -> ElementsResource:
-        from .resources.elements import ElementsResource
+    def features(self) -> FeaturesResource:
+        from .resources.features import FeaturesResource
 
-        return ElementsResource(self)
+        return FeaturesResource(self)
 
     @cached_property
     def datasets(self) -> DatasetsResource:
@@ -395,10 +395,10 @@ class AsyncPlaza(AsyncAPIClient):
         )
 
     @cached_property
-    def elements(self) -> AsyncElementsResource:
-        from .resources.elements import AsyncElementsResource
+    def features(self) -> AsyncFeaturesResource:
+        from .resources.features import AsyncFeaturesResource
 
-        return AsyncElementsResource(self)
+        return AsyncFeaturesResource(self)
 
     @cached_property
     def datasets(self) -> AsyncDatasetsResource:
@@ -576,10 +576,10 @@ class PlazaWithRawResponse:
         self._client = client
 
     @cached_property
-    def elements(self) -> elements.ElementsResourceWithRawResponse:
-        from .resources.elements import ElementsResourceWithRawResponse
+    def features(self) -> features.FeaturesResourceWithRawResponse:
+        from .resources.features import FeaturesResourceWithRawResponse
 
-        return ElementsResourceWithRawResponse(self._client.elements)
+        return FeaturesResourceWithRawResponse(self._client.features)
 
     @cached_property
     def datasets(self) -> datasets.DatasetsResourceWithRawResponse:
@@ -643,10 +643,10 @@ class AsyncPlazaWithRawResponse:
         self._client = client
 
     @cached_property
-    def elements(self) -> elements.AsyncElementsResourceWithRawResponse:
-        from .resources.elements import AsyncElementsResourceWithRawResponse
+    def features(self) -> features.AsyncFeaturesResourceWithRawResponse:
+        from .resources.features import AsyncFeaturesResourceWithRawResponse
 
-        return AsyncElementsResourceWithRawResponse(self._client.elements)
+        return AsyncFeaturesResourceWithRawResponse(self._client.features)
 
     @cached_property
     def datasets(self) -> datasets.AsyncDatasetsResourceWithRawResponse:
@@ -710,10 +710,10 @@ class PlazaWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def elements(self) -> elements.ElementsResourceWithStreamingResponse:
-        from .resources.elements import ElementsResourceWithStreamingResponse
+    def features(self) -> features.FeaturesResourceWithStreamingResponse:
+        from .resources.features import FeaturesResourceWithStreamingResponse
 
-        return ElementsResourceWithStreamingResponse(self._client.elements)
+        return FeaturesResourceWithStreamingResponse(self._client.features)
 
     @cached_property
     def datasets(self) -> datasets.DatasetsResourceWithStreamingResponse:
@@ -777,10 +777,10 @@ class AsyncPlazaWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def elements(self) -> elements.AsyncElementsResourceWithStreamingResponse:
-        from .resources.elements import AsyncElementsResourceWithStreamingResponse
+    def features(self) -> features.AsyncFeaturesResourceWithStreamingResponse:
+        from .resources.features import AsyncFeaturesResourceWithStreamingResponse
 
-        return AsyncElementsResourceWithStreamingResponse(self._client.elements)
+        return AsyncFeaturesResourceWithStreamingResponse(self._client.features)
 
     @cached_property
     def datasets(self) -> datasets.AsyncDatasetsResourceWithStreamingResponse:

@@ -4,7 +4,7 @@ from typing import Dict, Optional
 from typing_extensions import Literal
 
 from .._models import BaseModel
-from .geo_json_geometry import GeoJsonGeometry
+from .geometry import Geometry
 
 __all__ = ["GeocodingFeature", "Properties"]
 
@@ -67,12 +67,11 @@ class Properties(BaseModel):
     signals. Not bounded to 0-1.
     """
 
-    source: Optional[Literal["structured", "bm25", "fuzzy", "address", "place", "interpolation"]] = None
+    source: Optional[Literal["structured", "fuzzy", "address", "place", "interpolation"]] = None
     """
     Result source indicating how the result was found: structured (exact field
-    match), bm25 (full-text search), fuzzy (trigram similarity), address (reverse
-    geocode address), place (reverse geocode POI), interpolation (estimated from
-    neighboring addresses)
+    match), fuzzy (trigram similarity), address (reverse geocode address), place
+    (reverse geocode POI), interpolation (estimated from neighboring addresses)
     """
 
     state: Optional[str] = None
@@ -97,11 +96,10 @@ class GeocodingFeature(BaseModel):
     The geometry is always a Point. Properties include the formatted display name, OSM metadata, confidence score, and source type.
     """
 
-    geometry: GeoJsonGeometry
+    geometry: Geometry
     """GeoJSON Geometry object per RFC 7946.
 
-    Coordinates use [longitude, latitude] order. 3D coordinates [lng, lat,
-    elevation] are used for elevation endpoints.
+    Discriminated union — the `type` field determines the coordinate structure.
     """
 
     properties: Properties
