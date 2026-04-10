@@ -2,22 +2,16 @@
 
 from __future__ import annotations
 
-from typing import Iterable
 from typing_extensions import Required, TypedDict
 
-__all__ = ["ElevationProfileParams", "Coordinate"]
+from .line_string_geometry_param import LineStringGeometryParam
+
+__all__ = ["ElevationProfileParams"]
 
 
 class ElevationProfileParams(TypedDict, total=False):
-    coordinates: Required[Iterable[Coordinate]]
-    """Path coordinates in order of travel (min 2, max 50)"""
+    geometry: Required[LineStringGeometryParam]
+    """GeoJSON LineString geometry per RFC 7946.
 
-
-class Coordinate(TypedDict, total=False):
-    """Geographic coordinate as a JSON object with `lat` and `lng` fields."""
-
-    lat: Required[float]
-    """Latitude in decimal degrees (-90 to 90)"""
-
-    lng: Required[float]
-    """Longitude in decimal degrees (-180 to 180)"""
+    An ordered sequence of two or more positions.
+    """

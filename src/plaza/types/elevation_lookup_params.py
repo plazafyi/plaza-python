@@ -2,31 +2,21 @@
 
 from __future__ import annotations
 
-from typing_extensions import Annotated, TypedDict
+from typing import Union
+from typing_extensions import Required, TypeAlias, TypedDict
 
-from .._utils import PropertyInfo
+from .point_geometry_param import PointGeometryParam
+from .multi_point_geometry_param import MultiPointGeometryParam
 
-__all__ = ["ElevationLookupParams"]
+__all__ = ["ElevationLookupParams", "Geometry"]
 
 
 class ElevationLookupParams(TypedDict, total=False):
+    geometry: Required[Geometry]
+    """Point or MultiPoint geometry to look up elevations for"""
+
     format: str
     """Response format: json (default), geojson, csv, ndjson"""
 
-    lat: float
-    """Latitude (single point)"""
 
-    lng: float
-    """Longitude (single point)"""
-
-    locations: str
-    """Pipe-separated lng,lat pairs (batch)"""
-
-    output_fields: Annotated[str, PropertyInfo(alias="output[fields]")]
-    """Comma-separated property fields to include"""
-
-    output_include: Annotated[str, PropertyInfo(alias="output[include]")]
-    """Extra computed fields: bbox, center"""
-
-    output_precision: Annotated[int, PropertyInfo(alias="output[precision]")]
-    """Coordinate decimal precision (1-15, default 7)"""
+Geometry: TypeAlias = Union[PointGeometryParam, MultiPointGeometryParam]

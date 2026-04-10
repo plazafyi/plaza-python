@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Iterable, cast
+from typing import Any, cast
 from typing_extensions import Literal
 
 import httpx
@@ -21,6 +21,7 @@ from .._response import (
 from .._base_client import make_request_options
 from ..types.optimize_result import OptimizeResult
 from ..types.optimize_job_status import OptimizeJobStatus
+from ..types.multi_point_geometry_param import MultiPointGeometryParam
 
 __all__ = ["OptimizeResource", "AsyncOptimizeResource"]
 
@@ -48,7 +49,7 @@ class OptimizeResource(SyncAPIResource):
     def create(
         self,
         *,
-        waypoints: Iterable[optimize_create_params.Waypoint],
+        waypoints: MultiPointGeometryParam,
         format: str | Omit = omit,
         mode: Literal["auto", "foot", "bicycle"] | Omit = omit,
         roundtrip: bool | Omit = omit,
@@ -63,7 +64,7 @@ class OptimizeResource(SyncAPIResource):
         Optimize route through waypoints
 
         Args:
-          waypoints: Waypoints to visit in optimized order (2-50 points)
+          waypoints: GeoJSON MultiPoint geometry per RFC 7946. An array of positions.
 
           format: Response format: json (default), geojson, csv, ndjson
 
@@ -159,7 +160,7 @@ class AsyncOptimizeResource(AsyncAPIResource):
     async def create(
         self,
         *,
-        waypoints: Iterable[optimize_create_params.Waypoint],
+        waypoints: MultiPointGeometryParam,
         format: str | Omit = omit,
         mode: Literal["auto", "foot", "bicycle"] | Omit = omit,
         roundtrip: bool | Omit = omit,
@@ -174,7 +175,7 @@ class AsyncOptimizeResource(AsyncAPIResource):
         Optimize route through waypoints
 
         Args:
-          waypoints: Waypoints to visit in optimized order (2-50 points)
+          waypoints: GeoJSON MultiPoint geometry per RFC 7946. An array of positions.
 
           format: Response format: json (default), geojson, csv, ndjson
 

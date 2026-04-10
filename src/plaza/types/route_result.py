@@ -4,7 +4,7 @@ from typing import Dict, List, Optional
 from typing_extensions import Literal
 
 from .._models import BaseModel
-from .geo_json_geometry import GeoJsonGeometry
+from .geometry import Geometry
 
 __all__ = ["RouteResult", "Properties"]
 
@@ -43,11 +43,10 @@ class RouteResult(BaseModel):
     The geometry is a LineString or MultiLineString of the route path. When `alternatives > 0`, the response is a FeatureCollection containing multiple route Features.
     """
 
-    geometry: GeoJsonGeometry
+    geometry: Geometry
     """GeoJSON Geometry object per RFC 7946.
 
-    Coordinates use [longitude, latitude] order. 3D coordinates [lng, lat,
-    elevation] are used for elevation endpoints.
+    Discriminated union — the `type` field determines the coordinate structure.
     """
 
     properties: Properties

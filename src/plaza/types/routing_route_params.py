@@ -8,16 +8,25 @@ from typing_extensions import Literal, Required, Annotated, TypedDict
 
 from .._types import SequenceNotStr
 from .._utils import PropertyInfo
+from .point_geometry_param import PointGeometryParam
 
-__all__ = ["RoutingRouteParams", "Destination", "Origin", "Ev", "Waypoint"]
+__all__ = ["RoutingRouteParams", "Ev"]
 
 
 class RoutingRouteParams(TypedDict, total=False):
-    destination: Required[Destination]
-    """Geographic coordinate as a JSON object with `lat` and `lng` fields."""
+    destination: Required[PointGeometryParam]
+    """GeoJSON Point geometry per RFC 7946.
 
-    origin: Required[Origin]
-    """Geographic coordinate as a JSON object with `lat` and `lng` fields."""
+    Coordinates use [longitude, latitude] order. Optional third element is altitude
+    in meters.
+    """
+
+    origin: Required[PointGeometryParam]
+    """GeoJSON Point geometry per RFC 7946.
+
+    Coordinates use [longitude, latitude] order. Optional third element is altitude
+    in meters.
+    """
 
     format: str
     """Response format for alternatives: json (default), geojson, csv, ndjson"""
@@ -58,28 +67,8 @@ class RoutingRouteParams(TypedDict, total=False):
     traffic_model: Optional[Literal["best_guess", "optimistic", "pessimistic"]]
     """Traffic prediction model (only used when `depart_at` is set)"""
 
-    waypoints: Optional[Iterable[Waypoint]]
+    waypoints: Optional[Iterable[PointGeometryParam]]
     """Intermediate waypoints to visit in order (maximum 25)"""
-
-
-class Destination(TypedDict, total=False):
-    """Geographic coordinate as a JSON object with `lat` and `lng` fields."""
-
-    lat: Required[float]
-    """Latitude in decimal degrees (-90 to 90)"""
-
-    lng: Required[float]
-    """Longitude in decimal degrees (-180 to 180)"""
-
-
-class Origin(TypedDict, total=False):
-    """Geographic coordinate as a JSON object with `lat` and `lng` fields."""
-
-    lat: Required[float]
-    """Latitude in decimal degrees (-90 to 90)"""
-
-    lng: Required[float]
-    """Longitude in decimal degrees (-180 to 180)"""
 
 
 class Ev(TypedDict, total=False):
@@ -99,13 +88,3 @@ class Ev(TypedDict, total=False):
 
     min_power_kw: Optional[float]
     """Minimum charger power in kilowatts"""
-
-
-class Waypoint(TypedDict, total=False):
-    """Geographic coordinate as a JSON object with `lat` and `lng` fields."""
-
-    lat: Required[float]
-    """Latitude in decimal degrees (-90 to 90)"""
-
-    lng: Required[float]
-    """Longitude in decimal degrees (-180 to 180)"""

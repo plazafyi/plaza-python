@@ -4,7 +4,7 @@ from typing import Dict, Optional
 from typing_extensions import Literal
 
 from .._models import BaseModel
-from .geo_json_geometry import GeoJsonGeometry
+from .geometry import Geometry
 
 __all__ = ["GeoJsonFeature"]
 
@@ -15,11 +15,10 @@ class GeoJsonFeature(BaseModel):
     Tags from the original OSM element are flattened directly into `properties` (not nested under a `tags` key). Metadata fields `@type` and `@id` identify the OSM element type and ID within properties.
     """
 
-    geometry: GeoJsonGeometry
+    geometry: Geometry
     """GeoJSON Geometry object per RFC 7946.
 
-    Coordinates use [longitude, latitude] order. 3D coordinates [lng, lat,
-    elevation] are used for elevation endpoints.
+    Discriminated union — the `type` field determines the coordinate structure.
     """
 
     properties: Dict[str, object]

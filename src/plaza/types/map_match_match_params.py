@@ -5,26 +5,21 @@ from __future__ import annotations
 from typing import Iterable, Optional
 from typing_extensions import Required, TypedDict
 
-__all__ = ["MapMatchMatchParams", "Coordinate"]
+from .line_string_geometry_param import LineStringGeometryParam
+
+__all__ = ["MapMatchMatchParams"]
 
 
 class MapMatchMatchParams(TypedDict, total=False):
-    coordinates: Required[Iterable[Coordinate]]
-    """GPS coordinates to match, in order of travel (max 50 points)"""
+    geometry: Required[LineStringGeometryParam]
+    """GeoJSON LineString geometry per RFC 7946.
+
+    An ordered sequence of two or more positions.
+    """
 
     radiuses: Optional[Iterable[float]]
     """Search radius per coordinate in meters.
 
-    Must have the same length as `coordinates` or be omitted entirely. Default: 50m
-    per point.
+    Must have the same length as the geometry coordinates or be omitted entirely.
+    Default: 50m per point.
     """
-
-
-class Coordinate(TypedDict, total=False):
-    """Geographic coordinate as a JSON object with `lat` and `lng` fields."""
-
-    lat: Required[float]
-    """Latitude in decimal degrees (-90 to 90)"""
-
-    lng: Required[float]
-    """Longitude in decimal degrees (-180 to 180)"""

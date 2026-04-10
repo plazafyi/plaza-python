@@ -5,10 +5,10 @@ from __future__ import annotations
 from typing import Iterable
 from typing_extensions import Literal, Required, TypedDict
 
-__all__ = ["ElementBatchParams", "Element"]
+__all__ = ["FeatureBatchParams", "Element"]
 
 
-class ElementBatchParams(TypedDict, total=False):
+class FeatureBatchParams(TypedDict, total=False):
     elements: Required[Iterable[Element]]
     """Array of element references to fetch"""
 

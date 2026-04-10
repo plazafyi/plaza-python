@@ -48,13 +48,13 @@ from .datasets import (
     DatasetsResourceWithStreamingResponse,
     AsyncDatasetsResourceWithStreamingResponse,
 )
-from .elements import (
-    ElementsResource,
-    AsyncElementsResource,
-    ElementsResourceWithRawResponse,
-    AsyncElementsResourceWithRawResponse,
-    ElementsResourceWithStreamingResponse,
-    AsyncElementsResourceWithStreamingResponse,
+from .features import (
+    FeaturesResource,
+    AsyncFeaturesResource,
+    FeaturesResourceWithRawResponse,
+    AsyncFeaturesResourceWithRawResponse,
+    FeaturesResourceWithStreamingResponse,
+    AsyncFeaturesResourceWithStreamingResponse,
 )
 from .optimize import (
     OptimizeResource,
@@ -82,12 +82,12 @@ from .map_match import (
 )
 
 __all__ = [
-    "ElementsResource",
-    "AsyncElementsResource",
-    "ElementsResourceWithRawResponse",
-    "AsyncElementsResourceWithRawResponse",
-    "ElementsResourceWithStreamingResponse",
-    "AsyncElementsResourceWithStreamingResponse",
+    "FeaturesResource",
+    "AsyncFeaturesResource",
+    "FeaturesResourceWithRawResponse",
+    "AsyncFeaturesResourceWithRawResponse",
+    "FeaturesResourceWithStreamingResponse",
+    "AsyncFeaturesResourceWithStreamingResponse",
     "DatasetsResource",
     "AsyncDatasetsResource",
     "DatasetsResourceWithRawResponse",

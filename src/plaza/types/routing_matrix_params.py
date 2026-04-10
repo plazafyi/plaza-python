@@ -5,15 +5,17 @@ from __future__ import annotations
 from typing import Iterable, Optional
 from typing_extensions import Literal, Required, TypedDict
 
-__all__ = ["RoutingMatrixParams", "Destination", "Origin"]
+from .point_geometry_param import PointGeometryParam
+
+__all__ = ["RoutingMatrixParams"]
 
 
 class RoutingMatrixParams(TypedDict, total=False):
-    destinations: Required[Iterable[Destination]]
-    """Array of destination coordinates (max 50)"""
+    destinations: Required[Iterable[PointGeometryParam]]
+    """Array of destination coordinates as GeoJSON Points (max 50)"""
 
-    origins: Required[Iterable[Origin]]
-    """Array of origin coordinates (max 50)"""
+    origins: Required[Iterable[PointGeometryParam]]
+    """Array of origin coordinates as GeoJSON Points (max 50)"""
 
     annotations: str
     """
@@ -29,23 +31,3 @@ class RoutingMatrixParams(TypedDict, total=False):
 
     mode: Literal["auto", "foot", "bicycle"]
     """Travel mode (default: `auto`)"""
-
-
-class Destination(TypedDict, total=False):
-    """Geographic coordinate as a JSON object with `lat` and `lng` fields."""
-
-    lat: Required[float]
-    """Latitude in decimal degrees (-90 to 90)"""
-
-    lng: Required[float]
-    """Longitude in decimal degrees (-180 to 180)"""
-
-
-class Origin(TypedDict, total=False):
-    """Geographic coordinate as a JSON object with `lat` and `lng` fields."""
-
-    lat: Required[float]
-    """Latitude in decimal degrees (-90 to 90)"""
-
-    lng: Required[float]
-    """Longitude in decimal degrees (-180 to 180)"""

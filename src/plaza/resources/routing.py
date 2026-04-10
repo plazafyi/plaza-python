@@ -13,8 +13,6 @@ from ..types import (
     routing_matrix_params,
     routing_nearest_params,
     routing_isochrone_params,
-    routing_nearest_post_params,
-    routing_isochrone_post_params,
 )
 from .._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from .._utils import maybe_transform, async_maybe_transform
@@ -30,8 +28,8 @@ from .._base_client import make_request_options
 from ..types.route_result import RouteResult
 from ..types.matrix_result import MatrixResult
 from ..types.nearest_result import NearestResult
+from ..types.point_geometry_param import PointGeometryParam
 from ..types.routing_isochrone_response import RoutingIsochroneResponse
-from ..types.routing_isochrone_post_response import RoutingIsochronePostResponse
 
 __all__ = ["RoutingResource", "AsyncRoutingResource"]
 
@@ -59,16 +57,10 @@ class RoutingResource(SyncAPIResource):
     def isochrone(
         self,
         *,
-        lat: float,
-        lng: float,
-        time: float,
+        geometry: PointGeometryParam,
+        time: Iterable[int],
         format: str | Omit = omit,
-        mode: str | Omit = omit,
-        output_fields: str | Omit = omit,
-        output_geometry: bool | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        output_simplify: float | Omit = omit,
+        mode: Literal["auto", "foot", "bicycle"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -80,103 +72,14 @@ class RoutingResource(SyncAPIResource):
         Calculate an isochrone from a point
 
         Args:
-          lat: Latitude
+          geometry: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
-          lng: Longitude
-
-          time: Travel time in seconds (1-7200)
-
-          format: Response format: json (default), geojson, csv, ndjson
-
-          mode: Travel mode (auto, foot, bicycle)
-
-          output_fields: Comma-separated property fields to include
-
-          output_geometry: Include geometry (default true)
-
-          output_include: Extra computed fields: bbox, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          output_simplify: Simplify geometry tolerance in meters
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get(
-            "/api/v1/isochrone",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "lat": lat,
-                        "lng": lng,
-                        "time": time,
-                        "format": format,
-                        "mode": mode,
-                        "output_fields": output_fields,
-                        "output_geometry": output_geometry,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "output_simplify": output_simplify,
-                    },
-                    routing_isochrone_params.RoutingIsochroneParams,
-                ),
-            ),
-            cast_to=RoutingIsochroneResponse,
-        )
-
-    def isochrone_post(
-        self,
-        *,
-        lat: float,
-        lng: float,
-        time: float,
-        format: str | Omit = omit,
-        mode: str | Omit = omit,
-        output_fields: str | Omit = omit,
-        output_geometry: bool | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        output_simplify: float | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> RoutingIsochronePostResponse:
-        """
-        Calculate an isochrone from a point
-
-        Args:
-          lat: Latitude
-
-          lng: Longitude
-
-          time: Travel time in seconds (1-7200)
+          time: Travel time budgets in seconds. Each value produces one contour polygon.
 
           format: Response format: json (default), geojson, csv, ndjson
 
-          mode: Travel mode (auto, foot, bicycle)
-
-          output_fields: Comma-separated property fields to include
-
-          output_geometry: Include geometry (default true)
-
-          output_include: Extra computed fields: bbox, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          output_simplify: Simplify geometry tolerance in meters
+          mode: Travel mode (default: `auto`)
 
           extra_headers: Send extra headers
 
@@ -188,35 +91,29 @@ class RoutingResource(SyncAPIResource):
         """
         return self._post(
             "/api/v1/isochrone",
+            body=maybe_transform(
+                {
+                    "geometry": geometry,
+                    "time": time,
+                    "mode": mode,
+                },
+                routing_isochrone_params.RoutingIsochroneParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "lat": lat,
-                        "lng": lng,
-                        "time": time,
-                        "format": format,
-                        "mode": mode,
-                        "output_fields": output_fields,
-                        "output_geometry": output_geometry,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "output_simplify": output_simplify,
-                    },
-                    routing_isochrone_post_params.RoutingIsochronePostParams,
-                ),
+                query=maybe_transform({"format": format}, routing_isochrone_params.RoutingIsochroneParams),
             ),
-            cast_to=RoutingIsochronePostResponse,
+            cast_to=RoutingIsochroneResponse,
         )
 
     def matrix(
         self,
         *,
-        destinations: Iterable[routing_matrix_params.Destination],
-        origins: Iterable[routing_matrix_params.Origin],
+        destinations: Iterable[PointGeometryParam],
+        origins: Iterable[PointGeometryParam],
         annotations: str | Omit = omit,
         fallback_speed: Optional[float] | Omit = omit,
         mode: Literal["auto", "foot", "bicycle"] | Omit = omit,
@@ -231,9 +128,9 @@ class RoutingResource(SyncAPIResource):
         Calculate a distance matrix between points
 
         Args:
-          destinations: Array of destination coordinates (max 50)
+          destinations: Array of destination coordinates as GeoJSON Points (max 50)
 
-          origins: Array of origin coordinates (max 50)
+          origins: Array of origin coordinates as GeoJSON Points (max 50)
 
           annotations: Comma-separated list of annotations to include: `duration` (always included),
               `distance`. Example: `duration,distance`.
@@ -272,12 +169,8 @@ class RoutingResource(SyncAPIResource):
     def nearest(
         self,
         *,
-        lat: float,
-        lng: float,
-        output_fields: str | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        radius: int | Omit = omit,
+        geometry: PointGeometryParam,
+        radius: Optional[float] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -289,79 +182,10 @@ class RoutingResource(SyncAPIResource):
         Snap a coordinate to the nearest road
 
         Args:
-          lat: Latitude
+          geometry: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
-          lng: Longitude
-
-          output_fields: Comma-separated property fields to include
-
-          output_include: Extra computed fields: bbox, distance, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          radius: Search radius in meters (default 500, max 5000)
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get(
-            "/api/v1/nearest",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "lat": lat,
-                        "lng": lng,
-                        "output_fields": output_fields,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "radius": radius,
-                    },
-                    routing_nearest_params.RoutingNearestParams,
-                ),
-            ),
-            cast_to=NearestResult,
-        )
-
-    def nearest_post(
-        self,
-        *,
-        lat: float,
-        lng: float,
-        output_fields: str | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        radius: int | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> NearestResult:
-        """
-        Snap a coordinate to the nearest road
-
-        Args:
-          lat: Latitude
-
-          lng: Longitude
-
-          output_fields: Comma-separated property fields to include
-
-          output_include: Extra computed fields: bbox, distance, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          radius: Search radius in meters (default 500, max 5000)
+          radius: Maximum search radius in meters (default: 100)
 
           extra_headers: Send extra headers
 
@@ -373,22 +197,15 @@ class RoutingResource(SyncAPIResource):
         """
         return self._post(
             "/api/v1/nearest",
+            body=maybe_transform(
+                {
+                    "geometry": geometry,
+                    "radius": radius,
+                },
+                routing_nearest_params.RoutingNearestParams,
+            ),
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "lat": lat,
-                        "lng": lng,
-                        "output_fields": output_fields,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "radius": radius,
-                    },
-                    routing_nearest_post_params.RoutingNearestPostParams,
-                ),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=NearestResult,
         )
@@ -396,8 +213,8 @@ class RoutingResource(SyncAPIResource):
     def route(
         self,
         *,
-        destination: routing_route_params.Destination,
-        origin: routing_route_params.Origin,
+        destination: PointGeometryParam,
+        origin: PointGeometryParam,
         format: str | Omit = omit,
         alternatives: int | Omit = omit,
         annotations: bool | Omit = omit,
@@ -409,7 +226,7 @@ class RoutingResource(SyncAPIResource):
         overview: Literal["full", "simplified", "false"] | Omit = omit,
         steps: bool | Omit = omit,
         traffic_model: Optional[Literal["best_guess", "optimistic", "pessimistic"]] | Omit = omit,
-        waypoints: Optional[Iterable[routing_route_params.Waypoint]] | Omit = omit,
+        waypoints: Optional[Iterable[PointGeometryParam]] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -421,9 +238,11 @@ class RoutingResource(SyncAPIResource):
         Calculate a route between two points
 
         Args:
-          destination: Geographic coordinate as a JSON object with `lat` and `lng` fields.
+          destination: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
-          origin: Geographic coordinate as a JSON object with `lat` and `lng` fields.
+          origin: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
           format: Response format for alternatives: json (default), geojson, csv, ndjson
 
@@ -513,16 +332,10 @@ class AsyncRoutingResource(AsyncAPIResource):
     async def isochrone(
         self,
         *,
-        lat: float,
-        lng: float,
-        time: float,
+        geometry: PointGeometryParam,
+        time: Iterable[int],
         format: str | Omit = omit,
-        mode: str | Omit = omit,
-        output_fields: str | Omit = omit,
-        output_geometry: bool | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        output_simplify: float | Omit = omit,
+        mode: Literal["auto", "foot", "bicycle"] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -534,103 +347,14 @@ class AsyncRoutingResource(AsyncAPIResource):
         Calculate an isochrone from a point
 
         Args:
-          lat: Latitude
+          geometry: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
-          lng: Longitude
-
-          time: Travel time in seconds (1-7200)
-
-          format: Response format: json (default), geojson, csv, ndjson
-
-          mode: Travel mode (auto, foot, bicycle)
-
-          output_fields: Comma-separated property fields to include
-
-          output_geometry: Include geometry (default true)
-
-          output_include: Extra computed fields: bbox, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          output_simplify: Simplify geometry tolerance in meters
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._get(
-            "/api/v1/isochrone",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "lat": lat,
-                        "lng": lng,
-                        "time": time,
-                        "format": format,
-                        "mode": mode,
-                        "output_fields": output_fields,
-                        "output_geometry": output_geometry,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "output_simplify": output_simplify,
-                    },
-                    routing_isochrone_params.RoutingIsochroneParams,
-                ),
-            ),
-            cast_to=RoutingIsochroneResponse,
-        )
-
-    async def isochrone_post(
-        self,
-        *,
-        lat: float,
-        lng: float,
-        time: float,
-        format: str | Omit = omit,
-        mode: str | Omit = omit,
-        output_fields: str | Omit = omit,
-        output_geometry: bool | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        output_simplify: float | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> RoutingIsochronePostResponse:
-        """
-        Calculate an isochrone from a point
-
-        Args:
-          lat: Latitude
-
-          lng: Longitude
-
-          time: Travel time in seconds (1-7200)
+          time: Travel time budgets in seconds. Each value produces one contour polygon.
 
           format: Response format: json (default), geojson, csv, ndjson
 
-          mode: Travel mode (auto, foot, bicycle)
-
-          output_fields: Comma-separated property fields to include
-
-          output_geometry: Include geometry (default true)
-
-          output_include: Extra computed fields: bbox, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          output_simplify: Simplify geometry tolerance in meters
+          mode: Travel mode (default: `auto`)
 
           extra_headers: Send extra headers
 
@@ -642,35 +366,29 @@ class AsyncRoutingResource(AsyncAPIResource):
         """
         return await self._post(
             "/api/v1/isochrone",
+            body=await async_maybe_transform(
+                {
+                    "geometry": geometry,
+                    "time": time,
+                    "mode": mode,
+                },
+                routing_isochrone_params.RoutingIsochroneParams,
+            ),
             options=make_request_options(
                 extra_headers=extra_headers,
                 extra_query=extra_query,
                 extra_body=extra_body,
                 timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "lat": lat,
-                        "lng": lng,
-                        "time": time,
-                        "format": format,
-                        "mode": mode,
-                        "output_fields": output_fields,
-                        "output_geometry": output_geometry,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "output_simplify": output_simplify,
-                    },
-                    routing_isochrone_post_params.RoutingIsochronePostParams,
-                ),
+                query=await async_maybe_transform({"format": format}, routing_isochrone_params.RoutingIsochroneParams),
             ),
-            cast_to=RoutingIsochronePostResponse,
+            cast_to=RoutingIsochroneResponse,
         )
 
     async def matrix(
         self,
         *,
-        destinations: Iterable[routing_matrix_params.Destination],
-        origins: Iterable[routing_matrix_params.Origin],
+        destinations: Iterable[PointGeometryParam],
+        origins: Iterable[PointGeometryParam],
         annotations: str | Omit = omit,
         fallback_speed: Optional[float] | Omit = omit,
         mode: Literal["auto", "foot", "bicycle"] | Omit = omit,
@@ -685,9 +403,9 @@ class AsyncRoutingResource(AsyncAPIResource):
         Calculate a distance matrix between points
 
         Args:
-          destinations: Array of destination coordinates (max 50)
+          destinations: Array of destination coordinates as GeoJSON Points (max 50)
 
-          origins: Array of origin coordinates (max 50)
+          origins: Array of origin coordinates as GeoJSON Points (max 50)
 
           annotations: Comma-separated list of annotations to include: `duration` (always included),
               `distance`. Example: `duration,distance`.
@@ -726,12 +444,8 @@ class AsyncRoutingResource(AsyncAPIResource):
     async def nearest(
         self,
         *,
-        lat: float,
-        lng: float,
-        output_fields: str | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        radius: int | Omit = omit,
+        geometry: PointGeometryParam,
+        radius: Optional[float] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -743,79 +457,10 @@ class AsyncRoutingResource(AsyncAPIResource):
         Snap a coordinate to the nearest road
 
         Args:
-          lat: Latitude
+          geometry: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
-          lng: Longitude
-
-          output_fields: Comma-separated property fields to include
-
-          output_include: Extra computed fields: bbox, distance, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          radius: Search radius in meters (default 500, max 5000)
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._get(
-            "/api/v1/nearest",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "lat": lat,
-                        "lng": lng,
-                        "output_fields": output_fields,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "radius": radius,
-                    },
-                    routing_nearest_params.RoutingNearestParams,
-                ),
-            ),
-            cast_to=NearestResult,
-        )
-
-    async def nearest_post(
-        self,
-        *,
-        lat: float,
-        lng: float,
-        output_fields: str | Omit = omit,
-        output_include: str | Omit = omit,
-        output_precision: int | Omit = omit,
-        radius: int | Omit = omit,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> NearestResult:
-        """
-        Snap a coordinate to the nearest road
-
-        Args:
-          lat: Latitude
-
-          lng: Longitude
-
-          output_fields: Comma-separated property fields to include
-
-          output_include: Extra computed fields: bbox, distance, center
-
-          output_precision: Coordinate decimal precision (1-15, default 7)
-
-          radius: Search radius in meters (default 500, max 5000)
+          radius: Maximum search radius in meters (default: 100)
 
           extra_headers: Send extra headers
 
@@ -827,22 +472,15 @@ class AsyncRoutingResource(AsyncAPIResource):
         """
         return await self._post(
             "/api/v1/nearest",
+            body=await async_maybe_transform(
+                {
+                    "geometry": geometry,
+                    "radius": radius,
+                },
+                routing_nearest_params.RoutingNearestParams,
+            ),
             options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "lat": lat,
-                        "lng": lng,
-                        "output_fields": output_fields,
-                        "output_include": output_include,
-                        "output_precision": output_precision,
-                        "radius": radius,
-                    },
-                    routing_nearest_post_params.RoutingNearestPostParams,
-                ),
+                extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
             ),
             cast_to=NearestResult,
         )
@@ -850,8 +488,8 @@ class AsyncRoutingResource(AsyncAPIResource):
     async def route(
         self,
         *,
-        destination: routing_route_params.Destination,
-        origin: routing_route_params.Origin,
+        destination: PointGeometryParam,
+        origin: PointGeometryParam,
         format: str | Omit = omit,
         alternatives: int | Omit = omit,
         annotations: bool | Omit = omit,
@@ -863,7 +501,7 @@ class AsyncRoutingResource(AsyncAPIResource):
         overview: Literal["full", "simplified", "false"] | Omit = omit,
         steps: bool | Omit = omit,
         traffic_model: Optional[Literal["best_guess", "optimistic", "pessimistic"]] | Omit = omit,
-        waypoints: Optional[Iterable[routing_route_params.Waypoint]] | Omit = omit,
+        waypoints: Optional[Iterable[PointGeometryParam]] | Omit = omit,
         # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
         # The extra values given here take precedence over values defined on the client or passed to this method.
         extra_headers: Headers | None = None,
@@ -875,9 +513,11 @@ class AsyncRoutingResource(AsyncAPIResource):
         Calculate a route between two points
 
         Args:
-          destination: Geographic coordinate as a JSON object with `lat` and `lng` fields.
+          destination: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
-          origin: Geographic coordinate as a JSON object with `lat` and `lng` fields.
+          origin: GeoJSON Point geometry per RFC 7946. Coordinates use [longitude, latitude]
+              order. Optional third element is altitude in meters.
 
           format: Response format for alternatives: json (default), geojson, csv, ndjson
 
@@ -951,17 +591,11 @@ class RoutingResourceWithRawResponse:
         self.isochrone = to_raw_response_wrapper(
             routing.isochrone,
         )
-        self.isochrone_post = to_raw_response_wrapper(
-            routing.isochrone_post,
-        )
         self.matrix = to_raw_response_wrapper(
             routing.matrix,
         )
         self.nearest = to_raw_response_wrapper(
             routing.nearest,
-        )
-        self.nearest_post = to_raw_response_wrapper(
-            routing.nearest_post,
         )
         self.route = to_raw_response_wrapper(
             routing.route,
@@ -975,17 +609,11 @@ class AsyncRoutingResourceWithRawResponse:
         self.isochrone = async_to_raw_response_wrapper(
             routing.isochrone,
         )
-        self.isochrone_post = async_to_raw_response_wrapper(
-            routing.isochrone_post,
-        )
         self.matrix = async_to_raw_response_wrapper(
             routing.matrix,
         )
         self.nearest = async_to_raw_response_wrapper(
             routing.nearest,
-        )
-        self.nearest_post = async_to_raw_response_wrapper(
-            routing.nearest_post,
         )
         self.route = async_to_raw_response_wrapper(
             routing.route,
@@ -999,17 +627,11 @@ class RoutingResourceWithStreamingResponse:
         self.isochrone = to_streamed_response_wrapper(
             routing.isochrone,
         )
-        self.isochrone_post = to_streamed_response_wrapper(
-            routing.isochrone_post,
-        )
         self.matrix = to_streamed_response_wrapper(
             routing.matrix,
         )
         self.nearest = to_streamed_response_wrapper(
             routing.nearest,
-        )
-        self.nearest_post = to_streamed_response_wrapper(
-            routing.nearest_post,
         )
         self.route = to_streamed_response_wrapper(
             routing.route,
@@ -1023,17 +645,11 @@ class AsyncRoutingResourceWithStreamingResponse:
         self.isochrone = async_to_streamed_response_wrapper(
             routing.isochrone,
         )
-        self.isochrone_post = async_to_streamed_response_wrapper(
-            routing.isochrone_post,
-        )
         self.matrix = async_to_streamed_response_wrapper(
             routing.matrix,
         )
         self.nearest = async_to_streamed_response_wrapper(
             routing.nearest,
-        )
-        self.nearest_post = async_to_streamed_response_wrapper(
-            routing.nearest_post,
         )
         self.route = async_to_streamed_response_wrapper(
             routing.route,

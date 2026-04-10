@@ -4,7 +4,7 @@ from typing import Optional
 from typing_extensions import Literal
 
 from .._models import BaseModel
-from .geo_json_geometry import GeoJsonGeometry
+from .geometry import Geometry
 
 __all__ = ["NearestResult", "Properties"]
 
@@ -36,11 +36,10 @@ class NearestResult(BaseModel):
     GeoJSON Point Feature representing the nearest point on the road network to the input coordinate. Used for snapping GPS coordinates to roads.
     """
 
-    geometry: GeoJsonGeometry
+    geometry: Geometry
     """GeoJSON Geometry object per RFC 7946.
 
-    Coordinates use [longitude, latitude] order. 3D coordinates [lng, lat,
-    elevation] are used for elevation endpoints.
+    Discriminated union — the `type` field determines the coordinate structure.
     """
 
     properties: Properties

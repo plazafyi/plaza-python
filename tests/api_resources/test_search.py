@@ -62,51 +62,6 @@ class TestSearch:
 
         assert cast(Any, response.is_closed) is True
 
-    @parametrize
-    def test_method_query_post(self, client: Plaza) -> None:
-        search = client.search.query_post(
-            q="q",
-        )
-        assert_matches_type(FeatureCollection, search, path=["response"])
-
-    @parametrize
-    def test_method_query_post_with_all_params(self, client: Plaza) -> None:
-        search = client.search.query_post(
-            q="q",
-            cursor="cursor",
-            format="format",
-            limit=0,
-            output_fields="output[fields]",
-            output_include="output[include]",
-            output_precision=0,
-            output_sort="output[sort]",
-        )
-        assert_matches_type(FeatureCollection, search, path=["response"])
-
-    @parametrize
-    def test_raw_response_query_post(self, client: Plaza) -> None:
-        response = client.search.with_raw_response.query_post(
-            q="q",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        search = response.parse()
-        assert_matches_type(FeatureCollection, search, path=["response"])
-
-    @parametrize
-    def test_streaming_response_query_post(self, client: Plaza) -> None:
-        with client.search.with_streaming_response.query_post(
-            q="q",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            search = response.parse()
-            assert_matches_type(FeatureCollection, search, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
 
 class TestAsyncSearch:
     parametrize = pytest.mark.parametrize(
@@ -148,51 +103,6 @@ class TestAsyncSearch:
     @parametrize
     async def test_streaming_response_query(self, async_client: AsyncPlaza) -> None:
         async with async_client.search.with_streaming_response.query(
-            q="q",
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            search = await response.parse()
-            assert_matches_type(FeatureCollection, search, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_method_query_post(self, async_client: AsyncPlaza) -> None:
-        search = await async_client.search.query_post(
-            q="q",
-        )
-        assert_matches_type(FeatureCollection, search, path=["response"])
-
-    @parametrize
-    async def test_method_query_post_with_all_params(self, async_client: AsyncPlaza) -> None:
-        search = await async_client.search.query_post(
-            q="q",
-            cursor="cursor",
-            format="format",
-            limit=0,
-            output_fields="output[fields]",
-            output_include="output[include]",
-            output_precision=0,
-            output_sort="output[sort]",
-        )
-        assert_matches_type(FeatureCollection, search, path=["response"])
-
-    @parametrize
-    async def test_raw_response_query_post(self, async_client: AsyncPlaza) -> None:
-        response = await async_client.search.with_raw_response.query_post(
-            q="q",
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        search = await response.parse()
-        assert_matches_type(FeatureCollection, search, path=["response"])
-
-    @parametrize
-    async def test_streaming_response_query_post(self, async_client: AsyncPlaza) -> None:
-        async with async_client.search.with_streaming_response.query_post(
             q="q",
         ) as response:
             assert not response.is_closed

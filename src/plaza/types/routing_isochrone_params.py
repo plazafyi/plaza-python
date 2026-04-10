@@ -2,40 +2,27 @@
 
 from __future__ import annotations
 
-from typing_extensions import Required, Annotated, TypedDict
+from typing import Iterable
+from typing_extensions import Literal, Required, TypedDict
 
-from .._utils import PropertyInfo
+from .point_geometry_param import PointGeometryParam
 
 __all__ = ["RoutingIsochroneParams"]
 
 
 class RoutingIsochroneParams(TypedDict, total=False):
-    lat: Required[float]
-    """Latitude"""
+    geometry: Required[PointGeometryParam]
+    """GeoJSON Point geometry per RFC 7946.
 
-    lng: Required[float]
-    """Longitude"""
+    Coordinates use [longitude, latitude] order. Optional third element is altitude
+    in meters.
+    """
 
-    time: Required[float]
-    """Travel time in seconds (1-7200)"""
+    time: Required[Iterable[int]]
+    """Travel time budgets in seconds. Each value produces one contour polygon."""
 
     format: str
     """Response format: json (default), geojson, csv, ndjson"""
 
-    mode: str
-    """Travel mode (auto, foot, bicycle)"""
-
-    output_fields: Annotated[str, PropertyInfo(alias="output[fields]")]
-    """Comma-separated property fields to include"""
-
-    output_geometry: Annotated[bool, PropertyInfo(alias="output[geometry]")]
-    """Include geometry (default true)"""
-
-    output_include: Annotated[str, PropertyInfo(alias="output[include]")]
-    """Extra computed fields: bbox, center"""
-
-    output_precision: Annotated[int, PropertyInfo(alias="output[precision]")]
-    """Coordinate decimal precision (1-15, default 7)"""
-
-    output_simplify: Annotated[float, PropertyInfo(alias="output[simplify]")]
-    """Simplify geometry tolerance in meters"""
+    mode: Literal["auto", "foot", "bicycle"]
+    """Travel mode (default: `auto`)"""

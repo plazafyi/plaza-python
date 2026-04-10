@@ -13,7 +13,6 @@ from plaza.types import (
     MatrixResult,
     NearestResult,
     RoutingIsochroneResponse,
-    RoutingIsochronePostResponse,
 )
 from tests.utils import assert_matches_type
 from plaza._utils import parse_datetime
@@ -27,34 +26,35 @@ class TestRouting:
     @parametrize
     def test_method_isochrone(self, client: Plaza) -> None:
         routing = client.routing.isochrone(
-            lat=0,
-            lng=0,
-            time=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+            time=[1],
         )
         assert_matches_type(RoutingIsochroneResponse, routing, path=["response"])
 
     @parametrize
     def test_method_isochrone_with_all_params(self, client: Plaza) -> None:
         routing = client.routing.isochrone(
-            lat=0,
-            lng=0,
-            time=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+            time=[1],
             format="format",
-            mode="mode",
-            output_fields="output[fields]",
-            output_geometry=True,
-            output_include="output[include]",
-            output_precision=0,
-            output_simplify=0,
+            mode="auto",
         )
         assert_matches_type(RoutingIsochroneResponse, routing, path=["response"])
 
     @parametrize
     def test_raw_response_isochrone(self, client: Plaza) -> None:
         response = client.routing.with_raw_response.isochrone(
-            lat=0,
-            lng=0,
-            time=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+            time=[1],
         )
 
         assert response.is_closed is True
@@ -65,9 +65,11 @@ class TestRouting:
     @parametrize
     def test_streaming_response_isochrone(self, client: Plaza) -> None:
         with client.routing.with_streaming_response.isochrone(
-            lat=0,
-            lng=0,
-            time=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+            time=[1],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -78,75 +80,22 @@ class TestRouting:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    def test_method_isochrone_post(self, client: Plaza) -> None:
-        routing = client.routing.isochrone_post(
-            lat=0,
-            lng=0,
-            time=0,
-        )
-        assert_matches_type(RoutingIsochronePostResponse, routing, path=["response"])
-
-    @parametrize
-    def test_method_isochrone_post_with_all_params(self, client: Plaza) -> None:
-        routing = client.routing.isochrone_post(
-            lat=0,
-            lng=0,
-            time=0,
-            format="format",
-            mode="mode",
-            output_fields="output[fields]",
-            output_geometry=True,
-            output_include="output[include]",
-            output_precision=0,
-            output_simplify=0,
-        )
-        assert_matches_type(RoutingIsochronePostResponse, routing, path=["response"])
-
-    @parametrize
-    def test_raw_response_isochrone_post(self, client: Plaza) -> None:
-        response = client.routing.with_raw_response.isochrone_post(
-            lat=0,
-            lng=0,
-            time=0,
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        routing = response.parse()
-        assert_matches_type(RoutingIsochronePostResponse, routing, path=["response"])
-
-    @parametrize
-    def test_streaming_response_isochrone_post(self, client: Plaza) -> None:
-        with client.routing.with_streaming_response.isochrone_post(
-            lat=0,
-            lng=0,
-            time=0,
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            routing = response.parse()
-            assert_matches_type(RoutingIsochronePostResponse, routing, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
     def test_method_matrix(self, client: Plaza) -> None:
         routing = client.routing.matrix(
             destinations=[
                 {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
+                    "coordinates": [2.2945, 48.8584],
+                    "type": "Point",
                 }
             ],
             origins=[
                 {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
+                    "coordinates": [2.3522, 48.8566],
+                    "type": "Point",
                 },
                 {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
+                    "coordinates": [2.3376, 48.8606],
+                    "type": "Point",
                 },
             ],
         )
@@ -157,18 +106,18 @@ class TestRouting:
         routing = client.routing.matrix(
             destinations=[
                 {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
+                    "coordinates": [2.2945, 48.8584],
+                    "type": "Point",
                 }
             ],
             origins=[
                 {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
+                    "coordinates": [2.3522, 48.8566],
+                    "type": "Point",
                 },
                 {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
+                    "coordinates": [2.3376, 48.8606],
+                    "type": "Point",
                 },
             ],
             annotations="annotations",
@@ -182,18 +131,18 @@ class TestRouting:
         response = client.routing.with_raw_response.matrix(
             destinations=[
                 {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
+                    "coordinates": [2.2945, 48.8584],
+                    "type": "Point",
                 }
             ],
             origins=[
                 {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
+                    "coordinates": [2.3522, 48.8566],
+                    "type": "Point",
                 },
                 {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
+                    "coordinates": [2.3376, 48.8606],
+                    "type": "Point",
                 },
             ],
         )
@@ -208,18 +157,18 @@ class TestRouting:
         with client.routing.with_streaming_response.matrix(
             destinations=[
                 {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
+                    "coordinates": [2.2945, 48.8584],
+                    "type": "Point",
                 }
             ],
             origins=[
                 {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
+                    "coordinates": [2.3522, 48.8566],
+                    "type": "Point",
                 },
                 {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
+                    "coordinates": [2.3376, 48.8606],
+                    "type": "Point",
                 },
             ],
         ) as response:
@@ -234,28 +183,31 @@ class TestRouting:
     @parametrize
     def test_method_nearest(self, client: Plaza) -> None:
         routing = client.routing.nearest(
-            lat=0,
-            lng=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
         )
         assert_matches_type(NearestResult, routing, path=["response"])
 
     @parametrize
     def test_method_nearest_with_all_params(self, client: Plaza) -> None:
         routing = client.routing.nearest(
-            lat=0,
-            lng=0,
-            output_fields="output[fields]",
-            output_include="output[include]",
-            output_precision=0,
-            radius=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+            radius=1,
         )
         assert_matches_type(NearestResult, routing, path=["response"])
 
     @parametrize
     def test_raw_response_nearest(self, client: Plaza) -> None:
         response = client.routing.with_raw_response.nearest(
-            lat=0,
-            lng=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
         )
 
         assert response.is_closed is True
@@ -266,54 +218,10 @@ class TestRouting:
     @parametrize
     def test_streaming_response_nearest(self, client: Plaza) -> None:
         with client.routing.with_streaming_response.nearest(
-            lat=0,
-            lng=0,
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            routing = response.parse()
-            assert_matches_type(NearestResult, routing, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    def test_method_nearest_post(self, client: Plaza) -> None:
-        routing = client.routing.nearest_post(
-            lat=0,
-            lng=0,
-        )
-        assert_matches_type(NearestResult, routing, path=["response"])
-
-    @parametrize
-    def test_method_nearest_post_with_all_params(self, client: Plaza) -> None:
-        routing = client.routing.nearest_post(
-            lat=0,
-            lng=0,
-            output_fields="output[fields]",
-            output_include="output[include]",
-            output_precision=0,
-            radius=0,
-        )
-        assert_matches_type(NearestResult, routing, path=["response"])
-
-    @parametrize
-    def test_raw_response_nearest_post(self, client: Plaza) -> None:
-        response = client.routing.with_raw_response.nearest_post(
-            lat=0,
-            lng=0,
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        routing = response.parse()
-        assert_matches_type(NearestResult, routing, path=["response"])
-
-    @parametrize
-    def test_streaming_response_nearest_post(self, client: Plaza) -> None:
-        with client.routing.with_streaming_response.nearest_post(
-            lat=0,
-            lng=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -327,12 +235,12 @@ class TestRouting:
     def test_method_route(self, client: Plaza) -> None:
         routing = client.routing.route(
             destination={
-                "lat": 48.8584,
-                "lng": 2.2945,
+                "coordinates": [2.2945, 48.8584],
+                "type": "Point",
             },
             origin={
-                "lat": 48.8566,
-                "lng": 2.3522,
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
             },
         )
         assert_matches_type(RouteResult, routing, path=["response"])
@@ -341,12 +249,12 @@ class TestRouting:
     def test_method_route_with_all_params(self, client: Plaza) -> None:
         routing = client.routing.route(
             destination={
-                "lat": 48.8584,
-                "lng": 2.2945,
+                "coordinates": [2.2945, 48.8584],
+                "type": "Point",
             },
             origin={
-                "lat": 48.8566,
-                "lng": 2.3522,
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
             },
             format="format",
             alternatives=0,
@@ -367,8 +275,8 @@ class TestRouting:
             traffic_model="best_guess",
             waypoints=[
                 {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
+                    "coordinates": [2.3522, 48.8566],
+                    "type": "Point",
                 }
             ],
         )
@@ -378,12 +286,12 @@ class TestRouting:
     def test_raw_response_route(self, client: Plaza) -> None:
         response = client.routing.with_raw_response.route(
             destination={
-                "lat": 48.8584,
-                "lng": 2.2945,
+                "coordinates": [2.2945, 48.8584],
+                "type": "Point",
             },
             origin={
-                "lat": 48.8566,
-                "lng": 2.3522,
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
             },
         )
 
@@ -396,12 +304,12 @@ class TestRouting:
     def test_streaming_response_route(self, client: Plaza) -> None:
         with client.routing.with_streaming_response.route(
             destination={
-                "lat": 48.8584,
-                "lng": 2.2945,
+                "coordinates": [2.2945, 48.8584],
+                "type": "Point",
             },
             origin={
-                "lat": 48.8566,
-                "lng": 2.3522,
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
             },
         ) as response:
             assert not response.is_closed
@@ -421,34 +329,35 @@ class TestAsyncRouting:
     @parametrize
     async def test_method_isochrone(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.isochrone(
-            lat=0,
-            lng=0,
-            time=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+            time=[1],
         )
         assert_matches_type(RoutingIsochroneResponse, routing, path=["response"])
 
     @parametrize
     async def test_method_isochrone_with_all_params(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.isochrone(
-            lat=0,
-            lng=0,
-            time=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+            time=[1],
             format="format",
-            mode="mode",
-            output_fields="output[fields]",
-            output_geometry=True,
-            output_include="output[include]",
-            output_precision=0,
-            output_simplify=0,
+            mode="auto",
         )
         assert_matches_type(RoutingIsochroneResponse, routing, path=["response"])
 
     @parametrize
     async def test_raw_response_isochrone(self, async_client: AsyncPlaza) -> None:
         response = await async_client.routing.with_raw_response.isochrone(
-            lat=0,
-            lng=0,
-            time=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+            time=[1],
         )
 
         assert response.is_closed is True
@@ -459,9 +368,11 @@ class TestAsyncRouting:
     @parametrize
     async def test_streaming_response_isochrone(self, async_client: AsyncPlaza) -> None:
         async with async_client.routing.with_streaming_response.isochrone(
-            lat=0,
-            lng=0,
-            time=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+            time=[1],
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -472,75 +383,22 @@ class TestAsyncRouting:
         assert cast(Any, response.is_closed) is True
 
     @parametrize
-    async def test_method_isochrone_post(self, async_client: AsyncPlaza) -> None:
-        routing = await async_client.routing.isochrone_post(
-            lat=0,
-            lng=0,
-            time=0,
-        )
-        assert_matches_type(RoutingIsochronePostResponse, routing, path=["response"])
-
-    @parametrize
-    async def test_method_isochrone_post_with_all_params(self, async_client: AsyncPlaza) -> None:
-        routing = await async_client.routing.isochrone_post(
-            lat=0,
-            lng=0,
-            time=0,
-            format="format",
-            mode="mode",
-            output_fields="output[fields]",
-            output_geometry=True,
-            output_include="output[include]",
-            output_precision=0,
-            output_simplify=0,
-        )
-        assert_matches_type(RoutingIsochronePostResponse, routing, path=["response"])
-
-    @parametrize
-    async def test_raw_response_isochrone_post(self, async_client: AsyncPlaza) -> None:
-        response = await async_client.routing.with_raw_response.isochrone_post(
-            lat=0,
-            lng=0,
-            time=0,
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        routing = await response.parse()
-        assert_matches_type(RoutingIsochronePostResponse, routing, path=["response"])
-
-    @parametrize
-    async def test_streaming_response_isochrone_post(self, async_client: AsyncPlaza) -> None:
-        async with async_client.routing.with_streaming_response.isochrone_post(
-            lat=0,
-            lng=0,
-            time=0,
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            routing = await response.parse()
-            assert_matches_type(RoutingIsochronePostResponse, routing, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
     async def test_method_matrix(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.matrix(
             destinations=[
                 {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
+                    "coordinates": [2.2945, 48.8584],
+                    "type": "Point",
                 }
             ],
             origins=[
                 {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
+                    "coordinates": [2.3522, 48.8566],
+                    "type": "Point",
                 },
                 {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
+                    "coordinates": [2.3376, 48.8606],
+                    "type": "Point",
                 },
             ],
         )
@@ -551,18 +409,18 @@ class TestAsyncRouting:
         routing = await async_client.routing.matrix(
             destinations=[
                 {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
+                    "coordinates": [2.2945, 48.8584],
+                    "type": "Point",
                 }
             ],
             origins=[
                 {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
+                    "coordinates": [2.3522, 48.8566],
+                    "type": "Point",
                 },
                 {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
+                    "coordinates": [2.3376, 48.8606],
+                    "type": "Point",
                 },
             ],
             annotations="annotations",
@@ -576,18 +434,18 @@ class TestAsyncRouting:
         response = await async_client.routing.with_raw_response.matrix(
             destinations=[
                 {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
+                    "coordinates": [2.2945, 48.8584],
+                    "type": "Point",
                 }
             ],
             origins=[
                 {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
+                    "coordinates": [2.3522, 48.8566],
+                    "type": "Point",
                 },
                 {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
+                    "coordinates": [2.3376, 48.8606],
+                    "type": "Point",
                 },
             ],
         )
@@ -602,18 +460,18 @@ class TestAsyncRouting:
         async with async_client.routing.with_streaming_response.matrix(
             destinations=[
                 {
-                    "lat": 48.8584,
-                    "lng": 2.2945,
+                    "coordinates": [2.2945, 48.8584],
+                    "type": "Point",
                 }
             ],
             origins=[
                 {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
+                    "coordinates": [2.3522, 48.8566],
+                    "type": "Point",
                 },
                 {
-                    "lat": 48.8606,
-                    "lng": 2.3376,
+                    "coordinates": [2.3376, 48.8606],
+                    "type": "Point",
                 },
             ],
         ) as response:
@@ -628,28 +486,31 @@ class TestAsyncRouting:
     @parametrize
     async def test_method_nearest(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.nearest(
-            lat=0,
-            lng=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
         )
         assert_matches_type(NearestResult, routing, path=["response"])
 
     @parametrize
     async def test_method_nearest_with_all_params(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.nearest(
-            lat=0,
-            lng=0,
-            output_fields="output[fields]",
-            output_include="output[include]",
-            output_precision=0,
-            radius=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
+            radius=1,
         )
         assert_matches_type(NearestResult, routing, path=["response"])
 
     @parametrize
     async def test_raw_response_nearest(self, async_client: AsyncPlaza) -> None:
         response = await async_client.routing.with_raw_response.nearest(
-            lat=0,
-            lng=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
         )
 
         assert response.is_closed is True
@@ -660,54 +521,10 @@ class TestAsyncRouting:
     @parametrize
     async def test_streaming_response_nearest(self, async_client: AsyncPlaza) -> None:
         async with async_client.routing.with_streaming_response.nearest(
-            lat=0,
-            lng=0,
-        ) as response:
-            assert not response.is_closed
-            assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-
-            routing = await response.parse()
-            assert_matches_type(NearestResult, routing, path=["response"])
-
-        assert cast(Any, response.is_closed) is True
-
-    @parametrize
-    async def test_method_nearest_post(self, async_client: AsyncPlaza) -> None:
-        routing = await async_client.routing.nearest_post(
-            lat=0,
-            lng=0,
-        )
-        assert_matches_type(NearestResult, routing, path=["response"])
-
-    @parametrize
-    async def test_method_nearest_post_with_all_params(self, async_client: AsyncPlaza) -> None:
-        routing = await async_client.routing.nearest_post(
-            lat=0,
-            lng=0,
-            output_fields="output[fields]",
-            output_include="output[include]",
-            output_precision=0,
-            radius=0,
-        )
-        assert_matches_type(NearestResult, routing, path=["response"])
-
-    @parametrize
-    async def test_raw_response_nearest_post(self, async_client: AsyncPlaza) -> None:
-        response = await async_client.routing.with_raw_response.nearest_post(
-            lat=0,
-            lng=0,
-        )
-
-        assert response.is_closed is True
-        assert response.http_request.headers.get("X-Stainless-Lang") == "python"
-        routing = await response.parse()
-        assert_matches_type(NearestResult, routing, path=["response"])
-
-    @parametrize
-    async def test_streaming_response_nearest_post(self, async_client: AsyncPlaza) -> None:
-        async with async_client.routing.with_streaming_response.nearest_post(
-            lat=0,
-            lng=0,
+            geometry={
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
+            },
         ) as response:
             assert not response.is_closed
             assert response.http_request.headers.get("X-Stainless-Lang") == "python"
@@ -721,12 +538,12 @@ class TestAsyncRouting:
     async def test_method_route(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.route(
             destination={
-                "lat": 48.8584,
-                "lng": 2.2945,
+                "coordinates": [2.2945, 48.8584],
+                "type": "Point",
             },
             origin={
-                "lat": 48.8566,
-                "lng": 2.3522,
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
             },
         )
         assert_matches_type(RouteResult, routing, path=["response"])
@@ -735,12 +552,12 @@ class TestAsyncRouting:
     async def test_method_route_with_all_params(self, async_client: AsyncPlaza) -> None:
         routing = await async_client.routing.route(
             destination={
-                "lat": 48.8584,
-                "lng": 2.2945,
+                "coordinates": [2.2945, 48.8584],
+                "type": "Point",
             },
             origin={
-                "lat": 48.8566,
-                "lng": 2.3522,
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
             },
             format="format",
             alternatives=0,
@@ -761,8 +578,8 @@ class TestAsyncRouting:
             traffic_model="best_guess",
             waypoints=[
                 {
-                    "lat": 48.8566,
-                    "lng": 2.3522,
+                    "coordinates": [2.3522, 48.8566],
+                    "type": "Point",
                 }
             ],
         )
@@ -772,12 +589,12 @@ class TestAsyncRouting:
     async def test_raw_response_route(self, async_client: AsyncPlaza) -> None:
         response = await async_client.routing.with_raw_response.route(
             destination={
-                "lat": 48.8584,
-                "lng": 2.2945,
+                "coordinates": [2.2945, 48.8584],
+                "type": "Point",
             },
             origin={
-                "lat": 48.8566,
-                "lng": 2.3522,
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
             },
         )
 
@@ -790,12 +607,12 @@ class TestAsyncRouting:
     async def test_streaming_response_route(self, async_client: AsyncPlaza) -> None:
         async with async_client.routing.with_streaming_response.route(
             destination={
-                "lat": 48.8584,
-                "lng": 2.2945,
+                "coordinates": [2.2945, 48.8584],
+                "type": "Point",
             },
             origin={
-                "lat": 48.8566,
-                "lng": 2.3522,
+                "coordinates": [2.3522, 48.8566],
+                "type": "Point",
             },
         ) as response:
             assert not response.is_closed

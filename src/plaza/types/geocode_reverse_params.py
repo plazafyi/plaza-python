@@ -2,35 +2,30 @@
 
 from __future__ import annotations
 
-from typing_extensions import TypedDict
+from typing import Optional
+from typing_extensions import Required, TypedDict
+
+from .point_geometry_param import PointGeometryParam
 
 __all__ = ["GeocodeReverseParams"]
 
 
 class GeocodeReverseParams(TypedDict, total=False):
+    geometry: Required[PointGeometryParam]
+    """GeoJSON Point geometry per RFC 7946.
+
+    Coordinates use [longitude, latitude] order. Optional third element is altitude
+    in meters.
+    """
+
     format: str
     """Response format: json (default), geojson, csv, ndjson"""
 
-    lang: str
-    """Language code for localized names (e.g. en, de, fr)"""
+    lang: Optional[str]
+    """Preferred response language (ISO 639-1)"""
 
-    lat: float
-    """Legacy shorthand. Latitude. Use near param instead."""
+    limit: Optional[int]
+    """Maximum number of results (default: 1, max: 50)"""
 
-    layer: str
-    """Filter by layer: house or poi"""
-
-    limit: int
-    """Maximum results (default 1, max 20)"""
-
-    lng: float
-    """Legacy shorthand. Longitude. Use near param instead."""
-
-    near: str
-    """Point geometry for reverse geocode (lat,lng or GeoJSON).
-
-    Alternative to lat/lng params.
-    """
-
-    radius: int
-    """Search radius in meters (default 200, max 5000)"""
+    radius: Optional[float]
+    """Search radius in meters (default: 100)"""

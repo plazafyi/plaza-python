@@ -2,32 +2,36 @@
 
 from __future__ import annotations
 
+from typing import Optional
 from typing_extensions import Required, TypedDict
+
+from .point_geometry_param import PointGeometryParam
 
 __all__ = ["GeocodeAutocompleteParams"]
 
 
 class GeocodeAutocompleteParams(TypedDict, total=False):
     q: Required[str]
-    """Partial address query"""
-
-    country_code: str
-    """ISO 3166-1 alpha-2 country code filter"""
+    """Partial address or place name input"""
 
     format: str
     """Response format: json (default), geojson, csv, ndjson"""
 
-    lang: str
-    """Language code for localized names (e.g. en, de, fr)"""
+    country_code: Optional[str]
+    """ISO 3166-1 alpha-2 country code to restrict results"""
 
-    lat: float
-    """Focus latitude"""
+    focus: Optional[PointGeometryParam]
+    """GeoJSON Point geometry per RFC 7946.
 
-    layer: str
-    """Filter by layer: address, poi, or admin"""
+    Coordinates use [longitude, latitude] order. Optional third element is altitude
+    in meters.
+    """
 
-    limit: int
-    """Maximum results (default 10, max 20)"""
+    lang: Optional[str]
+    """Preferred response language (ISO 639-1)"""
 
-    lng: float
-    """Focus longitude"""
+    layer: Optional[str]
+    """Filter by result layer (e.g. `address`, `place`, `poi`)"""
+
+    limit: Optional[int]
+    """Maximum number of suggestions (default: 5, max: 20)"""
