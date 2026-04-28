@@ -19,9 +19,12 @@ from ._types import (
     RequestOptions,
     not_given,
 )
-from ._utils import is_given, get_async_library
+from ._utils import (
+    is_given,
+    is_mapping_t,
+    get_async_library,
+)
 from ._compat import cached_property
-from ._models import SecurityOptions
 from ._version import __version__
 from ._streaming import Stream as Stream, AsyncStream as AsyncStream
 from ._exceptions import PlazaError, APIStatusError
@@ -32,8 +35,17 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import v1
-    from .resources.v1.v1 import V1Resource, AsyncV1Resource
+    from .resources import query, tiles, search, geocode, routing, datasets, features, optimize, elevation, map_match
+    from .resources.query import QueryResource, AsyncQueryResource
+    from .resources.tiles import TilesResource, AsyncTilesResource
+    from .resources.search import SearchResource, AsyncSearchResource
+    from .resources.geocode import GeocodeResource, AsyncGeocodeResource
+    from .resources.routing import RoutingResource, AsyncRoutingResource
+    from .resources.datasets import DatasetsResource, AsyncDatasetsResource
+    from .resources.features import FeaturesResource, AsyncFeaturesResource
+    from .resources.optimize import OptimizeResource, AsyncOptimizeResource
+    from .resources.elevation import ElevationResource, AsyncElevationResource
+    from .resources.map_match import MapMatchResource, AsyncMapMatchResource
 
 __all__ = [
     "ENVIRONMENTS",
@@ -49,7 +61,7 @@ __all__ = [
 
 ENVIRONMENTS: Dict[str, str] = {
     "production": "https://plaza.fyi",
-    "environment_1": "http://localhost:4000",
+    "local": "http://localhost:4000",
 }
 
 
@@ -57,13 +69,13 @@ class Plaza(SyncAPIClient):
     # client options
     api_key: str
 
-    _environment: Literal["production", "environment_1"] | NotGiven
+    _environment: Literal["production", "local"] | NotGiven
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
-        environment: Literal["production", "environment_1"] | NotGiven = not_given,
+        environment: Literal["production", "local"] | NotGiven = not_given,
         base_url: str | httpx.URL | None | NotGiven = not_given,
         timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -121,6 +133,15 @@ class Plaza(SyncAPIClient):
             except KeyError as exc:
                 raise ValueError(f"Unknown environment: {environment}") from exc
 
+        custom_headers_env = os.environ.get("PLAZA_CUSTOM_HEADERS")
+        if custom_headers_env is not None:
+            parsed: dict[str, str] = {}
+            for line in custom_headers_env.split("\n"):
+                colon = line.find(":")
+                if colon >= 0:
+                    parsed[line[:colon].strip()] = line[colon + 1 :].strip()
+            default_headers = {**parsed, **(default_headers if is_mapping_t(default_headers) else {})}
+
         super().__init__(
             version=__version__,
             base_url=base_url,
@@ -133,10 +154,64 @@ class Plaza(SyncAPIClient):
         )
 
     @cached_property
-    def v1(self) -> V1Resource:
-        from .resources.v1 import V1Resource
+    def features(self) -> FeaturesResource:
+        from .resources.features import FeaturesResource
 
-        return V1Resource(self)
+        return FeaturesResource(self)
+
+    @cached_property
+    def datasets(self) -> DatasetsResource:
+        from .resources.datasets import DatasetsResource
+
+        return DatasetsResource(self)
+
+    @cached_property
+    def geocode(self) -> GeocodeResource:
+        from .resources.geocode import GeocodeResource
+
+        return GeocodeResource(self)
+
+    @cached_property
+    def search(self) -> SearchResource:
+        from .resources.search import SearchResource
+
+        return SearchResource(self)
+
+    @cached_property
+    def routing(self) -> RoutingResource:
+        from .resources.routing import RoutingResource
+
+        return RoutingResource(self)
+
+    @cached_property
+    def elevation(self) -> ElevationResource:
+        from .resources.elevation import ElevationResource
+
+        return ElevationResource(self)
+
+    @cached_property
+    def map_match(self) -> MapMatchResource:
+        from .resources.map_match import MapMatchResource
+
+        return MapMatchResource(self)
+
+    @cached_property
+    def optimize(self) -> OptimizeResource:
+        from .resources.optimize import OptimizeResource
+
+        return OptimizeResource(self)
+
+    @cached_property
+    def query(self) -> QueryResource:
+        from .resources.query import QueryResource
+
+        return QueryResource(self)
+
+    @cached_property
+    def tiles(self) -> TilesResource:
+        from .resources.tiles import TilesResource
+
+        return TilesResource(self)
 
     @cached_property
     def with_raw_response(self) -> PlazaWithRawResponse:
@@ -151,14 +226,9 @@ class Plaza(SyncAPIClient):
     def qs(self) -> Querystring:
         return Querystring(array_format="comma")
 
-    @override
-    def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
-        return {
-            **(self._bearer_auth if security.get("bearer_auth", False) else {}),
-        }
-
     @property
-    def _bearer_auth(self) -> dict[str, str]:
+    @override
+    def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
         return {"Authorization": f"Bearer {api_key}"}
 
@@ -175,7 +245,7 @@ class Plaza(SyncAPIClient):
         self,
         *,
         api_key: str | None = None,
-        environment: Literal["production", "environment_1"] | None = None,
+        environment: Literal["production", "local"] | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.Client | None = None,
@@ -262,13 +332,13 @@ class AsyncPlaza(AsyncAPIClient):
     # client options
     api_key: str
 
-    _environment: Literal["production", "environment_1"] | NotGiven
+    _environment: Literal["production", "local"] | NotGiven
 
     def __init__(
         self,
         *,
         api_key: str | None = None,
-        environment: Literal["production", "environment_1"] | NotGiven = not_given,
+        environment: Literal["production", "local"] | NotGiven = not_given,
         base_url: str | httpx.URL | None | NotGiven = not_given,
         timeout: float | Timeout | None | NotGiven = not_given,
         max_retries: int = DEFAULT_MAX_RETRIES,
@@ -326,6 +396,15 @@ class AsyncPlaza(AsyncAPIClient):
             except KeyError as exc:
                 raise ValueError(f"Unknown environment: {environment}") from exc
 
+        custom_headers_env = os.environ.get("PLAZA_CUSTOM_HEADERS")
+        if custom_headers_env is not None:
+            parsed: dict[str, str] = {}
+            for line in custom_headers_env.split("\n"):
+                colon = line.find(":")
+                if colon >= 0:
+                    parsed[line[:colon].strip()] = line[colon + 1 :].strip()
+            default_headers = {**parsed, **(default_headers if is_mapping_t(default_headers) else {})}
+
         super().__init__(
             version=__version__,
             base_url=base_url,
@@ -338,10 +417,64 @@ class AsyncPlaza(AsyncAPIClient):
         )
 
     @cached_property
-    def v1(self) -> AsyncV1Resource:
-        from .resources.v1 import AsyncV1Resource
+    def features(self) -> AsyncFeaturesResource:
+        from .resources.features import AsyncFeaturesResource
 
-        return AsyncV1Resource(self)
+        return AsyncFeaturesResource(self)
+
+    @cached_property
+    def datasets(self) -> AsyncDatasetsResource:
+        from .resources.datasets import AsyncDatasetsResource
+
+        return AsyncDatasetsResource(self)
+
+    @cached_property
+    def geocode(self) -> AsyncGeocodeResource:
+        from .resources.geocode import AsyncGeocodeResource
+
+        return AsyncGeocodeResource(self)
+
+    @cached_property
+    def search(self) -> AsyncSearchResource:
+        from .resources.search import AsyncSearchResource
+
+        return AsyncSearchResource(self)
+
+    @cached_property
+    def routing(self) -> AsyncRoutingResource:
+        from .resources.routing import AsyncRoutingResource
+
+        return AsyncRoutingResource(self)
+
+    @cached_property
+    def elevation(self) -> AsyncElevationResource:
+        from .resources.elevation import AsyncElevationResource
+
+        return AsyncElevationResource(self)
+
+    @cached_property
+    def map_match(self) -> AsyncMapMatchResource:
+        from .resources.map_match import AsyncMapMatchResource
+
+        return AsyncMapMatchResource(self)
+
+    @cached_property
+    def optimize(self) -> AsyncOptimizeResource:
+        from .resources.optimize import AsyncOptimizeResource
+
+        return AsyncOptimizeResource(self)
+
+    @cached_property
+    def query(self) -> AsyncQueryResource:
+        from .resources.query import AsyncQueryResource
+
+        return AsyncQueryResource(self)
+
+    @cached_property
+    def tiles(self) -> AsyncTilesResource:
+        from .resources.tiles import AsyncTilesResource
+
+        return AsyncTilesResource(self)
 
     @cached_property
     def with_raw_response(self) -> AsyncPlazaWithRawResponse:
@@ -356,14 +489,9 @@ class AsyncPlaza(AsyncAPIClient):
     def qs(self) -> Querystring:
         return Querystring(array_format="comma")
 
-    @override
-    def _auth_headers(self, security: SecurityOptions) -> dict[str, str]:
-        return {
-            **(self._bearer_auth if security.get("bearer_auth", False) else {}),
-        }
-
     @property
-    def _bearer_auth(self) -> dict[str, str]:
+    @override
+    def auth_headers(self) -> dict[str, str]:
         api_key = self.api_key
         return {"Authorization": f"Bearer {api_key}"}
 
@@ -380,7 +508,7 @@ class AsyncPlaza(AsyncAPIClient):
         self,
         *,
         api_key: str | None = None,
-        environment: Literal["production", "environment_1"] | None = None,
+        environment: Literal["production", "local"] | None = None,
         base_url: str | httpx.URL | None = None,
         timeout: float | Timeout | None | NotGiven = not_given,
         http_client: httpx.AsyncClient | None = None,
@@ -470,10 +598,64 @@ class PlazaWithRawResponse:
         self._client = client
 
     @cached_property
-    def v1(self) -> v1.V1ResourceWithRawResponse:
-        from .resources.v1 import V1ResourceWithRawResponse
+    def features(self) -> features.FeaturesResourceWithRawResponse:
+        from .resources.features import FeaturesResourceWithRawResponse
 
-        return V1ResourceWithRawResponse(self._client.v1)
+        return FeaturesResourceWithRawResponse(self._client.features)
+
+    @cached_property
+    def datasets(self) -> datasets.DatasetsResourceWithRawResponse:
+        from .resources.datasets import DatasetsResourceWithRawResponse
+
+        return DatasetsResourceWithRawResponse(self._client.datasets)
+
+    @cached_property
+    def geocode(self) -> geocode.GeocodeResourceWithRawResponse:
+        from .resources.geocode import GeocodeResourceWithRawResponse
+
+        return GeocodeResourceWithRawResponse(self._client.geocode)
+
+    @cached_property
+    def search(self) -> search.SearchResourceWithRawResponse:
+        from .resources.search import SearchResourceWithRawResponse
+
+        return SearchResourceWithRawResponse(self._client.search)
+
+    @cached_property
+    def routing(self) -> routing.RoutingResourceWithRawResponse:
+        from .resources.routing import RoutingResourceWithRawResponse
+
+        return RoutingResourceWithRawResponse(self._client.routing)
+
+    @cached_property
+    def elevation(self) -> elevation.ElevationResourceWithRawResponse:
+        from .resources.elevation import ElevationResourceWithRawResponse
+
+        return ElevationResourceWithRawResponse(self._client.elevation)
+
+    @cached_property
+    def map_match(self) -> map_match.MapMatchResourceWithRawResponse:
+        from .resources.map_match import MapMatchResourceWithRawResponse
+
+        return MapMatchResourceWithRawResponse(self._client.map_match)
+
+    @cached_property
+    def optimize(self) -> optimize.OptimizeResourceWithRawResponse:
+        from .resources.optimize import OptimizeResourceWithRawResponse
+
+        return OptimizeResourceWithRawResponse(self._client.optimize)
+
+    @cached_property
+    def query(self) -> query.QueryResourceWithRawResponse:
+        from .resources.query import QueryResourceWithRawResponse
+
+        return QueryResourceWithRawResponse(self._client.query)
+
+    @cached_property
+    def tiles(self) -> tiles.TilesResourceWithRawResponse:
+        from .resources.tiles import TilesResourceWithRawResponse
+
+        return TilesResourceWithRawResponse(self._client.tiles)
 
 
 class AsyncPlazaWithRawResponse:
@@ -483,10 +665,64 @@ class AsyncPlazaWithRawResponse:
         self._client = client
 
     @cached_property
-    def v1(self) -> v1.AsyncV1ResourceWithRawResponse:
-        from .resources.v1 import AsyncV1ResourceWithRawResponse
+    def features(self) -> features.AsyncFeaturesResourceWithRawResponse:
+        from .resources.features import AsyncFeaturesResourceWithRawResponse
 
-        return AsyncV1ResourceWithRawResponse(self._client.v1)
+        return AsyncFeaturesResourceWithRawResponse(self._client.features)
+
+    @cached_property
+    def datasets(self) -> datasets.AsyncDatasetsResourceWithRawResponse:
+        from .resources.datasets import AsyncDatasetsResourceWithRawResponse
+
+        return AsyncDatasetsResourceWithRawResponse(self._client.datasets)
+
+    @cached_property
+    def geocode(self) -> geocode.AsyncGeocodeResourceWithRawResponse:
+        from .resources.geocode import AsyncGeocodeResourceWithRawResponse
+
+        return AsyncGeocodeResourceWithRawResponse(self._client.geocode)
+
+    @cached_property
+    def search(self) -> search.AsyncSearchResourceWithRawResponse:
+        from .resources.search import AsyncSearchResourceWithRawResponse
+
+        return AsyncSearchResourceWithRawResponse(self._client.search)
+
+    @cached_property
+    def routing(self) -> routing.AsyncRoutingResourceWithRawResponse:
+        from .resources.routing import AsyncRoutingResourceWithRawResponse
+
+        return AsyncRoutingResourceWithRawResponse(self._client.routing)
+
+    @cached_property
+    def elevation(self) -> elevation.AsyncElevationResourceWithRawResponse:
+        from .resources.elevation import AsyncElevationResourceWithRawResponse
+
+        return AsyncElevationResourceWithRawResponse(self._client.elevation)
+
+    @cached_property
+    def map_match(self) -> map_match.AsyncMapMatchResourceWithRawResponse:
+        from .resources.map_match import AsyncMapMatchResourceWithRawResponse
+
+        return AsyncMapMatchResourceWithRawResponse(self._client.map_match)
+
+    @cached_property
+    def optimize(self) -> optimize.AsyncOptimizeResourceWithRawResponse:
+        from .resources.optimize import AsyncOptimizeResourceWithRawResponse
+
+        return AsyncOptimizeResourceWithRawResponse(self._client.optimize)
+
+    @cached_property
+    def query(self) -> query.AsyncQueryResourceWithRawResponse:
+        from .resources.query import AsyncQueryResourceWithRawResponse
+
+        return AsyncQueryResourceWithRawResponse(self._client.query)
+
+    @cached_property
+    def tiles(self) -> tiles.AsyncTilesResourceWithRawResponse:
+        from .resources.tiles import AsyncTilesResourceWithRawResponse
+
+        return AsyncTilesResourceWithRawResponse(self._client.tiles)
 
 
 class PlazaWithStreamedResponse:
@@ -496,10 +732,64 @@ class PlazaWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def v1(self) -> v1.V1ResourceWithStreamingResponse:
-        from .resources.v1 import V1ResourceWithStreamingResponse
+    def features(self) -> features.FeaturesResourceWithStreamingResponse:
+        from .resources.features import FeaturesResourceWithStreamingResponse
 
-        return V1ResourceWithStreamingResponse(self._client.v1)
+        return FeaturesResourceWithStreamingResponse(self._client.features)
+
+    @cached_property
+    def datasets(self) -> datasets.DatasetsResourceWithStreamingResponse:
+        from .resources.datasets import DatasetsResourceWithStreamingResponse
+
+        return DatasetsResourceWithStreamingResponse(self._client.datasets)
+
+    @cached_property
+    def geocode(self) -> geocode.GeocodeResourceWithStreamingResponse:
+        from .resources.geocode import GeocodeResourceWithStreamingResponse
+
+        return GeocodeResourceWithStreamingResponse(self._client.geocode)
+
+    @cached_property
+    def search(self) -> search.SearchResourceWithStreamingResponse:
+        from .resources.search import SearchResourceWithStreamingResponse
+
+        return SearchResourceWithStreamingResponse(self._client.search)
+
+    @cached_property
+    def routing(self) -> routing.RoutingResourceWithStreamingResponse:
+        from .resources.routing import RoutingResourceWithStreamingResponse
+
+        return RoutingResourceWithStreamingResponse(self._client.routing)
+
+    @cached_property
+    def elevation(self) -> elevation.ElevationResourceWithStreamingResponse:
+        from .resources.elevation import ElevationResourceWithStreamingResponse
+
+        return ElevationResourceWithStreamingResponse(self._client.elevation)
+
+    @cached_property
+    def map_match(self) -> map_match.MapMatchResourceWithStreamingResponse:
+        from .resources.map_match import MapMatchResourceWithStreamingResponse
+
+        return MapMatchResourceWithStreamingResponse(self._client.map_match)
+
+    @cached_property
+    def optimize(self) -> optimize.OptimizeResourceWithStreamingResponse:
+        from .resources.optimize import OptimizeResourceWithStreamingResponse
+
+        return OptimizeResourceWithStreamingResponse(self._client.optimize)
+
+    @cached_property
+    def query(self) -> query.QueryResourceWithStreamingResponse:
+        from .resources.query import QueryResourceWithStreamingResponse
+
+        return QueryResourceWithStreamingResponse(self._client.query)
+
+    @cached_property
+    def tiles(self) -> tiles.TilesResourceWithStreamingResponse:
+        from .resources.tiles import TilesResourceWithStreamingResponse
+
+        return TilesResourceWithStreamingResponse(self._client.tiles)
 
 
 class AsyncPlazaWithStreamedResponse:
@@ -509,10 +799,64 @@ class AsyncPlazaWithStreamedResponse:
         self._client = client
 
     @cached_property
-    def v1(self) -> v1.AsyncV1ResourceWithStreamingResponse:
-        from .resources.v1 import AsyncV1ResourceWithStreamingResponse
+    def features(self) -> features.AsyncFeaturesResourceWithStreamingResponse:
+        from .resources.features import AsyncFeaturesResourceWithStreamingResponse
 
-        return AsyncV1ResourceWithStreamingResponse(self._client.v1)
+        return AsyncFeaturesResourceWithStreamingResponse(self._client.features)
+
+    @cached_property
+    def datasets(self) -> datasets.AsyncDatasetsResourceWithStreamingResponse:
+        from .resources.datasets import AsyncDatasetsResourceWithStreamingResponse
+
+        return AsyncDatasetsResourceWithStreamingResponse(self._client.datasets)
+
+    @cached_property
+    def geocode(self) -> geocode.AsyncGeocodeResourceWithStreamingResponse:
+        from .resources.geocode import AsyncGeocodeResourceWithStreamingResponse
+
+        return AsyncGeocodeResourceWithStreamingResponse(self._client.geocode)
+
+    @cached_property
+    def search(self) -> search.AsyncSearchResourceWithStreamingResponse:
+        from .resources.search import AsyncSearchResourceWithStreamingResponse
+
+        return AsyncSearchResourceWithStreamingResponse(self._client.search)
+
+    @cached_property
+    def routing(self) -> routing.AsyncRoutingResourceWithStreamingResponse:
+        from .resources.routing import AsyncRoutingResourceWithStreamingResponse
+
+        return AsyncRoutingResourceWithStreamingResponse(self._client.routing)
+
+    @cached_property
+    def elevation(self) -> elevation.AsyncElevationResourceWithStreamingResponse:
+        from .resources.elevation import AsyncElevationResourceWithStreamingResponse
+
+        return AsyncElevationResourceWithStreamingResponse(self._client.elevation)
+
+    @cached_property
+    def map_match(self) -> map_match.AsyncMapMatchResourceWithStreamingResponse:
+        from .resources.map_match import AsyncMapMatchResourceWithStreamingResponse
+
+        return AsyncMapMatchResourceWithStreamingResponse(self._client.map_match)
+
+    @cached_property
+    def optimize(self) -> optimize.AsyncOptimizeResourceWithStreamingResponse:
+        from .resources.optimize import AsyncOptimizeResourceWithStreamingResponse
+
+        return AsyncOptimizeResourceWithStreamingResponse(self._client.optimize)
+
+    @cached_property
+    def query(self) -> query.AsyncQueryResourceWithStreamingResponse:
+        from .resources.query import AsyncQueryResourceWithStreamingResponse
+
+        return AsyncQueryResourceWithStreamingResponse(self._client.query)
+
+    @cached_property
+    def tiles(self) -> tiles.AsyncTilesResourceWithStreamingResponse:
+        from .resources.tiles import AsyncTilesResourceWithStreamingResponse
+
+        return AsyncTilesResourceWithStreamingResponse(self._client.tiles)
 
 
 Client = Plaza

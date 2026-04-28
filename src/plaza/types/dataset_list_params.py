@@ -1,0 +1,12 @@
+# File generated from our OpenAPI spec by Stainless. See CONTRIBUTING.md for details.
+
+from __future__ import annotations
+
+from typing_extensions import TypedDict
+
+__all__ = ["DatasetListParams"]
+
+
+class DatasetListParams(TypedDict, total=False):
+    scope: str
+    """Filter by scope: plaza, user. Default shows user's own + plaza datasets."""

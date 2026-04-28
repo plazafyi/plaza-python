@@ -2,19 +2,55 @@
 
 from __future__ import annotations
 
-from .v1_find_nearby_params import V1FindNearbyParams as V1FindNearbyParams
-from .v1_execute_query_params import V1ExecuteQueryParams as V1ExecuteQueryParams
-from .v1_execute_sparql_params import V1ExecuteSparqlParams as V1ExecuteSparqlParams
-from .v1_calculate_route_params import V1CalculateRouteParams as V1CalculateRouteParams
-from .v1_reverse_geocode_params import V1ReverseGeocodeParams as V1ReverseGeocodeParams
-from .v1_search_features_params import V1SearchFeaturesParams as V1SearchFeaturesParams
-from .v1_snap_to_nearest_params import V1SnapToNearestParams as V1SnapToNearestParams
-from .v1_execute_overpass_params import V1ExecuteOverpassParams as V1ExecuteOverpassParams
-from .v1_execute_sparql_response import V1ExecuteSparqlResponse as V1ExecuteSparqlResponse
-from .v1_calculate_route_response import V1CalculateRouteResponse as V1CalculateRouteResponse
-from .v1_snap_to_nearest_response import V1SnapToNearestResponse as V1SnapToNearestResponse
-from .v1_calculate_isochrone_params import V1CalculateIsochroneParams as V1CalculateIsochroneParams
-from .v1_calculate_distance_matrix_params import V1CalculateDistanceMatrixParams as V1CalculateDistanceMatrixParams
-from .v1_calculate_distance_matrix_response import (
-    V1CalculateDistanceMatrixResponse as V1CalculateDistanceMatrixResponse,
-)
+from .dataset import Dataset as Dataset
+from .geometry import Geometry as Geometry
+from .dataset_list import DatasetList as DatasetList
+from .route_result import RouteResult as RouteResult
+from .matrix_result import MatrixResult as MatrixResult
+from .geocode_result import GeocodeResult as GeocodeResult
+from .geometry_param import GeometryParam as GeometryParam
+from .nearest_result import NearestResult as NearestResult
+from .point_geometry import PointGeometry as PointGeometry
+from .optimize_result import OptimizeResult as OptimizeResult
+from .geo_json_feature import GeoJsonFeature as GeoJsonFeature
+from .map_match_result import MapMatchResult as MapMatchResult
+from .polygon_geometry import PolygonGeometry as PolygonGeometry
+from .geocoding_feature import GeocodingFeature as GeocodingFeature
+from .feature_collection import FeatureCollection as FeatureCollection
+from .autocomplete_result import AutocompleteResult as AutocompleteResult
+from .dataset_list_params import DatasetListParams as DatasetListParams
+from .optimize_job_status import OptimizeJobStatus as OptimizeJobStatus
+from .search_query_params import SearchQueryParams as SearchQueryParams
+from .feature_batch_params import FeatureBatchParams as FeatureBatchParams
+from .feature_query_params import FeatureQueryParams as FeatureQueryParams
+from .geocode_batch_params import GeocodeBatchParams as GeocodeBatchParams
+from .line_string_geometry import LineStringGeometry as LineStringGeometry
+from .multi_point_geometry import MultiPointGeometry as MultiPointGeometry
+from .point_geometry_param import PointGeometryParam as PointGeometryParam
+from .query_execute_params import QueryExecuteParams as QueryExecuteParams
+from .routing_route_params import RoutingRouteParams as RoutingRouteParams
+from .dataset_create_params import DatasetCreateParams as DatasetCreateParams
+from .routing_matrix_params import RoutingMatrixParams as RoutingMatrixParams
+from .geocode_batch_response import GeocodeBatchResponse as GeocodeBatchResponse
+from .geocode_forward_params import GeocodeForwardParams as GeocodeForwardParams
+from .geocode_reverse_params import GeocodeReverseParams as GeocodeReverseParams
+from .map_match_match_params import MapMatchMatchParams as MapMatchMatchParams
+from .multi_polygon_geometry import MultiPolygonGeometry as MultiPolygonGeometry
+from .optimize_create_params import OptimizeCreateParams as OptimizeCreateParams
+from .polygon_geometry_param import PolygonGeometryParam as PolygonGeometryParam
+from .reverse_geocode_result import ReverseGeocodeResult as ReverseGeocodeResult
+from .routing_nearest_params import RoutingNearestParams as RoutingNearestParams
+from .elevation_lookup_params import ElevationLookupParams as ElevationLookupParams
+from .elevation_lookup_result import ElevationLookupResult as ElevationLookupResult
+from .elevation_profile_params import ElevationProfileParams as ElevationProfileParams
+from .elevation_profile_result import ElevationProfileResult as ElevationProfileResult
+from .routing_isochrone_params import RoutingIsochroneParams as RoutingIsochroneParams
+from .optimize_completed_result import OptimizeCompletedResult as OptimizeCompletedResult
+from .line_string_geometry_param import LineStringGeometryParam as LineStringGeometryParam
+from .multi_line_string_geometry import MultiLineStringGeometry as MultiLineStringGeometry
+from .multi_point_geometry_param import MultiPointGeometryParam as MultiPointGeometryParam
+from .optimize_processing_result import OptimizeProcessingResult as OptimizeProcessingResult
+from .routing_isochrone_response import RoutingIsochroneResponse as RoutingIsochroneResponse
+from .geocode_autocomplete_params import GeocodeAutocompleteParams as GeocodeAutocompleteParams
+from .multi_polygon_geometry_param import MultiPolygonGeometryParam as MultiPolygonGeometryParam
+from .multi_line_string_geometry_param import MultiLineStringGeometryParam as MultiLineStringGeometryParam

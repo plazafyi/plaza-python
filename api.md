@@ -1,74 +1,169 @@
-# V1
+# Plaza
 
 Types:
 
 ```python
 from plaza.types import (
-    V1CalculateDistanceMatrixResponse,
-    V1CalculateRouteResponse,
-    V1ExecuteSparqlResponse,
-    V1SnapToNearestResponse,
+    Error,
+    FeatureCollection,
+    GeoJsonFeature,
+    Geometry,
+    LineStringGeometry,
+    MultiLineStringGeometry,
+    MultiPointGeometry,
+    MultiPolygonGeometry,
+    PointGeometry,
+    PolygonGeometry,
+    ValidationError,
+)
+```
+
+# Features
+
+Types:
+
+```python
+from plaza.types import BatchRequest, SpatialPredicate
+```
+
+Methods:
+
+- <code title="get /api/v1/features/{type}/{id}">client.features.<a href="./src/plaza/resources/features.py">retrieve</a>(id, \*, type) -> <a href="./src/plaza/types/geo_json_feature.py">GeoJsonFeature</a></code>
+- <code title="post /api/v1/features/batch">client.features.<a href="./src/plaza/resources/features.py">batch</a>(\*\*<a href="src/plaza/types/feature_batch_params.py">params</a>) -> <a href="./src/plaza/types/feature_collection.py">FeatureCollection</a></code>
+- <code title="post /api/v1/features">client.features.<a href="./src/plaza/resources/features.py">query</a>(\*\*<a href="src/plaza/types/feature_query_params.py">params</a>) -> <a href="./src/plaza/types/feature_collection.py">FeatureCollection</a></code>
+
+# Datasets
+
+Types:
+
+```python
+from plaza.types import Dataset, DatasetList
+```
+
+Methods:
+
+- <code title="post /api/v1/datasets">client.datasets.<a href="./src/plaza/resources/datasets.py">create</a>(\*\*<a href="src/plaza/types/dataset_create_params.py">params</a>) -> <a href="./src/plaza/types/dataset.py">Dataset</a></code>
+- <code title="get /api/v1/datasets/{id}">client.datasets.<a href="./src/plaza/resources/datasets.py">retrieve</a>(id) -> <a href="./src/plaza/types/dataset.py">Dataset</a></code>
+- <code title="get /api/v1/datasets">client.datasets.<a href="./src/plaza/resources/datasets.py">list</a>(\*\*<a href="src/plaza/types/dataset_list_params.py">params</a>) -> <a href="./src/plaza/types/dataset_list.py">DatasetList</a></code>
+- <code title="delete /api/v1/datasets/{id}">client.datasets.<a href="./src/plaza/resources/datasets.py">delete</a>(id) -> None</code>
+
+# Geocode
+
+Types:
+
+```python
+from plaza.types import (
+    AutocompleteRequest,
+    AutocompleteResult,
+    GeocodeForwardRequest,
+    GeocodeResult,
+    GeocodeReverseRequest,
+    GeocodingFeature,
+    ReverseGeocodeResult,
+    GeocodeBatchResponse,
 )
 ```
 
 Methods:
 
-- <code title="post /api/v1/matrix">client.v1.<a href="./src/plaza/resources/v1/v1.py">calculate_distance_matrix</a>(\*\*<a href="src/plaza/types/v1_calculate_distance_matrix_params.py">params</a>) -> <a href="./src/plaza/types/v1_calculate_distance_matrix_response.py">V1CalculateDistanceMatrixResponse</a></code>
-- <code title="get /api/v1/isochrone">client.v1.<a href="./src/plaza/resources/v1/v1.py">calculate_isochrone</a>(\*\*<a href="src/plaza/types/v1_calculate_isochrone_params.py">params</a>) -> <a href="./src/plaza/types/v1/geo_json_feature.py">GeoJsonFeature</a></code>
-- <code title="post /api/v1/route">client.v1.<a href="./src/plaza/resources/v1/v1.py">calculate_route</a>(\*\*<a href="src/plaza/types/v1_calculate_route_params.py">params</a>) -> <a href="./src/plaza/types/v1_calculate_route_response.py">V1CalculateRouteResponse</a></code>
-- <code title="post /api/v1/overpass">client.v1.<a href="./src/plaza/resources/v1/v1.py">execute_overpass</a>(\*\*<a href="src/plaza/types/v1_execute_overpass_params.py">params</a>) -> <a href="./src/plaza/types/v1/feature_collection.py">FeatureCollection</a></code>
-- <code title="get /api/v1/query">client.v1.<a href="./src/plaza/resources/v1/v1.py">execute_query</a>(\*\*<a href="src/plaza/types/v1_execute_query_params.py">params</a>) -> <a href="./src/plaza/types/v1/feature_collection.py">FeatureCollection</a></code>
-- <code title="post /api/v1/sparql">client.v1.<a href="./src/plaza/resources/v1/v1.py">execute_sparql</a>(\*\*<a href="src/plaza/types/v1_execute_sparql_params.py">params</a>) -> <a href="./src/plaza/types/v1_execute_sparql_response.py">V1ExecuteSparqlResponse</a></code>
-- <code title="get /api/v1/nearby">client.v1.<a href="./src/plaza/resources/v1/v1.py">find_nearby</a>(\*\*<a href="src/plaza/types/v1_find_nearby_params.py">params</a>) -> <a href="./src/plaza/types/v1/feature_collection.py">FeatureCollection</a></code>
-- <code title="get /api/v1/tiles/{z}/{x}/{y}">client.v1.<a href="./src/plaza/resources/v1/v1.py">get_tile</a>(y, \*, z, x) -> BinaryAPIResponse</code>
-- <code title="get /api/v1/reverse-geocode">client.v1.<a href="./src/plaza/resources/v1/v1.py">reverse_geocode</a>(\*\*<a href="src/plaza/types/v1_reverse_geocode_params.py">params</a>) -> <a href="./src/plaza/types/v1/geo_json_feature.py">GeoJsonFeature</a></code>
-- <code title="get /api/v1/search">client.v1.<a href="./src/plaza/resources/v1/v1.py">search_features</a>(\*\*<a href="src/plaza/types/v1_search_features_params.py">params</a>) -> <a href="./src/plaza/types/v1/feature_collection.py">FeatureCollection</a></code>
-- <code title="get /api/v1/nearest">client.v1.<a href="./src/plaza/resources/v1/v1.py">snap_to_nearest</a>(\*\*<a href="src/plaza/types/v1_snap_to_nearest_params.py">params</a>) -> <a href="./src/plaza/types/v1_snap_to_nearest_response.py">V1SnapToNearestResponse</a></code>
+- <code title="post /api/v1/geocode/autocomplete">client.geocode.<a href="./src/plaza/resources/geocode.py">autocomplete</a>(\*\*<a href="src/plaza/types/geocode_autocomplete_params.py">params</a>) -> <a href="./src/plaza/types/autocomplete_result.py">AutocompleteResult</a></code>
+- <code title="post /api/v1/geocode/batch">client.geocode.<a href="./src/plaza/resources/geocode.py">batch</a>(\*\*<a href="src/plaza/types/geocode_batch_params.py">params</a>) -> <a href="./src/plaza/types/geocode_batch_response.py">GeocodeBatchResponse</a></code>
+- <code title="post /api/v1/geocode">client.geocode.<a href="./src/plaza/resources/geocode.py">forward</a>(\*\*<a href="src/plaza/types/geocode_forward_params.py">params</a>) -> <a href="./src/plaza/types/geocode_result.py">GeocodeResult</a></code>
+- <code title="post /api/v1/geocode/reverse">client.geocode.<a href="./src/plaza/resources/geocode.py">reverse</a>(\*\*<a href="src/plaza/types/geocode_reverse_params.py">params</a>) -> <a href="./src/plaza/types/reverse_geocode_result.py">ReverseGeocodeResult</a></code>
 
-## Datasets
-
-Types:
-
-```python
-from plaza.types.v1 import DatasetResponse, FeatureCollection, DatasetListResponse
-```
+# Search
 
 Methods:
 
-- <code title="post /api/v1/datasets">client.v1.datasets.<a href="./src/plaza/resources/v1/datasets.py">create</a>(\*\*<a href="src/plaza/types/v1/dataset_create_params.py">params</a>) -> <a href="./src/plaza/types/v1/dataset_response.py">DatasetResponse</a></code>
-- <code title="get /api/v1/datasets/{id}">client.v1.datasets.<a href="./src/plaza/resources/v1/datasets.py">retrieve</a>(id) -> <a href="./src/plaza/types/v1/dataset_response.py">DatasetResponse</a></code>
-- <code title="get /api/v1/datasets">client.v1.datasets.<a href="./src/plaza/resources/v1/datasets.py">list</a>() -> <a href="./src/plaza/types/v1/dataset_list_response.py">DatasetListResponse</a></code>
-- <code title="delete /api/v1/datasets/{id}">client.v1.datasets.<a href="./src/plaza/resources/v1/datasets.py">delete</a>(id) -> None</code>
-- <code title="get /api/v1/datasets/{id}/features">client.v1.datasets.<a href="./src/plaza/resources/v1/datasets.py">query_features</a>(id, \*\*<a href="src/plaza/types/v1/dataset_query_features_params.py">params</a>) -> <a href="./src/plaza/types/v1/feature_collection.py">FeatureCollection</a></code>
+- <code title="post /api/v1/search">client.search.<a href="./src/plaza/resources/search.py">query</a>(\*\*<a href="src/plaza/types/search_query_params.py">params</a>) -> <a href="./src/plaza/types/feature_collection.py">FeatureCollection</a></code>
 
-## Elements
+# Routing
 
 Types:
 
 ```python
-from plaza.types.v1 import GeoJsonFeature, GeoJsonGeometry
-```
-
-Methods:
-
-- <code title="get /api/v1/elements/{type}/{id}">client.v1.elements.<a href="./src/plaza/resources/v1/elements.py">retrieve</a>(id, \*, type) -> <a href="./src/plaza/types/v1/geo_json_feature.py">GeoJsonFeature</a></code>
-- <code title="post /api/v1/elements/batch">client.v1.elements.<a href="./src/plaza/resources/v1/elements.py">fetch_batch</a>(\*\*<a href="src/plaza/types/v1/element_fetch_batch_params.py">params</a>) -> <a href="./src/plaza/types/v1/feature_collection.py">FeatureCollection</a></code>
-- <code title="get /api/v1/elements">client.v1.elements.<a href="./src/plaza/resources/v1/elements.py">query</a>(\*\*<a href="src/plaza/types/v1/element_query_params.py">params</a>) -> <a href="./src/plaza/types/v1/feature_collection.py">FeatureCollection</a></code>
-
-## Geocode
-
-Types:
-
-```python
-from plaza.types.v1 import (
-    GeocodeAutocompleteResponse,
-    GeocodeForwardResponse,
-    GeocodeReverseResponse,
+from plaza.types import (
+    IsochroneRequest,
+    MatrixRequest,
+    MatrixResult,
+    NearestRequest,
+    NearestResult,
+    RouteRequest,
+    RouteResult,
+    RoutingIsochroneResponse,
 )
 ```
 
 Methods:
 
-- <code title="get /api/v1/geocode/autocomplete">client.v1.geocode.<a href="./src/plaza/resources/v1/geocode.py">autocomplete</a>(\*\*<a href="src/plaza/types/v1/geocode_autocomplete_params.py">params</a>) -> <a href="./src/plaza/types/v1/geocode_autocomplete_response.py">GeocodeAutocompleteResponse</a></code>
-- <code title="get /api/v1/geocode">client.v1.geocode.<a href="./src/plaza/resources/v1/geocode.py">forward</a>(\*\*<a href="src/plaza/types/v1/geocode_forward_params.py">params</a>) -> <a href="./src/plaza/types/v1/geocode_forward_response.py">GeocodeForwardResponse</a></code>
-- <code title="get /api/v1/geocode/reverse">client.v1.geocode.<a href="./src/plaza/resources/v1/geocode.py">reverse</a>(\*\*<a href="src/plaza/types/v1/geocode_reverse_params.py">params</a>) -> <a href="./src/plaza/types/v1/geocode_reverse_response.py">GeocodeReverseResponse</a></code>
+- <code title="post /api/v1/isochrone">client.routing.<a href="./src/plaza/resources/routing.py">isochrone</a>(\*\*<a href="src/plaza/types/routing_isochrone_params.py">params</a>) -> <a href="./src/plaza/types/routing_isochrone_response.py">RoutingIsochroneResponse</a></code>
+- <code title="post /api/v1/matrix">client.routing.<a href="./src/plaza/resources/routing.py">matrix</a>(\*\*<a href="src/plaza/types/routing_matrix_params.py">params</a>) -> <a href="./src/plaza/types/matrix_result.py">MatrixResult</a></code>
+- <code title="post /api/v1/nearest">client.routing.<a href="./src/plaza/resources/routing.py">nearest</a>(\*\*<a href="src/plaza/types/routing_nearest_params.py">params</a>) -> <a href="./src/plaza/types/nearest_result.py">NearestResult</a></code>
+- <code title="post /api/v1/route">client.routing.<a href="./src/plaza/resources/routing.py">route</a>(\*\*<a href="src/plaza/types/routing_route_params.py">params</a>) -> <a href="./src/plaza/types/route_result.py">RouteResult</a></code>
+
+# Elevation
+
+Types:
+
+```python
+from plaza.types import (
+    ElevationLookupRequest,
+    ElevationLookupResult,
+    ElevationProfileRequest,
+    ElevationProfileResult,
+)
+```
+
+Methods:
+
+- <code title="post /api/v1/elevation">client.elevation.<a href="./src/plaza/resources/elevation.py">lookup</a>(\*\*<a href="src/plaza/types/elevation_lookup_params.py">params</a>) -> <a href="./src/plaza/types/elevation_lookup_result.py">ElevationLookupResult</a></code>
+- <code title="post /api/v1/elevation/profile">client.elevation.<a href="./src/plaza/resources/elevation.py">profile</a>(\*\*<a href="src/plaza/types/elevation_profile_params.py">params</a>) -> <a href="./src/plaza/types/elevation_profile_result.py">ElevationProfileResult</a></code>
+
+# MapMatch
+
+Types:
+
+```python
+from plaza.types import MapMatchRequest, MapMatchResult
+```
+
+Methods:
+
+- <code title="post /api/v1/map-match">client.map_match.<a href="./src/plaza/resources/map_match.py">match</a>(\*\*<a href="src/plaza/types/map_match_match_params.py">params</a>) -> <a href="./src/plaza/types/map_match_result.py">MapMatchResult</a></code>
+
+# Optimize
+
+Types:
+
+```python
+from plaza.types import (
+    OptimizeCompletedResult,
+    OptimizeJobStatus,
+    OptimizeProcessingResult,
+    OptimizeRequest,
+    OptimizeResult,
+)
+```
+
+Methods:
+
+- <code title="post /api/v1/optimize">client.optimize.<a href="./src/plaza/resources/optimize.py">create</a>(\*\*<a href="src/plaza/types/optimize_create_params.py">params</a>) -> <a href="./src/plaza/types/optimize_result.py">OptimizeResult</a></code>
+- <code title="get /api/v1/optimize/{job_id}">client.optimize.<a href="./src/plaza/resources/optimize.py">retrieve</a>(job_id) -> <a href="./src/plaza/types/optimize_job_status.py">OptimizeJobStatus</a></code>
+
+# Query
+
+Types:
+
+```python
+from plaza.types import PlazaqlQuery
+```
+
+Methods:
+
+- <code title="post /api/v1/query">client.query.<a href="./src/plaza/resources/query.py">execute</a>(\*\*<a href="src/plaza/types/query_execute_params.py">params</a>) -> <a href="./src/plaza/types/feature_collection.py">FeatureCollection</a></code>
+
+# Tiles
+
+Methods:
+
+- <code title="get /api/v1/tiles/{z}/{x}/{y}">client.tiles.<a href="./src/plaza/resources/tiles.py">get</a>(y, \*, z, x) -> BinaryAPIResponse</code>
