@@ -1,4 +1,4 @@
-configured_endpoints: 22
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/plaza%2Fplaza-aadf2657321b53002916d836b509bba98b16cf4b2bbbcb46ad152ed0d8c38e4b.yml
-openapi_spec_hash: e85b181d9f1f4af08a2c1d2da1508456
-config_hash: 7c9bab80d7c77c27417c1563768deb45
+configured_endpoints: 23
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/plaza/plaza-98a5d46371b9051809ac079719e0760391d37849efa9ec311c221dcb7cfd15fd.yml
+openapi_spec_hash: 8dfb25db12a56443acaa7fb760818c6e
+config_hash: a2c0014a178d9d0ef641e78068109f47
